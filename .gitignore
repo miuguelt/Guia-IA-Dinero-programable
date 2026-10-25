@@ -114,3 +114,4 @@ dist/
 /taller/*/coverage/
 /taller/*/coverage.json
 /taller/*/evidencia-taller.md
+/backend/audit/__pycache__
