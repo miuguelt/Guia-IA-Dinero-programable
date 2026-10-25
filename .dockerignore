@@ -1,0 +1,131 @@
+# --- DevBrain baseline: never ship VCS or secrets into an image ---
+.git
+.gitignore
+.gitattributes
+.github
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+
+# --- DevBrain baseline: editor and IDE state ---
+.vscode
+.idea
+.antigravityrules
+
+# --- DevBrain baseline: build-irrelevant content ---
+*.md
+!README.md
+docs/
+tests/
+logs/
+tmp/
+coverage/
+scratch/
+
+# --- DevBrain baseline: fossils and quarantine ---
+_archive/
+_graveyard/
+backups/
+vault/
+*.bak
+*.bak-*
+*_OLD*
+
+# --- DevBrain baseline: override local de Compose (nunca se versiona) ---
+docker-compose.override.yml
+
+# --- Sitio estatico: fuentes de diseno, nunca el codigo del build ---
+*.psd
+*.ai
+*.fig
+*.sketch
+*.xcf
+design/
+mockups/
+
+# --- DevBrain: rastros de agentes IA (bloque gestionado) ---
+# Rastros de agentes IA: jamas entran en la imagen
+.claude
+**/.claude
+.codex
+**/.codex
+.cursor
+**/.cursor
+.windsurf
+**/.windsurf
+.opencode
+**/.opencode
+.antigravity
+**/.antigravity
+.gemini
+**/.gemini
+.continue
+**/.continue
+.roo
+**/.roo
+.kilocode
+**/.kilocode
+.trae
+**/.trae
+.serena
+**/.serena
+.taskmaster
+**/.taskmaster
+.specify
+**/.specify
+.zed
+**/.zed
+.junie
+**/.junie
+.crush
+**/.crush
+.qoder
+**/.qoder
+.entire
+**/.entire
+.srclight
+**/.srclight
+.devbrain
+**/.devbrain
+.playwright-mcp
+**/.playwright-mcp
+.agents
+**/.agents
+.cursorrules
+.codexrules
+.windsurfrules
+.opencoderules
+.antigravityrules
+.clinerules
+.roomodes
+.aiderignore
+**/.cursorrules
+**/.codexrules
+**/.windsurfrules
+**/.opencoderules
+**/.antigravityrules
+**/.clinerules
+**/.roomodes
+**/.aiderignore
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+QWEN.md
+WARP.md
+PROJECT_GENOME.md
+.github/copilot-instructions.md
+.mcp.json
+**/.mcp.json
+conversations/
+memory-bank/
+# --- end DevBrain rastros de agentes IA ---
+
+# --- DevBrain repo hygiene (managed block) ---
+node_modules
+# --- end DevBrain repo hygiene ---
+
+# --- Publicacion remota: web/ se compila dentro de la imagen ---
+web/

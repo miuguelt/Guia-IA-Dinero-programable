@@ -1,0 +1,35 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const { tmpdir } = require('node:os');
+const { buildWeb } = require('../../scripts/build-web.cjs');
+
+test('La compilación genera una web autocontenida sin alterar las fuentes', async (t) => {
+  const root = await fs.mkdtemp(path.join(tmpdir(), 'aula-build-'));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  const source = path.join(root, 'frontend', 'web');
+  await fs.mkdir(source, { recursive: true });
+  await fs.writeFile(path.join(source, 'index.html'), '<main>Aprender</main>');
+  await fs.writeFile(path.join(source, 'main.js'), 'document.title = "Aula";');
+  await fs.writeFile(path.join(source, 'styles.css'), 'body { color: green; }');
+  await fs.mkdir(path.join(root, 'js/vendor'), { recursive: true });
+  await fs.mkdir(path.join(root, 'css/vendor'), { recursive: true });
+  await fs.writeFile(path.join(root, 'js/vendor/devbrain-learner-sdk.js'), 'window.DevBrainSDK = {};');
+  await fs.writeFile(path.join(root, 'css/vendor/devbrain-learner-sdk.css'), '.sdk {}');
+  await fs.writeFile(path.join(root, 'css/vendor/devbrain-reader.css'), '.reader {}');
+  await fs.mkdir(path.join(root, 'taller/inicio/src'), { recursive: true });
+  await fs.writeFile(path.join(root, 'taller/inicio/src/reglas.js'), '// TODO etapa 1');
+  const result = await buildWeb(root);
+  assert.equal(result.download, path.join(root, 'web', 'descargas', 'taller-agropay.zip'));
+  const zip = await fs.readFile(result.download);
+  assert.equal(zip.readUInt32LE(0), 0x04034b50);
+  assert.ok(zip.includes(Buffer.from('agropay-taller/src/reglas.js')));
+  assert.match(await fs.readFile(path.join(root, 'web', 'index.html'), 'utf8'), /Aprender/);
+  assert.match(await fs.readFile(path.join(root, 'web', 'main.js'), 'utf8'), /Aula/);
+  assert.match(await fs.readFile(path.join(root, 'web', 'styles.css'), 'utf8'), /green/);
+  assert.equal(await fs.readFile(path.join(root, 'web/vendor/devbrain-learner-sdk.js'), 'utf8'), 'window.DevBrainSDK = {};');
+  assert.equal(await fs.readFile(path.join(root, 'web/vendor/devbrain-learner-sdk.css'), 'utf8'), '.sdk {}');
+  assert.equal(await fs.readFile(path.join(root, 'web/vendor/devbrain-reader.css'), 'utf8'), '.reader {}');
+  assert.equal(await fs.readFile(path.join(source, 'main.js'), 'utf8'), 'document.title = "Aula";');
+});

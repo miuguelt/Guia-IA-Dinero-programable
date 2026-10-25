@@ -1,0 +1,181 @@
+{
+  "standard": {
+    "id": "devbrain.educational-guide",
+    "version": "2.4.0"
+  },
+  "guide": {
+    "id": "adso-guia-ia-dinero-programable-2026",
+    "title": "Dinero programable — Aula ADSO",
+    "format": "web",
+    "entrypoint": "./web/index.html",
+    "language": "es-CO",
+    "version": "2.0.0",
+    "servicePort": 8153,
+    "summary": "Ruta web de seis módulos, doce laboratorios en simulación y ejecución real local, y un taller de siete etapas para construir un proyecto propio, con evaluación por reglas explicables."
+  },
+  "curricularAlignment": {
+    "program": {
+      "code": "228118",
+      "name": "Tecnólogo en Análisis y Desarrollo de Software (ADSO)"
+    },
+    "competency": {
+      "code": "220501096",
+      "name": "Desarrollar la solución de software de acuerdo con el diseño y metodologías de desarrollo"
+    },
+    "learningResults": [
+      {
+        "code": "RAP-01",
+        "name": "Aplicar los fundamentos de Dinero Programable e IA con trazabilidad técnica y pedagógica."
+      }
+    ]
+  },
+  "duration": {
+    "recommendedTotalHours": "8 horas de ruta introductoria; preparación y prácticas reales como ampliación",
+    "hours": 8,
+    "extensionTiming": "Los tiempos de ejecución se registran durante las prácticas; no equivalen a una duración de aprendizaje garantizada."
+  },
+  "platform": {
+    "bootstrap": "frontend/web/main.js",
+    "storagePrefix": "aula-dinero-v2",
+    "legacyStoragePrefix": "guia_crypto_",
+    "modules": 6,
+    "laboratories": 12,
+    "xpTotal": 1500,
+    "assessment": "El juicio del instructor se registra por separado de los puntos y las prácticas verificadas."
+  },
+  "project": {
+    "caseStudy": "AgroPay & GovTrust: casos de aprendizaje de garantía, evaluación y trazabilidad",
+    "challenge": "Construir y verificar un recorrido de datos, firmas, reglas, contratos y consulta, con permisos y pruebas reproducibles.",
+    "finalProduct": "Repositorio con contratos, pruebas, evaluador por reglas y Portafolio de Evidencias.",
+    "deliverablesRegistry": "deliverables.registry.json",
+    "checkpoints": [
+      {
+        "id": "CP-01",
+        "name": "Decisión de arquitectura",
+        "evidence": "MG-A01",
+        "criterion": "La decisión responde al problema, compara alternativas y declara dependencias."
+      },
+      {
+        "id": "CP-02",
+        "name": "Diseño razonado",
+        "evidence": "MG-A02",
+        "criterion": "El diseño relaciona actores, componentes, reglas y estados alternos de forma coherente."
+      },
+      {
+        "id": "CP-03",
+        "name": "Implementación comprobada",
+        "evidence": "MG-A03",
+        "criterion": "Las pruebas ejecutan la lógica de producción y comprueban cambios y reversiones."
+      },
+      {
+        "id": "CP-04",
+        "name": "Validación del oráculo",
+        "evidence": "MG-A04",
+        "criterion": "La evidencia distingue identidad, integridad, evaluación y efectos de la operación."
+      },
+      {
+        "id": "CP-05",
+        "name": "Cierre técnico reproducible",
+        "evidence": "MG-A05",
+        "criterion": "Otra persona puede reproducir la entrega y comprender el alcance de sus comprobaciones."
+      }
+    ]
+  },
+  "learningSequence": [
+    {
+      "phase": "reflection",
+      "name": "Reflexión inicial",
+      "purpose": "Comprender la disrupción del dinero programable frente a pasarelas centralizadas tradicionales y evaluar la viabilidad de blockchain.",
+      "hours": 1
+    },
+    {
+      "phase": "contextualization",
+      "name": "Contextualización",
+      "purpose": "Analizar casos de uso reales en Colombia como trazabilidad apícola, inclusión rural y contratación pública transparente.",
+      "hours": 1
+    },
+    {
+      "phase": "appropriation",
+      "name": "Apropiación",
+      "purpose": "Aprender patrones de seguridad (Check-Effects-Interactions), oráculos de IA y desarrollar contratos con TDD en Hardhat.",
+      "hours": 4
+    },
+    {
+      "phase": "transfer",
+      "name": "Transferencia",
+      "purpose": "Integrar la solución descentralizada y transferir los artefactos verificables al proyecto formativo del aprendiz.",
+      "hours": 2
+    }
+  ],
+  "evidence": {
+    "knowledge": [
+      "MG-A01"
+    ],
+    "performance": [
+      "MG-A03",
+      "MG-A04"
+    ],
+    "product": [
+      "MG-A02",
+      "MG-A05"
+    ]
+  },
+  "assessment": {
+    "instruments": [
+      "Lista de chequeo técnica",
+      "Rúbrica de implementación",
+      "Autoevaluación de cierre"
+    ]
+  },
+  "glossary": [
+    {
+      "term": "Dinero Programable",
+      "meaning": "Valor digital cuya emisión, transferencia y condiciones de liquidación son ejecutadas por código inmutable en una red descentralizada."
+    },
+    {
+      "term": "Smart Contract",
+      "meaning": "Programa informático desplegado en una cadena de bloques que se ejecuta de forma determinista y autónoma."
+    },
+    {
+      "term": "Oráculo",
+      "meaning": "Mecanismo criptográfico que suministra datos del mundo exterior (off-chain) a los contratos inteligentes (on-chain)."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Estándar Educativo DevBrain",
+      "locator": "_core/knowledge_base/EDUCATIONAL_GUIDE_STANDARD.md",
+      "use": "Contrato curricular y de evidencias."
+    },
+    {
+      "title": "Ethereum: contratos inteligentes y oráculos",
+      "locator": "https://ethereum.org/developers/docs/smart-contracts/",
+      "use": "Definiciones y límites; revisión 2026-10-21."
+    },
+    {
+      "title": "IOTA Documentation",
+      "locator": "https://docs.iota.org/",
+      "use": "Move y tarifas de gas en la red actual; revisión 2026-10-21."
+    },
+    {
+      "title": "Semaphore V4",
+      "locator": "https://docs.semaphore.pse.dev/guides/proofs",
+      "use": "Pruebas de pertenencia y protección contra repetición; revisión 2026-10-21."
+    }
+  ],
+  "workshop": {
+    "name": "Taller AgroPay",
+    "stages": 7,
+    "route": "#taller",
+    "setupRoute": "#preparar",
+    "starter": "taller/inicio",
+    "reference": "taller/solucion",
+    "download": "web/descargas/taller-agropay.zip",
+    "verification": "npm run test:taller",
+    "languages": [
+      "JavaScript",
+      "Solidity",
+      "SQL"
+    ]
+  }
+}

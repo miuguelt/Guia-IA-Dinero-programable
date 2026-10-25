@@ -1,0 +1,116 @@
+# --- DevBrain baseline: secrets (never commit) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+secrets.json
+credentials.json
+
+# --- DevBrain baseline: local noise ---
+.DS_Store
+Thumbs.db
+*.log
+logs/
+tmp/
+.cache/
+coverage/
+
+# --- DevBrain baseline: throwaway scripts (main credential leak vector) ---
+scratch/
+debug_*.py
+debug_*.ps1
+debug_*.js
+
+# --- DevBrain baseline: fossils and quarantine (policy: never live in a repo) ---
+_archive/
+_graveyard/
+backups/
+vault/
+*.bak
+*.bak-*
+*_OLD*
+
+# --- DevBrain baseline: override local de Compose (nunca se versiona) ---
+docker-compose.override.yml
+
+# --- Sitio estatico ---
+.sass-cache/
+*.css.map
+*.js.map
+
+# --- DevBrain: rastros de agentes IA (bloque gestionado) ---
+# Estado local de agentes (lo regenera Sync-DevBrainIdeIntegration)
+.claude/
+.codex/
+.cursor/
+.windsurf/
+.opencode/
+.antigravity/
+.gemini/
+.continue/
+.roo/
+.kilocode/
+.trae/
+.serena/
+.taskmaster/
+.specify/
+.zed/
+.junie/
+.crush/
+.qoder/
+.entire/
+.srclight/
+.devbrain/*
+!.devbrain/invariants.json
+.playwright-mcp/
+.agents/
+
+# Reglas SSoT por IDE
+.cursorrules
+.codexrules
+.windsurfrules
+.opencoderules
+.antigravityrules
+.clinerules
+.roomodes
+.aiderignore
+
+# Briefs y manifiestos de agente
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+QWEN.md
+WARP.md
+PROJECT_GENOME.md
+.github/copilot-instructions.md
+
+# Artefactos de sesion
+.mcp.json
+.aider*
+*.aider.chat.history.md
+conversations/
+memory-bank/
+# --- end DevBrain rastros de agentes IA ---
+
+# Salidas regenerables del aula; las fuentes viven en frontend/web y backend.
+/web/
+/artifacts/
+/test-results/
+/output/
+/.coverage/
+/cache/
+/coverage.json
+
+# --- DevBrain repo hygiene (managed block) ---
+node_modules/
+dist/
+# --- end DevBrain repo hygiene ---
+
+# Salidas regenerables del taller del aprendiz.
+/taller/*/artifacts/
+/taller/*/cache/
+/taller/*/coverage/
+/taller/*/coverage.json
+/taller/*/evidencia-taller.md

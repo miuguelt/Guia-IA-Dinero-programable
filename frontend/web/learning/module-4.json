@@ -1,0 +1,31 @@
+{
+  "id": "m4",
+  "title": "Oráculos y datos firmados",
+  "eyebrow": "04 · Integración",
+  "minutes": 90,
+  "summary": "Conecta una evaluación reproducible con una transacción autorizada y conserva su trazabilidad.",
+  "outcome": "Distinguir una firma válida de un dato verdadero y manejar el flujo completo.",
+  "evidence": "MG-A04",
+  "labs": [
+    "signatures",
+    "pipeline"
+  ],
+  "steps": [
+    {
+      "title": "Comprende",
+      "body": "<h2>El contrato necesita un puente</h2><p>La EVM no consulta por sí sola un sensor ni ejecuta un modelo de IA que cambia cada vez. Un oráculo es el mecanismo que lleva información externa al contrato. Su diseño define quién responde por ese dato, cómo se verifica y qué ocurre cuando falta.</p><p>En esta aula el dictamen se calcula con <strong>reglas explicables</strong>. No se ejecuta un modelo de IA. Si después incorporas un modelo, deberás comprobar formato, rangos, procedencia, permisos y restricciones de pago antes de usar su respuesta.</p><div class=\"insight\"><strong>Firma válida ≠ medición verdadera.</strong><p>La firma ayuda a comprobar qué identidad firmó y si el contenido cambió. No prueba calibración, ubicación, presencia del producto ni ausencia de fraude en la captura.</p></div><h3>Evita reutilizar una autorización</h3><p>Una autorización necesita contexto: lote, operación, red, destinatario y un valor de un solo uso. La validación debe rechazar un paquete alterado y una segunda presentación del mismo paquete. El transporte protegido y la firma cumplen responsabilidades distintas.</p><p class=\"source-note\">Fuente revisada el 21 de octubre de 2026: <a href=\"https://ethereum.org/developers/docs/oracles/\" target=\"_blank\" rel=\"noreferrer\">Ethereum: oráculos y datos externos</a>.</p>"
+    },
+    {
+      "title": "Revisa el ejemplo",
+      "body": "<h2>De la lectura a la consulta</h2><ol class=\"flow\"><li><strong>1. Capturar</strong><span>Recibir lote, temperatura y acidez.</span></li><li><strong>2. Firmar</strong><span>Crear una firma sobre el contenido y su contexto.</span></li><li><strong>3. Verificar</strong><span>Comprobar identidad, integridad y ausencia de repetición.</span></li><li><strong>4. Evaluar</strong><span>Aplicar reglas y explicar el resultado.</span></li><li><strong>5. Confirmar</strong><span>Esperar el recibo de la operación en la red.</span></li><li><strong>6. Indexar</strong><span>Registrar eventos para la consulta en PostgreSQL.</span></li></ol><h3>Regla reproducible del ejercicio</h3><pre><code>temperatura ≤ 4 °C → 60 puntos; de lo contrario → 20\n14 ≤ acidez ≤ 18 → 38 puntos; de lo contrario → 10\naprobado = puntaje ≥ 90</code></pre><p>Una lectura a 3,5 °C y acidez 16 obtiene 98 puntos. Una a 8 °C y acidez 16 obtiene 58. Estas reglas enseñan decisiones y validaciones; no son una norma sanitaria.</p><h3>Fallos independientes</h3><p>Puede haber firma correcta y evaluación rechazada. También puede haber evaluación aprobada y transacción fallida por permisos o fondos. Si la red confirma y SQL falla, conserva el recibo y permite reintentar la indexación sin enviar otra vez el pago.</p>"
+    },
+    {
+      "title": "Practica",
+      "body": "<h2>Manipula una entrada</h2><p>En firmas, ejecuta una lectura válida y después activa la alteración del contenido. Comprueba que el verificador rechaza la modificación. Prueba también la repetición de la autorización.</p><a class=\"button\" href=\"#lab/signatures\">Abrir firma de datos</a><p>Continúa con el flujo completo. Compara un lote aprobado y uno rechazado. Identifica la etapa exacta en la que termina cada recorrido y revisa si se emitió una transacción.</p><a class=\"button secondary\" href=\"#lab/pipeline\">Abrir flujo de seis pasos</a><h3>Qué debes registrar</h3><ul><li>Entrada y regla aplicada.</li><li>Resultado de verificación de firma.</li><li>Autorización, recibo y evento, cuando existan.</li><li>Resultado de indexación y recuperación ante errores.</li></ul><h3>Inspecciona el Taller AgroPay</h3><p>Esta etapa demuestra cómo un oráculo firma datos con criptografía asimétrica ECDSA, detecta adulteraciones y bloquea repeticiones con nonces.</p><ul class=\"clean-list\"><li><a href=\"#taller/4\">Etapa 4 · Oráculo con datos firmados</a></li></ul>"
+    },
+    {
+      "title": "Aplica",
+      "body": "<h2>MG-A04 · Validación del oráculo</h2><p>Registra un caso aprobado y uno rechazado. En cada caso, separa verificación de firma, dictamen del evaluador y resultado del contrato.</p><h3>Ejemplo</h3><blockquote>El paquete conserva su firma, pero la lectura a 8 °C obtiene 58 puntos. El evaluador rechaza el caso y no autoriza el pago. Al alterar una lectura ya firmada, el sistema rechaza la firma antes de evaluar.</blockquote><p>Incluye una prueba de repetición y explica quién administra la identidad autorizada. Si usas un modelo en tu proyecto, documenta sus límites; no atribuyas ese comportamiento al evaluador por reglas de esta guía.</p>"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "taller-agropay-solucion",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Solución de referencia del taller AgroPay: reglas, contrato, oráculo firmado, indexador e inspección en tres capas.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "verificar": "node scripts/verificar-entorno.cjs",
+    "compilar": "hardhat compile",
+    "etapa:0": "hardhat test test/etapa-0.entorno.test.js",
+    "etapa:1": "hardhat test test/etapa-1.reglas.test.js",
+    "etapa:2": "hardhat test test/etapa-2.contrato.test.js",
+    "etapa:3": "hardhat test test/etapa-3.seguridad.test.js",
+    "etapa:4": "hardhat test test/etapa-4.oraculo.test.js",
+    "etapa:5": "hardhat test test/etapa-5.indexador.test.js",
+    "etapa:6": "hardhat test test/etapa-6.recorrido.test.js",
+    "inspeccionar:estado": "hardhat run scripts/inspeccionar-estado.js",
+    "probar:seguridad": "hardhat run scripts/probar-seguridad.js",
+    "mis-pruebas": "hardhat test test/mis-pruebas.test.js",
+    "test": "hardhat test",
+    "demo": "hardhat run scripts/demo.js",
+    "cobertura": "c8 --all --include=src/**/*.js --include=scripts/**/*.js --include=scripts/**/*.cjs --check-coverage --functions=100 --reporter=text hardhat test",
+    "cobertura:contrato": "hardhat coverage"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "5.0.0",
+    "c8": "12.0.0",
+    "hardhat": "2.29.1",
+    "solc": "0.8.24",
+    "solidity-coverage": "0.8.17"
+  },
+  "dependencies": {
+    "ethers": "6.17.0",
+    "pg": "8.23.1"
+  }
+}

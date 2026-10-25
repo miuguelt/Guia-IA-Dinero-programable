@@ -1,0 +1,51 @@
+# =========================================================================
+# Publicación en VPS con Coolify — Guía «Dinero programable» (§6.2)
+# =========================================================================
+# Artefacto de despliegue remoto: no es el entorno de desarrollo. El trabajo
+# del aprendiz y del instructor se hace en local con runtime nativo; este
+# archivo solo lo lee Coolify (Docker Compose Location: /docker-compose.yml).
+#
+# Un solo servicio, `frontend`: la guía es estática y en el VPS funciona en
+# modo simulación. El backend NO se publica a propósito: sus labs reales
+# ejecutan herramientas y usan claves locales, y solo aceptan conexiones de
+# loopback por diseño (backend/http/handler.cjs, backend/chain/connection.cjs,
+# backend/security/webauthn.cjs). Exponerlo en Internet abriría la ejecución
+# de herramientas a cualquier visitante.
+#
+# Sin `ports`: Traefik (red externa `coolify`) enruta el dominio y emite el
+# certificado. Sin secretos ni variables con valores por defecto.
+# =========================================================================
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    restart: unless-stopped
+    expose:
+      - "80"
+    environment:
+      - TZ=America/Bogota
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:80/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - frontend_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - coolify
+
+volumes:
+  frontend_logs:
+    driver: local
+
+networks:
+  coolify:
+    external: true

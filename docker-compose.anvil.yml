@@ -1,0 +1,65 @@
+# =========================================================================
+# Servidor EVM propio con Foundry Anvil en Coolify — Aula «Dinero programable»
+# =========================================================================
+# Artefacto de despliegue remoto en VPS con Coolify (§6.2). No es un entorno
+# de ejecución local con Docker: el desarrollo se realiza de forma nativa en
+# tu equipo y este archivo lo procesa Coolify en el servidor remoto.
+#
+# Características:
+# - Motor EVM: Foundry Anvil (< 50 MB RAM, arranque inmediato).
+# - Persistencia: guarda cuentas, contratos y bloques en el volumen `anvil_data`.
+# - Seguridad: sin `ports` abiertos al host; Traefik enruta por la red `coolify`
+#   y exige credenciales mediante el middleware `basicauth` (`ANVIL_BASIC_AUTH`).
+# =========================================================================
+
+services:
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:latest
+    entrypoint: ["anvil"]
+    command:
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8545"
+      - "--chain-id"
+      - "${ANVIL_CHAIN_ID:-31337}"
+      - "--block-time"
+      - "${ANVIL_BLOCK_TIME:-2}"
+      - "--state"
+      - "/data/anvil-state.json"
+      - "--state-interval"
+      - "10"
+    restart: unless-stopped
+    expose:
+      - "8545"
+    environment:
+      - TZ=America/Bogota
+      - ANVIL_CHAIN_ID=${ANVIL_CHAIN_ID:-31337}
+      - ANVIL_BLOCK_TIME=${ANVIL_BLOCK_TIME:-2}
+    volumes:
+      - anvil_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "cast block-number --rpc-url http://127.0.0.1:8545 >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.anvil-auth.basicauth.users=${ANVIL_BASIC_AUTH}"
+      - "traefik.http.services.anvil.loadbalancer.server.port=8545"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - coolify
+
+volumes:
+  anvil_data:
+    driver: local
+
+networks:
+  coolify:
+    external: true

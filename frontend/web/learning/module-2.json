@@ -1,0 +1,32 @@
+{
+  "id": "m2",
+  "title": "Casos de uso y decisiones",
+  "eyebrow": "02 · Diseño",
+  "minutes": 60,
+  "summary": "Relaciona actores, fuentes de datos y reglas de negocio en un caso colombiano.",
+  "outcome": "Dibujar los límites de una solución y sus responsabilidades.",
+  "evidence": "MG-A02",
+  "labs": [
+    "pharma",
+    "honey",
+    "elections"
+  ],
+  "steps": [
+    {
+      "title": "Comprende",
+      "body": "<h2>La trazabilidad comienza en la fuente</h2><p>Un registro difícil de alterar no garantiza que el dato original sea verdadero. Un sensor sin calibración puede firmar una lectura incorrecta y un operador puede registrar un lote distinto del que está inspeccionando.</p><p>La cadena de bloques puede ayudar a comprobar autoría, orden y cambios de estado. La calidad de la medición requiere procedimientos, instrumentos, controles humanos y criterios del dominio.</p><div class=\"case-grid\"><article><h3>AgroPay · Pago por calidad</h3><p>Un proveedor entrega un lote. El evaluador recibe parámetros, aplica reglas y autoriza una reserva de fondos. El beneficiario retira después de la confirmación.</p><p><strong>Límite:</strong> los umbrales del ejercicio no certifican inocuidad ni sustituyen un laboratorio.</p></article><article><h3>GovTrust · Entrega por hitos</h3><p>Un comprador bloquea una garantía. Una autoridad definida verifica un hito antes de liberar recursos o tramitar un reembolso.</p><p><strong>Límite:</strong> el programa no reemplaza la evaluación contractual ni las reglas legales aplicables.</p></article></div><h3>Otros casos para comparar</h3><ul><li><strong>Cadena de frío:</strong> conservar lecturas y bloquear un lote que rompe las condiciones del ejercicio.</li><li><strong>Certificación:</strong> registrar la huella de un documento y comprobar después si corresponde al mismo archivo.</li><li><strong>Votación:</strong> comprobar pertenencia a un grupo y evitar otra participación en el mismo proceso. Esto no resuelve todos los requisitos de una elección pública.</li></ul>"
+    },
+    {
+      "title": "Revisa el ejemplo",
+      "body": "<h2>Separa los límites del sistema</h2><p>Una cooperativa recibe un lote de miel y quiere dejar evidencia del resultado. La solución necesita responsabilidades diferenciadas:</p><ol class=\"flow\"><li><strong>Captura</strong><span>La persona registra lote y parámetros.</span></li><li><strong>Verificación</strong><span>El servicio valida tipos, rangos, firma e identidad.</span></li><li><strong>Regla</strong><span>El evaluador produce un dictamen reproducible con sus razones.</span></li><li><strong>Registro</strong><span>Un contrato autorizado registra el resultado; SQL facilita las consultas.</span></li></ol><h3>Huella digital y documento</h3><p>Un hash es una huella calculada a partir de bytes. Si cambia el archivo, su huella debería cambiar. Registrar el hash permite comparar el documento; no demuestra que su contenido sea cierto.</p><pre><code>archivo de evidencia → SHA-256 → huella de 32 bytes\nhuella registrada === huella del archivo consultado</code></pre><p>Los documentos y datos personales no se publican en una cadena por comodidad. Define qué guardar, quién puede verlo y cómo conservar la evidencia original.</p>"
+    },
+    {
+      "title": "Practica",
+      "body": "<h2>Observa estados alternos</h2><p>Ejecuta cadena de frío con un mismo lote: primero 4,2 °C, después 9 °C y finalmente 4 °C. En este ejercicio, una ruptura deja el lote en cuarentena aunque una lectura posterior esté dentro del rango.</p><a class=\"button\" href=\"#lab/pharma\">Abrir cadena de frío</a><p>En miel, compara humedad, HMF y delta de carbono. Se usan para aprender validación y reglas; el resultado no permite emitir un diagnóstico sobre un alimento.</p><a class=\"button secondary\" href=\"#lab/honey\">Abrir calidad de miel</a><h3>Para una votación</h3><p>Prueba una participación válida, una prueba inválida y una repetición. Distingue el conteo, la verificación de una prueba y la protección contra repetición.</p><a class=\"button secondary\" href=\"#lab/elections\">Abrir elecciones</a><h3>Inspecciona el Taller AgroPay</h3><p>Esta etapa muestra cómo aislar reglas puras y emitir dictámenes explicables sin tocar la blockchain ni gastar gas.</p><ul class=\"clean-list\"><li><a href=\"#taller/1\">Etapa 1 · Reglas en JavaScript</a></li></ul>"
+    },
+    {
+      "title": "Aplica",
+      "body": "<h2>MG-A02 · Diseño razonado</h2><p>Describe un caso de tu proyecto con al menos tres actores. Dibuja o enumera el recorrido desde la entrada hasta la evidencia verificable y asigna una responsabilidad a cada componente.</p><h3>Ejemplo</h3><blockquote>El proveedor identifica el lote. El servicio comprueba la firma y evalúa reglas. El contrato solo acepta al oráculo autorizado. PostgreSQL conserva una proyección para consultar el historial, asociada al recibo de la transacción.</blockquote><p>Incluye un flujo aprobado, uno rechazado y una recuperación ante falta de conexión. Explica qué dato se conserva fuera de la cadena y por qué.</p>"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const { createStore } = require('../../backend/persistence/store.cjs');
+const { createChainRuntime } = require('../../backend/chain/runtime.cjs');
+const { indexEvents } = require('../../backend/labs/index-events.cjs');
+
+test('La posición persistida permite reanudar sin duplicados y separa reinicios de cadena', async t => {
+  const store = createStore();
+  const chain = createChainRuntime();
+  t.after(async () => { await chain.close(); await store.close(); });
+  await store.initialize();
+  assert.equal(await store.readPosition('despliegue-ausente-' + crypto.randomUUID()), null);
+  const receipt = (await chain.execute('evm', { amountEth: '0.001' })).receipt;
+  const first = await indexEvents(chain, store);
+  assert.equal(first.status, 'indexed');
+  const position = await store.readPosition(first.deploymentId);
+  assert.ok(position.blockNumber >= receipt.blockNumber);
+  assert.ok(position.logIndex >= 0);
+  assert.ok(first.position.blockNumber <= position.blockNumber);
+  const before = await store.readEvents(first.deploymentId);
+  await store.recordEvents(first.deploymentId, before);
+  const duplicateCheck = await store.readEvents(first.deploymentId);
+  assert.equal(new Set(duplicateCheck.map(event => event.txHash + ':' + event.logIndex)).size, duplicateCheck.length);
+  const repeated = await indexEvents(chain, store);
+  assert.ok(repeated.fromBlock >= position.blockNumber);
+  assert.ok((await store.readPosition(first.deploymentId)).blockNumber >= position.blockNumber);
+  const after = await store.readEvents(first.deploymentId);
+  assert.ok(before.every(event => after.some(item => item.txHash === event.txHash && item.logIndex === event.logIndex)));
+  const remaining = await chain.events({ fromBlock: position.blockNumber + 1 });
+  assert.ok(remaining.every(event => event.blockNumber > position.blockNumber));
+  await assert.rejects(chain.events({ fromBlock: -1 }), /posición/i);
+  await assert.rejects(chain.events({ fromBlock: '0' }), /posición/i);
+  const failure = await indexEvents({ health: async () => { throw new Error('Nodo desconectado.'); } }, store);
+  assert.equal(failure.status, 'pending');
+  assert.ok((await store.readPosition(first.deploymentId)).blockNumber >= position.blockNumber);
+});

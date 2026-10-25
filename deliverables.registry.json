@@ -1,0 +1,273 @@
+{
+  "version": "2.4.0",
+  "standard": "devbrain.educational-guide",
+  "guideId": "adso-guia-ia-dinero-programable-2026",
+  "status": "authored",
+  "sourceStatus": "Contenido específico revisado para la ruta web; la verificación de la ejecución se informa por separado.",
+  "portfolioTemplate": "docs/evidencias-template.md",
+  "submission": {
+    "packageName": "EV-GUIA-IA-DINERO-PROGRAMABLE-2026",
+    "namingRule": "EV-GUIA-IA-DINERO-PROGRAMABLE-<ficha>-<apellido><nombre>.zip",
+    "format": "Repositorio Git con evidencias y pruebas.",
+    "where": "Actividad definida por el instructor.",
+    "whatIsGraded": "Decisiones justificadas, implementación y resultados reproducibles, con sus límites.",
+    "approval": [
+      "Las evidencias están completas.",
+      "Las validaciones pasan.",
+      "Los límites están documentados."
+    ],
+    "competencyMap": [
+      {
+        "evidenceType": "conocimiento",
+        "artifacts": [
+          "MG-A01"
+        ],
+        "criterion": "Fundamentos correctos.",
+        "instrument": "Lista de chequeo",
+        "learningResult": "RAP-01"
+      },
+      {
+        "evidenceType": "desempeño",
+        "artifacts": [
+          "MG-A03",
+          "MG-A04"
+        ],
+        "criterion": "Implementación y validación demostradas.",
+        "instrument": "Rúbrica",
+        "learningResult": "RAP-01"
+      },
+      {
+        "evidenceType": "producto",
+        "artifacts": [
+          "MG-A02",
+          "MG-A05"
+        ],
+        "criterion": "Producto completo y trazable.",
+        "instrument": "Rúbrica",
+        "learningResult": "RAP-01"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "id": "MG-A01",
+      "code": "MG-FUND",
+      "name": "Decisión de arquitectura",
+      "purpose": "Compara un registro relacional y un contrato inteligente para el proceso de tu proyecto. Identifica actores, dato compartido, autoridad y costo.",
+      "inputs": [
+        "Guía y contexto del caso"
+      ],
+      "instructions": "Compara un registro relacional y un contrato inteligente para el proceso de tu proyecto. Identifica actores, dato compartido, autoridad y costo.",
+      "example": "El inventario interno queda en PostgreSQL; la garantía entre organizaciones se explora en un contrato con un oráculo definido.",
+      "station": {
+        "sectionId": "m1",
+        "order": 1,
+        "phase": "reflection",
+        "minutes": null
+      },
+      "evidenceType": "conocimiento",
+      "fields": [
+        {
+          "key": "evidencia",
+          "label": "Procedimiento, resultado y límites",
+          "type": "area",
+          "hint": "Identifica la entrada, la modalidad, las comprobaciones y lo que observaste."
+        }
+      ],
+      "checklist": [
+        "Justifica la alternativa elegida",
+        "Distingue fuente de datos y estado compartido",
+        "Reconoce un costo y un límite"
+      ],
+      "criterion": "La decisión responde al problema, compara alternativas y declara dependencias.",
+      "instrument": "Lista de chequeo de evidencia DevBrain",
+      "evidence": "docs/01-fundamentos.md",
+      "nextStep": "Revisa los criterios y continúa con el siguiente módulo.",
+      "aiAssist": {
+        "prompt": "Ayuda a revisar la claridad de esta evidencia sin inventar resultados ni sustituir mis comprobaciones.",
+        "verify": "Contrasta cada afirmación con código, pruebas o fuente técnica.",
+        "log": "Interacción registrada en la bitácora del aprendiz."
+      },
+      "upload": {
+        "fileName": "01-fundamentos.md",
+        "format": "markdown"
+      }
+    },
+    {
+      "id": "MG-A02",
+      "code": "MG-DISENO",
+      "name": "Diseño razonado",
+      "purpose": "Describe tres actores y el recorrido desde la captura hasta el resultado consultable. Incluye aprobación, rechazo y recuperación.",
+      "inputs": [
+        "Guía y contexto del caso"
+      ],
+      "instructions": "Describe tres actores y el recorrido desde la captura hasta el resultado consultable. Incluye aprobación, rechazo y recuperación.",
+      "example": "El proveedor identifica el lote; el servicio verifica la firma; el contrato aplica permisos y PostgreSQL conserva la proyección.",
+      "station": {
+        "sectionId": "m2",
+        "order": 2,
+        "phase": "contextualization",
+        "minutes": null
+      },
+      "evidenceType": "producto",
+      "fields": [
+        {
+          "key": "evidencia",
+          "label": "Procedimiento, resultado y límites",
+          "type": "area",
+          "hint": "Identifica la entrada, la modalidad, las comprobaciones y lo que observaste."
+        }
+      ],
+      "checklist": [
+        "Asigna responsabilidades sin solaparlas",
+        "Incluye un flujo rechazado y recuperación",
+        "Explica qué datos quedan fuera de la cadena"
+      ],
+      "criterion": "El diseño relaciona actores, componentes, reglas y estados alternos de forma coherente.",
+      "instrument": "Lista de chequeo de evidencia DevBrain",
+      "evidence": "docs/02-diseno.md",
+      "nextStep": "Revisa los criterios y continúa con el siguiente módulo.",
+      "aiAssist": {
+        "prompt": "Ayuda a revisar la claridad de esta evidencia sin inventar resultados ni sustituir mis comprobaciones.",
+        "verify": "Contrasta cada afirmación con código, pruebas o fuente técnica.",
+        "log": "Interacción registrada en la bitácora del aprendiz."
+      },
+      "upload": {
+        "fileName": "02-diseno.md",
+        "format": "markdown"
+      }
+    },
+    {
+      "id": "MG-A03",
+      "code": "MG-IMPLEMENTA",
+      "name": "Implementación comprobada",
+      "purpose": "Presenta una regla del contrato con código, prueba y efecto observable. Comprueba autorización y rechazo por permisos.",
+      "inputs": [
+        "Guía y contexto del caso"
+      ],
+      "instructions": "Presenta una regla del contrato con código, prueba y efecto observable. Comprueba autorización y rechazo por permisos. Puedes usar la etapa 3 del Taller AgroPay o el contrato del aula.",
+      "example": "La cuenta observadora recibe NoAutorizado y no obtiene saldo; el oráculo autorizado produce el evento y reserva el monto.",
+      "station": {
+        "sectionId": "m3",
+        "order": 3,
+        "phase": "appropriation",
+        "minutes": null
+      },
+      "evidenceType": "desempeño",
+      "fields": [
+        {
+          "key": "evidencia",
+          "label": "Procedimiento, resultado y límites",
+          "type": "area",
+          "hint": "Identifica la entrada, la modalidad, las comprobaciones y lo que observaste."
+        }
+      ],
+      "checklist": [
+        "Verifica permisos en el contrato",
+        "Incluye aserciones sobre estado y eventos",
+        "Distingue envío, confirmación y resultado"
+      ],
+      "criterion": "Las pruebas ejecutan la lógica de producción y comprueban cambios y reversiones.",
+      "instrument": "Lista de chequeo de evidencia DevBrain",
+      "evidence": "docs/03-implementacion.md",
+      "nextStep": "Revisa los criterios y continúa con el siguiente módulo.",
+      "aiAssist": {
+        "prompt": "Ayuda a revisar la claridad de esta evidencia sin inventar resultados ni sustituir mis comprobaciones.",
+        "verify": "Contrasta cada afirmación con código, pruebas o fuente técnica.",
+        "log": "Interacción registrada en la bitácora del aprendiz."
+      },
+      "upload": {
+        "fileName": "03-implementacion.md",
+        "format": "markdown"
+      }
+    },
+    {
+      "id": "MG-A04",
+      "code": "MG-VALIDA",
+      "name": "Validación del oráculo",
+      "purpose": "Compara firma válida, contenido alterado y repetición. Separa dictamen por reglas y autorización del pago.",
+      "inputs": [
+        "Guía y contexto del caso"
+      ],
+      "instructions": "Compara firma válida, contenido alterado y repetición. Separa dictamen por reglas y autorización del pago.",
+      "example": "La firma válida no autoriza un lote que obtiene 58 puntos. Un paquete alterado se rechaza antes de la evaluación.",
+      "station": {
+        "sectionId": "m4",
+        "order": 4,
+        "phase": "appropriation",
+        "minutes": null
+      },
+      "evidenceType": "desempeño",
+      "fields": [
+        {
+          "key": "evidencia",
+          "label": "Procedimiento, resultado y límites",
+          "type": "area",
+          "hint": "Identifica la entrada, la modalidad, las comprobaciones y lo que observaste."
+        }
+      ],
+      "checklist": [
+        "Comprueba integridad y protección contra repetición",
+        "Explica los umbrales y el puntaje",
+        "Identifica modalidad, recibo e indexación cuando existan"
+      ],
+      "criterion": "La evidencia distingue identidad, integridad, evaluación y efectos de la operación.",
+      "instrument": "Lista de chequeo de evidencia DevBrain",
+      "evidence": "docs/04-validacion.md",
+      "nextStep": "Revisa los criterios y continúa con el siguiente módulo.",
+      "aiAssist": {
+        "prompt": "Ayuda a revisar la claridad de esta evidencia sin inventar resultados ni sustituir mis comprobaciones.",
+        "verify": "Contrasta cada afirmación con código, pruebas o fuente técnica.",
+        "log": "Interacción registrada en la bitácora del aprendiz."
+      },
+      "upload": {
+        "fileName": "04-validacion.md",
+        "format": "markdown"
+      }
+    },
+    {
+      "id": "MG-A05",
+      "code": "MG-CIERRE",
+      "name": "Cierre técnico reproducible",
+      "purpose": "Consolida pruebas, cobertura y resultados de sincronización. Incluye un fallo corregido y pasos para reproducir la entrega.",
+      "inputs": [
+        "Guía y contexto del caso"
+      ],
+      "instructions": "Consolida pruebas, cobertura y resultados de sincronización. Incluye un fallo corregido y pasos para reproducir la entrega. Puedes usar las etapas 5 y 6 del Taller AgroPay, con la salida de npm test y evidencia-taller.md.",
+      "example": "Reindexar conserva el conteo; reconstruir devuelve los mismos registros para el mismo despliegue, sin duplicados.",
+      "station": {
+        "sectionId": "m5",
+        "order": 5,
+        "phase": "transfer",
+        "minutes": null
+      },
+      "evidenceType": "producto",
+      "fields": [
+        {
+          "key": "evidencia",
+          "label": "Procedimiento, resultado y límites",
+          "type": "area",
+          "hint": "Identifica la entrada, la modalidad, las comprobaciones y lo que observaste."
+        }
+      ],
+      "checklist": [
+        "Adjunta resultados reales de pruebas y cobertura",
+        "Comprueba idempotencia y recuperación",
+        "Relaciona resultados con criterios y límites"
+      ],
+      "criterion": "Otra persona puede reproducir la entrega y comprender el alcance de sus comprobaciones.",
+      "instrument": "Lista de chequeo de evidencia DevBrain",
+      "evidence": "docs/05-cierre.md",
+      "nextStep": "Revisa los criterios y continúa con el siguiente módulo.",
+      "aiAssist": {
+        "prompt": "Ayuda a revisar la claridad de esta evidencia sin inventar resultados ni sustituir mis comprobaciones.",
+        "verify": "Contrasta cada afirmación con código, pruebas o fuente técnica.",
+        "log": "Interacción registrada en la bitácora del aprendiz."
+      },
+      "upload": {
+        "fileName": "05-cierre.md",
+        "format": "markdown"
+      }
+    }
+  ]
+}

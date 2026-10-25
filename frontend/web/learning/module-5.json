@@ -1,0 +1,32 @@
+{
+  "id": "m5",
+  "title": "Pruebas y persistencia",
+  "eyebrow": "05 · Verificación",
+  "minutes": 90,
+  "summary": "Ejecuta herramientas reales, interpreta la evidencia y sincroniza eventos sin duplicarlos.",
+  "outcome": "Diseñar pruebas de comportamiento y reconstruir una proyección de consulta.",
+  "evidence": "MG-A05",
+  "labs": [
+    "pc",
+    "database",
+    "audit"
+  ],
+  "steps": [
+    {
+      "title": "Comprende",
+      "body": "<h2>Primero una prueba que falle</h2><p>El desarrollo guiado por pruebas comienza con un comportamiento observable. Escribe una prueba, confirma que falla por la razón esperada, implementa el cambio y comprueba el resultado. Un fallo por una importación rota no demuestra que una regla de negocio esté cubierta.</p><p>Las pruebas unitarias verifican reglas aisladas. Las de integración comprueban límites reales: contrato y nodo, API y base de datos, o generación y verificación de una prueba criptográfica. Las de recorrido verifican lo que una persona puede hacer desde la interfaz.</p><h3>¿Por qué y cómo guardamos en PostgreSQL? (Patrón CQRS)</h3><p>La cadena de bloques no es una base de datos para consultas: no admite <code>SELECT</code> con filtros avanzados, ni ordenamientos, ni paginación sin incurrir en costos exorbitantes de gas. Por eso aplicamos el patrón <strong>CQRS (Command Query Responsibility Segregation)</strong>:</p><ul><li><strong>Write Model (Blockchain):</strong> El contrato inteligente ejecuta la lógica crítica, custodia los fondos y emite logs de eventos inmutables.</li><li><strong>Read Model (PostgreSQL):</strong> Un servicio indexador escucha los eventos en segundo plano y los proyecta en tablas SQL relacionales, permitiendo que tu backend responda consultas en menos de 5 ms.</li></ul><p>Si la base de datos se borra o corrompe, se reconstruye íntegramente leyendo los eventos desde el bloque génesis sin perder un solo registro.</p>"
+    },
+    {
+      "title": "Revisa el ejemplo",
+      "body": "<h2>Indexar el mismo evento dos veces</h2><p>Un indexador puede reintentar después de una desconexión. La base debe impedir duplicados por identidad del despliegue, hash de transacción e índice del evento.</p><pre><code>UNIQUE (deployment_id, tx_hash, log_index)\nINSERT ... ON CONFLICT DO NOTHING;</code></pre><p>La posición de lectura avanza después de guardar los eventos. Al reiniciar la cadena local, un nuevo despliegue debe quedar separado del anterior. El chainId puede seguir en 31337; no basta para identificar la misma historia.</p><h3>Tipos de datos</h3><ul><li>Importes de token: enteros exactos; para uint256, NUMERIC(78, 0).</li><li>Hashes: longitud y formato comprobados.</li><li>Temperaturas: precisión definida para el ejercicio.</li><li>Credenciales WebAuthn: guardar información pública y contador, nunca la clave privada.</li></ul><h3>Una ejecución no es una consola libre</h3><p>La interfaz solicita tareas enumeradas: compilar, probar y auditar. El servidor ejecuta comandos conocidos, con límite de tiempo y salida revisada. No acepta una cadena de comandos arbitraria enviada por el navegador.</p>"
+    },
+    {
+      "title": "Practica",
+      "body": "<h2>Ejecuta, comprueba y reconstruye</h2><p>En el entorno en PC, ejecuta compilación y pruebas. Conserva el resultado real del proceso; si falta una dependencia, resuelve el requisito antes de afirmar que pasó.</p><a class=\"button\" href=\"#lab/pc\">Abrir entorno en PC</a><p>En PostgreSQL, sincroniza eventos y repite la operación. Comprueba que no aumente el número de registros por duplicación. Después reconstruye la proyección y compara los datos.</p><a class=\"button secondary\" href=\"#lab/database\">Abrir PostgreSQL</a><h3>Comandos en la carpeta de la guía</h3><pre><code>npm run compile\nnpx hardhat test\nnpm run test:unit</code></pre><p>Los comandos se ejecutan en Windows nativo. El despliegue remoto en contenedores es un tema adicional; no se necesita Docker ni WSL para esta ruta local.</p><h3>Inspecciona el Taller AgroPay</h3><p>Esta etapa muestra el patrón CQRS: los eventos de la cadena se proyectan hacia una tabla relacional en PostgreSQL sin duplicados y con capacidad de reconstrucción total.</p><ul class=\"clean-list\"><li><a href=\"#taller/5\">Etapa 5 · Indexador y proyección SQL</a></li></ul>"
+    },
+    {
+      "title": "Aplica",
+      "body": "<h2>MG-A05 · Cierre técnico</h2><p>Consolida una prueba fallida, su corrección y la comprobación posterior. Adjunta el resultado completo de la suite y la cobertura obtenida, sin confundir pruebas aprobadas con porcentaje de funciones cubiertas.</p><h3>Ejemplo</h3><blockquote>La segunda indexación conservó el mismo número de eventos. La restricción única impidió duplicarlos. La reconstrucción produjo los mismos registros para el mismo despliegue. El reporte muestra el alcance y los errores encontrados.</blockquote><p>Relaciona cada resultado con la regla que verifica. Señala dependencias, límites y pasos de reproducción para otra persona.</p><p><strong>Fuente sugerida:</strong> la <a href=\"#taller/5\">etapa 5</a> y la <a href=\"#taller/6\">etapa 6 del Taller AgroPay</a>. Adjunta la salida de <code>npm test</code>, el archivo <code>evidencia-taller.md</code> y, si tienes el nivel completo, la salida de la etapa 5 con PostgreSQL.</p>"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+name: Pruebas del aula
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  windows-native:
+    runs-on: windows-2025
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: astral-sh/setup-uv@v9
+      - uses: ankane/setup-postgres@v1
+        with:
+          postgres-version: '17'
+          config: |
+            port = 5434
+      - name: Preparar dependencias nativas
+        shell: pwsh
+        run: |
+          npm ci
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          uv tool install slither-analyzer==0.11.6
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Verificar contratos, aplicación y navegador
+        shell: pwsh
+        run: ./scripts/ci-native.ps1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidencia-windows
+          path: |
+            coverage/
+            test-results/
+            output/playwright/
+          retention-days: 14

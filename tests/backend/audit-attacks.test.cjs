@@ -1,0 +1,32 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs/promises');
+const os = require('node:os');
+const path = require('node:path');
+const solc = require('solc');
+const { createTaskRunner } = require('../../backend/audit/runner.cjs');
+
+test('un ataque fallido hace fallar la auditoría sin ocultar el análisis estático real', async t => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'aula-audit-attack-'));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  const cli = path.join(root, 'node_modules/hardhat/internal/cli');
+  const builds = path.join(root, 'artifacts/hardhat/build-info');
+  await fs.mkdir(cli, { recursive: true });
+  await fs.mkdir(builds, { recursive: true });
+  await fs.mkdir(path.join(root, 'contracts'));
+  const source = 'pragma solidity ^0.8.24; contract Example { address public owner; constructor(){owner=msg.sender;} function setOwner(address next) external { owner=next; } }';
+  const input = { language: 'Solidity', sources: { 'contracts/Example.sol': { content: source } }, settings: { outputSelection: { '*': { '*': ['abi', 'evm.bytecode', 'evm.deployedBytecode', 'userdoc', 'devdoc'], '': ['ast'] } } } };
+  const output = JSON.parse(solc.compile(JSON.stringify(input)));
+  assert.equal(output.errors?.some(item => item.severity === 'error'), false);
+  await fs.writeFile(path.join(root, 'contracts/Example.sol'), source);
+  await fs.writeFile(path.join(builds, 'example.json'), JSON.stringify({ solcVersion: '0.8.24', input, output }));
+  await fs.writeFile(path.join(cli, 'cli.js'), `console.log(JSON.stringify(process.argv.slice(2)));if(process.argv.includes('test')){console.error('Falló la comprobación de ataque.');process.exitCode=7;}`);
+  const result = await createTaskRunner({ root }).run('audit');
+  assert.equal(result.success, false);
+  assert.equal(result.analysisCompleted, true);
+  assert.ok(result.findings.length > 0);
+  assert.equal(result.attackTests.success, false);
+  assert.equal(result.attackTests.exitCode, 7);
+  assert.match(result.attackTests.stderr, /comprobación de ataque/);
+  assert.deepEqual(JSON.parse(result.attackTests.stdout), ['test', '--no-compile', 'test/WithdrawalSecurity.test.js']);
+});
