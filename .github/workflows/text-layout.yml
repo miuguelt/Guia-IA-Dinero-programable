@@ -19,6 +19,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+          cache: npm
       - name: Pruebas y cobertura de los auditores
         run: |
           $env:NODE_V8_COVERAGE = 'coverage/text-layout'
@@ -28,6 +29,14 @@ jobs:
         run: |
           node tools/text-layout/scripts/text-layout-audit.mjs --root . --project --fail-on-violations --json > text-layout-static.json
           if ($LASTEXITCODE -ne 0) { throw 'Hay restricciones de texto pendientes de corregir.' }
+      # Las entradas raíz redirigen a web/index.html, que es salida de `npm run build`
+      # y no se versiona; sin compilar, el navegador audita su propia página de error.
+      - name: Compilar la web del aula
+        run: |
+          npm ci --no-audit --no-fund
+          if ($LASTEXITCODE -ne 0) { throw 'No se pudieron instalar las dependencias.' }
+          npm run build
+          if ($LASTEXITCODE -ne 0) { throw 'No se pudo compilar la web del aula.' }
       - name: Auditar las páginas estáticas
         run: |
           node tools/text-layout/scripts/text-layout-browser-audit.cjs --root . --project --json > text-layout-browser.json
