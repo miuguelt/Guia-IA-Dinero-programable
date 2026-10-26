@@ -186,6 +186,32 @@ describe('Despliegue remoto de la guía en Coolify', () => {
     }
   });
 
+  test('la etapa de build copia cada archivo que frontend/web importa fuera de su carpeta', () => {
+    const dockerfile = read('frontend/Dockerfile');
+    const buildStage = dockerfile.split(/^FROM\s/m)[1];
+    const copied = buildStage.split(/\r?\n/)
+      .filter((line) => /^COPY\s/.test(line))
+      .flatMap((line) => line.split(/\s+/).slice(1, -1));
+    const webRoot = path.join(projectRoot, 'frontend', 'web');
+    const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) return entry.name === 'node_modules' ? [] : walk(full);
+      return /\.(m?js)$/.test(entry.name) ? [full] : [];
+    });
+    const external = new Set();
+    for (const file of walk(webRoot)) {
+      for (const [, specifier] of fs.readFileSync(file, 'utf-8').matchAll(/(?:from|import\()\s*['"](\.{1,2}\/[^'"]+)['"]/g)) {
+        const resolved = path.resolve(path.dirname(file), specifier);
+        if (!resolved.startsWith(webRoot + path.sep)) external.add(path.relative(projectRoot, resolved).split(path.sep).join('/'));
+      }
+    }
+    assert.ok(external.size >= 1, 'frontend/web importa al menos un archivo compartido');
+    for (const dependency of external) {
+      const covered = copied.some((source) => dependency === source || (source.endsWith('/') && dependency.startsWith(source)));
+      assert.ok(covered, `frontend/Dockerfile copia ${dependency} antes de npm run build`);
+    }
+  });
+
   test('.dockerignore impide copiar secretos y control de versiones a la imagen', () => {
     const ignored = read('.dockerignore').split(/\r?\n/).map((line) => line.trim());
     for (const pattern of ['.git', '.env', '.env.*', 'node_modules', 'web/']) assert.ok(ignored.includes(pattern), `.dockerignore incluye ${pattern}`);

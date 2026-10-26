@@ -95,7 +95,9 @@ describe('⚡ Verificación: Implementación en Aplicaciones Reales, Redes y Coo
     test('Ejecuta script de demostración en Python sin errores de sintaxis', () => {
       const pythonScript = path.join(projectRoot, 'scripts', 'agente_ia_oraculo.py');
       assert.ok(fs.existsSync(pythonScript));
-      const output = execSync(`python "${pythonScript}"`, {
+      const rawPython = process.env.PYTHON || 'python';
+      const pythonBin = rawPython.trim().replace(/^"(.*)"$/, '$1');
+      const output = execSync(`"${pythonBin}" "${pythonScript}"`, {
         encoding: 'utf-8',
         env: { ...process.env, PYTHONIOENCODING: 'utf-8' }
       });

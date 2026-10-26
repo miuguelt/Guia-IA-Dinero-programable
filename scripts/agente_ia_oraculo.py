@@ -18,8 +18,8 @@ from typing import Dict, Any, Tuple
 # Garantizar codificación UTF-8 en stdout/stderr para consolas Windows y CI
 for stream_name in ("stdout", "stderr"):
     stream = getattr(sys, stream_name, None)
-    if stream is not None:
-        if hasattr(stream, "reconfigure"):
+    if stream is not None and not getattr(stream, "closed", False):
+        if hasattr(stream, "reconfigure") and callable(getattr(stream, "reconfigure")):
             try:
                 stream.reconfigure(encoding="utf-8", errors="replace")
                 continue
@@ -28,7 +28,19 @@ for stream_name in ("stdout", "stderr"):
         if hasattr(stream, "buffer"):
             try:
                 import io
-                setattr(sys, stream_name, io.TextIOWrapper(stream.buffer, encoding="utf-8", errors="replace", line_buffering=True))
+                buffer = None
+                if hasattr(stream, "detach") and callable(getattr(stream, "detach")):
+                    try:
+                        buffer = stream.detach()
+                    except Exception:
+                        buffer = None
+                if buffer is None:
+                    buffer = getattr(stream, "buffer", None)
+                if buffer is not None:
+                    new_wrapper = io.TextIOWrapper(buffer, encoding="utf-8", errors="replace", line_buffering=True)
+                    setattr(sys, stream_name, new_wrapper)
+                    if getattr(sys, f"__{stream_name}__", None) is stream:
+                        setattr(sys, f"__{stream_name}__", new_wrapper)
             except Exception:
                 pass
 

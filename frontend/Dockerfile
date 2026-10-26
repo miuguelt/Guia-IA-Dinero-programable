@@ -13,6 +13,8 @@ RUN npm ci --ignore-scripts --no-audit --no-fund && npm cache clean --force
 
 COPY scripts/build-web.cjs scripts/package-taller.cjs ./scripts/
 COPY frontend/web/ ./frontend/web/
+# frontend/web/evidence/view.mjs importa el registro de entregables de la raíz.
+COPY deliverables.registry.json ./
 COPY taller/inicio/ ./taller/inicio/
 COPY js/vendor/devbrain-learner-sdk.js ./js/vendor/
 COPY css/vendor/devbrain-learner-sdk.css css/vendor/devbrain-reader.css ./css/vendor/
