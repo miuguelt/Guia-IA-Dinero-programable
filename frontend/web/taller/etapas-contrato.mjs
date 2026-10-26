@@ -163,7 +163,112 @@ export const etapa3 = {
     ['scripts/probar-seguridad.js', 'Script guiado que ejecuta 4 ataques controlados y muestra su mitigación.'],
     ['test/etapa-3.seguridad.test.js', 'Diez pruebas que validan permisos, solvencia, reentrada y experimentos.'],
   ],
-  conceptos: '<p><strong>¿Dónde se guardan los datos en esta etapa?</strong></p><ul><li><code>mapping(address => uint256) public saldoPendiente;</code> almacena en slots de storage de la EVM los fondos que pertenecen a cada productor. Es una tabla hash criptográfica distribuida.</li><li><code>mapping(uint256 => bool) public loteAutorizado;</code> almacena qué lotes ya fueron autorizados, evitando que un mismo lote cobre dos veces (idempotencia en cadena).</li></ul><p><strong>El Patrón Checks-Effects-Interactions (CEI):</strong> En <code>retirar()</code>, la regla fundamental de seguridad es:</p><ol><li><strong>Checks:</strong> Comprobar que el saldo del llamador sea mayor a cero.</li><li><strong>Effects:</strong> Reducir el saldo a cero en el storage de la EVM <em>antes</em> de transferir fondos.</li><li><strong>Interactions:</strong> Transferir el dinero al productor mediante <code>call</code>.</li></ol><p>Si el saldo se redujera después de transferir, un contrato malicioso (como <code>AtacanteRetiro.sol</code>) podría reingresar recursivamente a <code>retirar()</code> durante la transferencia y drenar la garantía completa de todos los demás productores. El patrón CEI neutraliza este vector de ataque por diseño.</p>',
+  conceptos: `<p><strong>¿Dónde se guardan los datos en esta etapa?</strong></p><ul><li><code>mapping(address =&gt; uint256) public saldoPendiente;</code> almacena en slots de storage de la EVM los fondos que pertenecen a cada productor. Es una tabla hash criptográfica distribuida calculada como <code>keccak256(h(k) . p)</code>.</li><li><code>mapping(uint256 =&gt; bool) public loteAutorizado;</code> almacena qué lotes ya fueron autorizados, evitando que un mismo lote cobre dos veces (idempotencia en cadena).</li></ul>
+
+<div class="insight"><strong>Analogía del mundo real: La ventanilla bancaria y el retiro seguro</strong><p>Imagina una ventanilla de banco físico donde un cliente llega a cobrar un cheque de ventanilla:</p><ol><li><strong>1. Verificación (Checks):</strong> El cajero consulta el saldo en la pantalla para comprobar que hay dinero disponible.</li><li><strong>2. Débito contable (Effects):</strong> Antes de contar y entregar los billetes físicos, el cajero descuenta el saldo en el sistema informático y lo deja en $0.</li><li><strong>3. Entrega de fondos (Interactions):</strong> El cajero pasa el fajo de billetes por la ventanilla al cliente.</li></ol><p>Si el cajero primero entregara los billetes y solo después tecleara el débito en la pantalla, un cliente malicioso con un clon o cómplice podría pedir otro retiro de inmediato antes de que el cajero actualice el sistema. En contratos inteligentes, eso es exactamente un <strong>ataque de reentrada</strong>: transferir dinero mediante <code>call</code> cede el control computacional al contrato receptor, el cual puede volver a llamar a <code>retirar()</code> si su saldo aún no ha sido llevado a cero.</p></div>
+
+<div class="hero-diagram" aria-label="Diagrama de neutralización de ataque de reentrada mediante el patrón Checks-Effects-Interactions">
+  <div class="diagram-label">SEGURIDAD EN SOLIDITY · CHECKS-EFFECTS-INTERACTIONS VS ATAQUE DE REENTRADA</div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 330" width="100%" height="auto" role="img" aria-label="Diagrama de neutralización de ataque de reentrada mediante el patrón Checks-Effects-Interactions" style="max-width:840px;height:auto;display:block;margin:1rem auto;border-radius:12px;background:#0f172a;border:1px solid #334155;">
+    <title>Patrón Checks-Effects-Interactions y bloqueo de reentrada</title>
+    <desc>Compara el flujo vulnerable que permite reentrada frente al flujo seguro CEI implementado en GarantiaAgroPay donde el saldo se lleva a cero antes de transferir.</desc>
+    <defs>
+      <linearGradient id="gradChecks" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#1e293b"/>
+        <stop offset="100%" stop-color="#0f172a"/>
+      </linearGradient>
+      <linearGradient id="gradEffects" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#064e3b"/>
+        <stop offset="100%" stop-color="#022c22"/>
+      </linearGradient>
+      <linearGradient id="gradInteractions" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#1e3a8a"/>
+        <stop offset="100%" stop-color="#0f172a"/>
+      </linearGradient>
+      <linearGradient id="gradAttack" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#7f1d1d"/>
+        <stop offset="100%" stop-color="#450a0a"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Paso 1: Checks -->
+    <g transform="translate(24, 30)">
+      <rect width="180" height="150" rx="10" fill="url(#gradChecks)" stroke="#38bdf8" stroke-width="1.8"/>
+      <rect x="12" y="12" width="56" height="22" rx="4" fill="#38bdf8" fill-opacity="0.2"/>
+      <text x="40" y="27" text-anchor="middle" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="10" font-weight="bold">1. CHECKS</text>
+      <text x="12" y="52" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">Validar estado</text>
+      <rect x="12" y="64" width="156" height="72" rx="5" fill="#0f172a" stroke="#334155"/>
+      <text x="18" y="84" fill="#a5f3fc" font-family="monospace" font-size="9.5">uint monto =</text>
+      <text x="24" y="98" fill="#a5f3fc" font-family="monospace" font-size="9.5">saldo[msg.sender];</text>
+      <text x="18" y="116" fill="#fca5a5" font-family="monospace" font-size="9">if (monto == 0)</text>
+      <text x="24" y="128" fill="#f87171" font-family="monospace" font-size="9">revert SinSaldo();</text>
+    </g>
+
+    <!-- Flecha 1 a 2 -->
+    <path d="M 204 105 L 234 105" stroke="#10b981" stroke-width="2.5"/>
+    <polygon points="232,100 242,105 232,110" fill="#10b981"/>
+
+    <!-- Paso 2: Effects (Seguro) -->
+    <g transform="translate(244, 30)">
+      <rect width="195" height="150" rx="10" fill="url(#gradEffects)" stroke="#10b981" stroke-width="1.8"/>
+      <rect x="12" y="12" width="60" height="22" rx="4" fill="#10b981" fill-opacity="0.2"/>
+      <text x="42" y="27" text-anchor="middle" fill="#10b981" font-family="system-ui, sans-serif" font-size="10" font-weight="bold">2. EFFECTS</text>
+      <text x="12" y="52" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">Mutación previa</text>
+      <rect x="12" y="64" width="171" height="72" rx="5" fill="#0f172a" stroke="#047857"/>
+      <text x="18" y="86" fill="#34d399" font-family="monospace" font-size="9.5">saldo[msg.sender] = 0;</text>
+      <text x="18" y="104" fill="#a7f3d0" font-family="system-ui, sans-serif" font-size="9">¡Antes de transferir!</text>
+      <text x="18" y="124" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="8.5">Storage blindado en EVM</text>
+    </g>
+
+    <!-- Flecha 2 a 3 -->
+    <path d="M 439 105 L 469 105" stroke="#38bdf8" stroke-width="2.5"/>
+    <polygon points="467,100 477,105 467,110" fill="#38bdf8"/>
+
+    <!-- Paso 3: Interactions -->
+    <g transform="translate(479, 30)">
+      <rect width="180" height="150" rx="10" fill="url(#gradInteractions)" stroke="#60a5fa" stroke-width="1.8"/>
+      <rect x="12" y="12" width="90" height="22" rx="4" fill="#60a5fa" fill-opacity="0.2"/>
+      <text x="57" y="27" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="9.5" font-weight="bold">3. INTERACTIONS</text>
+      <text x="12" y="52" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">Transferencia</text>
+      <rect x="12" y="64" width="156" height="72" rx="5" fill="#0f172a" stroke="#1e3a8a"/>
+      <text x="16" y="86" fill="#93c5fd" font-family="monospace" font-size="9">msg.sender.call{</text>
+      <text x="24" y="100" fill="#93c5fd" font-family="monospace" font-size="9">value: monto}("");</text>
+      <text x="16" y="120" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="8.5">Cede control externo</text>
+    </g>
+
+    <!-- Intento de Reentrada Bloqueado -->
+    <g transform="translate(674, 30)">
+      <rect width="142" height="150" rx="10" fill="url(#gradAttack)" stroke="#ef4444" stroke-width="1.8"/>
+      <text x="71" y="27" text-anchor="middle" fill="#fca5a5" font-family="system-ui, sans-serif" font-size="10" font-weight="bold">ATAQUE REENTRADA</text>
+      <text x="12" y="50" fill="#f87171" font-family="system-ui, sans-serif" font-size="11" font-weight="bold">AtacanteRetiro.sol</text>
+      <rect x="10" y="60" width="122" height="78" rx="5" fill="#0f172a" stroke="#7f1d1d"/>
+      <text x="16" y="78" fill="#f87171" font-family="monospace" font-size="8.5">receive() external {</text>
+      <text x="20" y="92" fill="#fca5a5" font-family="monospace" font-size="8">contrato.retirar();</text>
+      <text x="16" y="106" fill="#f87171" font-family="monospace" font-size="8.5">}</text>
+      <text x="16" y="126" fill="#ef4444" font-family="system-ui, sans-serif" font-size="8" font-weight="bold">BLOCKED: saldo == 0</text>
+    </g>
+
+    <!-- Flecha curvada de retorno atacante hacia Checks -->
+    <path d="M 745 180 C 745 220, 114 220, 114 185" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4 3"/>
+    <polygon points="109,190 114,180 119,190" fill="#ef4444"/>
+    <text x="430" y="215" text-anchor="middle" fill="#fca5a5" font-family="system-ui, sans-serif" font-size="10">El reingreso choca contra el paso 1 (Checks) porque el saldo ya es 0 → revierte SinSaldoPendiente()</text>
+
+    <!-- Barra inferior resumen invariante -->
+    <rect x="24" y="240" width="792" height="74" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="44" y="263" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="11" font-weight="bold">Invariante de seguridad contra reentrada (CEI):</text>
+    <text x="44" y="280" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="10">El orden es la defensa: al mutar el estado antes de llamar a contratos externos, cualquier intento de llamada recursiva</text>
+    <text x="44" y="295" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="9.5">encuentra el saldo en cero y revierte. Adicionalmente, autorizarPago() restringe permisos estrictos con SoloOraculo.</text>
+  </svg>
+  <p>El diagrama ilustra el flujo protegido por CEI: el saldo se reduce a cero antes de la llamada de transferencia, neutralizando cualquier intento de recursión maliciosa.</p>
+</div>
+
+<h3>Control de acceso y neutralización de ataques en la Etapa 3</h3>
+<div class="table-scroll"><table><caption>Defensas y validaciones en GarantiaAgroPay.sol</caption><thead><tr><th scope="col">Vector de ataque</th><th scope="col">Comprobación técnica</th><th scope="col">Error personalizado</th><th scope="col">Efecto en la EVM</th></tr></thead><tbody>
+<tr><td><strong>Suplantación de oráculo</strong></td><td><code>if (msg.sender != oraculo)</code></td><td><code>revert SoloOraculo(msg.sender);</code></td><td>Revierte llamadas de cuentas que intentan autorizarse pagos sin ser el validador registrado.</td></tr>
+<tr><td><strong>Ataque de repetición (Replay)</strong></td><td><code>if (loteAutorizado[idLote])</code></td><td><code>revert LoteYaAutorizado(idLote);</code></td><td>Garantiza idempotencia en cadena: un lote evaluado solo puede cobrarse exactamente una vez.</td></tr>
+<tr><td><strong>Solvencia de fondos</strong></td><td><code>if (monto &gt; garantiaDisponible)</code></td><td><code>revert FondosInsuficientes(disponible, monto);</code></td><td>Impide comprometer más garantía de la que el contrato custodia efectivamente en depósito.</td></tr>
+<tr><td><strong>Ataque de reentrada</strong></td><td><code>saldoPendiente[msg.sender] = 0;</code> antes del <code>call</code></td><td><code>revert SinSaldoPendiente();</code></td><td>El reingreso malicioso encuentra balance cero en el paso de Checks y es neutralizado.</td></tr>
+</tbody></table></div>`,
   pasos: [
     'Abre <code>contracts/GarantiaAgroPay.sol</code> y analiza las comprobaciones estrictas de <code>autorizarPago()</code>: control de oráculo (<code>SoloOraculo</code>), unicidad (<code>LoteYaAutorizado</code>) y solvencia (<code>FondosInsuficientes</code>).',
     'Revisa <code>retirar()</code> e identifica exactamente la línea donde se aplica el paso <em>Effects</em> (<code>saldoPendiente[msg.sender] = 0;</code>) antes del <em>Interactions</em>.',
