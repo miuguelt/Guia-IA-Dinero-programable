@@ -49,3 +49,16 @@ test('el observador marca contenido nuevo, responde al cambio de tamaño y se de
   await espera();
   assert.equal(tabla.hasAttribute('tabindex'), false);
 });
+
+test('los bloques de código conservan sus líneas y los cortes forzados declaran su excepción', async () => {
+  const { readFileSync } = await import('node:fs');
+  const css = readFileSync(new URL('../../frontend/web/styles.css', import.meta.url), 'utf8');
+  const reglaCodigo = css.split('\n').find(linea => linea.startsWith('.lesson-body pre,pre.result-json {'));
+  assert.ok(reglaCodigo, 'falta la regla de bloques de código');
+  assert.match(reglaCodigo, /white-space:\s*pre;/);
+  assert.match(reglaCodigo, /overflow-x:\s*auto;/);
+  assert.doesNotMatch(reglaCodigo, /overflow-wrap:\s*anywhere|word-break:\s*break-(word|all)/);
+  for (const linea of css.split('\n').filter(l => /overflow-wrap:\s*anywhere|word-break:\s*break-all/.test(l))) {
+    assert.match(linea, /text-layout-exception: \S.+\*\//, `sin excepción declarada: ${linea.slice(0, 60)}`);
+  }
+});

@@ -2,7 +2,8 @@
 // evidencias con una sola estación y catálogos alineados con el manifiesto.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { modules } from '../../frontend/web/learning/catalog.mjs';
 import { labs } from '../../frontend/web/labs/catalog.mjs';
 import { etapas } from '../../frontend/web/taller/catalog.mjs';
@@ -66,6 +67,46 @@ test('el manifiesto, los catálogos y el taller concuerdan', () => {
     assert.ok(modules.some(module => module.id === etapa.modulo), `etapa ${etapa.numero}`);
     for (const lab of etapa.labs) assert.ok(labs.some(item => item.id === lab), `etapa ${etapa.numero}: ${lab}`);
   }
+});
+
+test('las imágenes y enlaces locales de los documentos apuntan a archivos existentes', () => {
+  for (const archivo of documentos) {
+    const base = dirname(archivo);
+    for (const [, destino] of leer(archivo).matchAll(/\]\(([^)\s]+)\)/g)) {
+      if (/^(https?:|mailto:|#)/.test(destino)) continue;
+      const ruta = decodeURIComponent(destino.split('#')[0]);
+      assert.ok(existsSync(join(base, ruta)), `${archivo}: ${destino}`);
+    }
+  }
+});
+
+test('el README relaciona cada documento de apoyo con su módulo web', () => {
+  const readme = leer('README.md');
+  const seccion = readme.slice(readme.indexOf('## Documentos de apoyo'), readme.indexOf('## Mantenimiento e instructor'));
+  assert.ok(seccion.length > 30, 'falta la sección Documentos de apoyo');
+  for (const archivo of documentos.filter(f => f.startsWith('docs/') && f !== 'docs/evidencias-template.md')) {
+    assert.ok(seccion.includes(`](${archivo})`), `${archivo} sin fila en la tabla`);
+  }
+  for (const artefacto of JSON.parse(leer('deliverables.registry.json')).artifacts) {
+    const fila = seccion.split('\n').find(linea => linea.includes(`](${artefacto.evidence})`));
+    assert.ok(fila?.includes(artefacto.station.sectionId), `${artefacto.evidence}: módulo ${artefacto.station.sectionId}`);
+  }
+});
+
+test('las horas de cada fase del manifiesto suman los minutos de sus módulos', () => {
+  const manifiesto = JSON.parse(leer('guide.manifest.json'));
+  const registro = JSON.parse(leer('deliverables.registry.json'));
+  // m6 consolida el Portafolio sin estación propia; pertenece a la fase de transferencia.
+  const fasePorModulo = { m6: 'transfer', ...Object.fromEntries(registro.artifacts.map(a => [a.station.sectionId, a.station.phase])) };
+  const minutos = {};
+  for (const module of modules) {
+    const fase = fasePorModulo[module.id];
+    assert.ok(fase, `${module.id} sin fase`);
+    minutos[fase] = (minutos[fase] ?? 0) + module.minutes;
+  }
+  const declaradas = Object.fromEntries(manifiesto.learningSequence.map(f => [f.phase, f.hours * 60]));
+  assert.deepEqual(declaradas, minutos);
+  assert.equal(manifiesto.duration.hours * 60, modules.reduce((total, module) => total + module.minutes, 0));
 });
 
 test('la plantilla del Portafolio incluye cada evidencia con su lista de chequeo', () => {

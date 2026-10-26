@@ -10,7 +10,7 @@ A continuación, exploramos los casos de uso multi-industria más relevantes, su
 
 Los medicamentos biológicos (como vacunas de ARN mensajero o insulina) pierden su eficacia o se vuelven tóxicos si se rompe la cadena de frío (+2.0°C a +8.0°C). En los sistemas tradicionales, las auditorías son en papel o en bases de datos modificables a posteriori por el transportista.
 
-![Diseño 3D: Cadena de Suministro y Smart Contracts](assets/3d_supply_chain.jpg)
+![Diseño 3D: Cadena de Suministro y Smart Contracts](../assets/3d_supply_chain.jpg)
 
 ### Arquitectura de la Solución:
 * **Tokenización del Lote:** Cada lote se acuña en el laboratorio fabricante como un token ERC-721 con estado mutable (`ACTIVE`, `QUARANTINE`, `ADMINISTERED`).
@@ -53,7 +53,7 @@ Si los análisis certificados de laboratorio (LIMS) cumplen los tres criterios, 
 
 Los sistemas de votación digital tradicionales fallan porque el administrador de la base de datos puede alterar registros o porque no existe forma de auditar el conteo sin vulnerar el secreto del voto.
 
-![Diseño 3D: Voto Electrónico Descentralizado](assets/3d_evoting.jpg)
+![Diseño 3D: Voto Electrónico Descentralizado](../assets/3d_evoting.jpg)
 
 ### Esquema Criptográfico Groth16:
 * **Tokens Soulbound Quemables (ERC-5192):** Cada ciudadano registrado en el censo recibe un token intransferible.

@@ -104,8 +104,9 @@ Abre PowerShell 7 en la carpeta de este proyecto y define las variables de conex
 ```powershell
 $env:VPS_RPC_URL = "https://aprendiz:MiTokenSeguro2026@rpc.tudominio.com"
 $env:VPS_CHAIN_ID = "31337"
-# Clave privada de práctica (nunca uses una clave con dinero real)
-$env:VPS_PRIVATE_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+# Pega aquí la clave de práctica de una cuenta de tu nodo; nunca la guardes en archivos ni uses una con dinero real.
+# Las claves predeterminadas de Hardhat y Anvil son públicas: cualquiera puede usarlas en una red expuesta.
+$env:VPS_PRIVATE_KEY = Read-Host "Clave privada de práctica" -MaskInput
 ```
 
 ### Paso 4.2. Probar la respuesta del servidor EVM remoto

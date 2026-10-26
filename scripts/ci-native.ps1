@@ -28,6 +28,7 @@ try {
         try { $null = Invoke-RestMethod -Uri 'http://127.0.0.1:8545' -Method Post -ContentType 'application/json' -Body '{"jsonrpc":"2.0","id":1,"method":"eth_chainId","params":[]}'; break }
         catch { Start-Sleep -Milliseconds 250 }
     }
+    if ($attempt -ge 40) { throw 'El nodo EVM no respondió en 127.0.0.1:8545 tras 10 s; revise test-results\ci-chain-errors.log.' }
     & npm run deploy
     if ($LASTEXITCODE) { throw 'Falló el despliegue local del ejecutor.' }
     $ciWeb = Start-Process -FilePath (Get-Command node).Source -ArgumentList ('"' + (Join-Path $ciRoot 'backend\server.cjs') + '"') -WorkingDirectory $ciRoot -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $ciRoot 'test-results\ci-web.log') -RedirectStandardError (Join-Path $ciRoot 'test-results\ci-web-errors.log')
@@ -35,6 +36,7 @@ try {
         try { $null = Invoke-RestMethod -Uri 'http://127.0.0.1:8153/api/runtime'; break }
         catch { Start-Sleep -Milliseconds 250 }
     }
+    if ($attempt -ge 40) { throw 'La API no respondió en 127.0.0.1:8153 tras 10 s; revise test-results\ci-web-errors.log.' }
     & npm run coverage
     if ($LASTEXITCODE) { throw 'Falló la suite o la cobertura de funciones de la aplicación.' }
     & npm run test:legacy

@@ -341,3 +341,17 @@ test('una confirmación con indexación pendiente no concede puntos ni una prác
   context.app.destroy();
   context.dom.window.close();
 });
+
+test('el diagrama de inicio es una figura con nombre y el primer módulo regresa al inicio', async () => {
+  const { homeView, lessonView } = await import('../../frontend/web/learning/view.mjs');
+  const state = createProgress(createMemoryStorage()).read();
+  const inicio = new JSDOM(homeView(state)).window.document;
+  const diagrama = inicio.querySelector('.hero-diagram');
+  assert.equal(diagrama.getAttribute('role'), 'figure');
+  assert.match(diagrama.getAttribute('aria-label'), /se confirma en un contrato/);
+  const anteriorDe = id => new JSDOM(lessonView(modules.find(m => m.id === id), 0, state)).window.document.querySelector('.lesson-footer a');
+  assert.equal(anteriorDe('m1').getAttribute('href'), '#home');
+  assert.equal(anteriorDe('m1').textContent, '← Inicio');
+  assert.equal(anteriorDe('m3').getAttribute('href'), '#m2/3');
+  assert.equal(anteriorDe('m3').textContent, '← Módulo anterior');
+});

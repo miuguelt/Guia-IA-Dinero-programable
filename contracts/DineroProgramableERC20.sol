@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity =0.8.24;
 
 /**
  * @dev Interfaz mínima del estándar ERC-20 (Stablecoins como USDC, USDT o DAI).
@@ -92,8 +92,7 @@ contract DineroProgramableERC20 {
         totalEnGarantia += _monto;
 
         // 2. Interacción: transferir tokens del depositante hacia este contrato
-        bool exito = tokenEstable.transferFrom(msg.sender, address(this), _monto);
-        if (!exito) revert FalloTransferenciaERC20();
+        _llamarToken(abi.encodeCall(IERC20.transferFrom, (msg.sender, address(this), _monto)));
 
         emit GarantiaDepositada(msg.sender, _monto, totalEnGarantia);
     }
@@ -145,10 +144,22 @@ contract DineroProgramableERC20 {
         saldosPendientes[msg.sender] = 0;
 
         // 3. INTERACTIONS
-        bool exito = tokenEstable.transfer(msg.sender, monto);
-        if (!exito) revert FalloTransferenciaERC20();
+        _llamarToken(abi.encodeCall(IERC20.transfer, (msg.sender, monto)));
 
         emit FondosRetirados(msg.sender, monto);
+    }
+
+    // --- TRANSFERENCIA SEGURA ---
+    /**
+     * @dev Algunos tokens reales (como USDT en Ethereum) no devuelven `bool`.
+     * Llamar con la interfaz estricta los haría fallar; por eso se acepta una
+     * respuesta vacía o `true`, y se exige que la dirección del token tenga código.
+     */
+    function _llamarToken(bytes memory datos) private {
+        address token = address(tokenEstable);
+        if (token.code.length == 0) revert FalloTransferenciaERC20();
+        (bool exito, bytes memory respuesta) = token.call(datos);
+        if (!exito || (respuesta.length != 0 && !abi.decode(respuesta, (bool)))) revert FalloTransferenciaERC20();
     }
 
     // --- ADMINISTRACIÓN ---

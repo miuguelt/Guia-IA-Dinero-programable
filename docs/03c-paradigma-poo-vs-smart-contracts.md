@@ -161,7 +161,7 @@ function transferir(address destino, uint256 monto) public {
     
     // Paso 2: Validación
     require(!cuentasBloqueadas[destino], "Destino bloqueado"); 
-    // Si esta aserción falla, TODO EL ESTADO REVISTE.
+    // Si esta aserción falla, TODO EL ESTADO SE REVIERTE.
     // El balance de msg.sender regresa a su valor original como si nada hubiera ocurrido.
     
     balances[destino] += monto;

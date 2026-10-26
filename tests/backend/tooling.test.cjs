@@ -153,3 +153,11 @@ test('cierre de la recarga espera la compilación en curso y descarta guardados 
   await new Promise(resolve => setTimeout(resolve, 300));
   assert.equal(builds.length, 2);
 });
+
+test('la CI se detiene con un mensaje claro si la cadena o la API no responden a tiempo', async () => {
+  const script = await fs.readFile(path.join(__dirname, '../../scripts/ci-native.ps1'), 'utf8');
+  const esperas = script.match(/for \(\$attempt = 0; \$attempt -lt 40; \$attempt\+\+\)/g) ?? [];
+  const cortes = script.match(/if \(\$attempt -ge 40\) \{ throw '[^']+' \}/g) ?? [];
+  assert.equal(esperas.length, 2);
+  assert.equal(cortes.length, esperas.length);
+});

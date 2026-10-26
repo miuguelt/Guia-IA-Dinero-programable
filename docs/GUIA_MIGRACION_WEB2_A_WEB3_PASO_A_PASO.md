@@ -156,7 +156,7 @@ Un cliente compra un producto en una tienda online. El pago no va al vendedor in
 #### 1. El Contrato Inteligente en Solidity:
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity =0.8.24;
 
 contract TiendaEscrowWeb3 {
     enum Estado { NO_EXISTE, BLOQUEADO, DESPACHADO, ENTREGADO }
@@ -213,9 +213,9 @@ async function liberarPagoAlVendedor(idPedido) {
 ---
 
 ### CASO DE USO 2: AgroPay & Liquidación Condicional con IA
-Sensores lecheros en Antioquia o Boyacá envían parámetros de acidez y temperatura. Si un modelo de IA en Python certifica que la leche llegó a menos de 4°C, el contrato autoriza el pago al campesino en Stablecoins USDC.
+Sensores lecheros en Antioquia o Boyacá envían parámetros de acidez y temperatura. Si el oráculo comprueba con reglas explicables que la leche llegó a menos de 4 °C, firma el dictamen y el contrato autoriza el pago al productor. En la práctica se usan fondos de la red local; en producción podría usarse una stablecoin como USDC.
 
-*(Ver implementación completa en [`contracts/DineroProgramableBase.sol`](../contracts/DineroProgramableBase.sol) y [`scripts/agente-ia-oraculo.js`](../scripts/agente-ia-oraculo.js). Para construirlo tú, sigue las etapas 3 y 4 del Taller AgroPay).*
+*(Ver implementación completa en [`contracts/DineroProgramableBase.sol`](../contracts/DineroProgramableBase.sol) y [`scripts/agente-ia-oraculo.js`](../scripts/agente-ia-oraculo.js). Para explorarlo paso a paso, recorre las etapas 3 y 4 del Taller AgroPay).*
 
 ---
 
@@ -237,7 +237,7 @@ const hashPDF = ethers.sha256(archivoBuffer);
 const [esAutentico, estaVigente, codigo] = await contrato.verificarAutenticidad(hashPDF);
 
 if (esAutentico && estaVigente) {
-  console.log(`✅ Certificado SENA 100% Auténtico. Código: ${codigo}`);
+  console.log(`✅ El archivo coincide con el hash registrado y el certificado está vigente. Código: ${codigo}`);
 } else {
   console.warn("❌ Alerta: Documento no registrado o adulterado.");
 }

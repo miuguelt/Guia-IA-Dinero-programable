@@ -68,7 +68,9 @@ async function procesarLoteYAutorizarPago({
   cuentaOraculoPrivKey,
   beneficiarioAddress,
   montoEth,
-  rpcUrl = "http://127.0.0.1:8545"
+  rpcUrl = "http://127.0.0.1:8545",
+  provider = new ethers.JsonRpcProvider(rpcUrl),
+  direccionContrato = CONTRACT_ADDRESS
 }) {
   console.log("\n============================================================");
   console.log("🤖 INICIANDO PIPELINE DE AGENTE IA & DINERO PROGRAMABLE");
@@ -89,13 +91,12 @@ async function procesarLoteYAutorizarPago({
 
   // Paso B: Conectar con la Blockchain como Oráculo
   console.log("\n🔑 2. Inicializando credenciales del Oráculo Criptográfico...");
-  const provider = new ethers.JsonRpcProvider(rpcUrl);
 
   // La clave privada del oráculo DEBE provenir de variables de entorno seguras (process.env.ORACLE_PRIVATE_KEY)
   const oraculoSigner = new ethers.Wallet(cuentaOraculoPrivKey, provider);
   console.log("• Dirección pública del Oráculo:", oraculoSigner.address);
 
-  const contrato = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, oraculoSigner);
+  const contrato = new ethers.Contract(direccionContrato, CONTRACT_ABI, oraculoSigner);
 
   // Verificamos si este firmante es realmente el oráculo autorizado en el contrato
   const oraculoEsperado = await contrato.oraculoIA();

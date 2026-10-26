@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity =0.8.24;
 
 /// @title GarantiaAgroPay
 /// @notice Custodia fondos de garantía de práctica y autoriza pagos a productores

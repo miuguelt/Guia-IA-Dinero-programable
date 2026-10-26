@@ -108,16 +108,16 @@ function iniciarSincronizadorEventos(contratoEscrowMock) {
 /**
  * CLIENTE FRONTEND: EL USUARIO EJECUTA EL PAGO DESDE SU NAVEGADOR
  */
-async function clientePagarPedidoWeb3({ idPedido, vendedorAddress, montoEth, signer }) {
+async function clientePagarPedidoWeb3({ idPedido, vendedorAddress, montoEth, signer, direccionEscrow = ESCROW_ADDRESS }) {
   console.log(`\n🦊 [Frontend Web3] Cliente conectando billetera para pagar Pedido #${idPedido}...`);
-  const contrato = new ethers.Contract(ESCROW_ADDRESS, ESCROW_ABI, signer);
+  const contrato = new ethers.Contract(direccionEscrow, ESCROW_ABI, signer);
 
   const montoWei = ethers.parseEther(montoEth.toString());
   const tx = await contrato.pagarYBloquearEnEscrow(idPedido, vendedorAddress, { value: montoWei });
   console.log(`🚀 [Frontend Web3] Transacción enviada a la mempool. Hash: ${tx.hash}`);
 
   const receipt = await tx.wait();
-  console.log(`⛓️ [Frontend Web3] Transacción minada en bloque ${receipt.blockNumber}. Dinero en custodia.`);
+  console.log(`⛓️ [Frontend Web3] Transacción confirmada en el bloque ${receipt.blockNumber}. Dinero en custodia.`);
   return receipt;
 }
 

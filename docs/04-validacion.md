@@ -4,9 +4,9 @@ En el Taller AgroPay, cada etapa trae pruebas de aceptación escritas con Mocha,
 
 ## Ciclo de trabajo
 
-1. Ejecuta `npm run etapa:N` y confirma que las pruebas fallan por la razón esperada (`TODO etapa N`).
-2. Completa el código indicado.
-3. Vuelve a ejecutar la etapa hasta que todas las pruebas pasen.
+1. Ejecuta `npm run etapa:N` y confirma que todas las pruebas pasan: el taller viene construido.
+2. Lee cada prueba junto al código que comprueba y explica qué comportamiento garantiza.
+3. Cambia una regla o un valor a propósito, vuelve a ejecutar la etapa y observa qué prueba falla y por qué; luego restaura el cambio.
 4. Escribe una prueba propia en `test/mis-pruebas.test.js` y ejecútala con `npm run mis-pruebas`.
 5. Antes de entregar, ejecuta `npm test` para correr todas las etapas juntas.
 

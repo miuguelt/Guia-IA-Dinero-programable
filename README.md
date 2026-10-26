@@ -10,7 +10,7 @@ La guía web explica cada paso con comandos, salidas esperadas y solución de pr
 
 1. **Prepara tu equipo** (`#preparar`). Nivel mínimo: Node.js 24, VS Code y PowerShell 7. Nivel completo: además PostgreSQL 18 y, si tu instructor lo pide, uv con Slither.
 2. **Recorre los seis módulos** y registra las evidencias MG-A01 a MG-A05 donde se producen.
-3. **Explora el Taller AgroPay** (`#taller`). Descargas `descargas/taller-agropay.zip`, lo instalas con `npm install` y recorres las siete etapas con `npm run etapa:N`. El taller viene 100 % construido y funcional: ejecutas pruebas, inspeccionas dónde se guardan los datos (EVM Storage vs. Logs vs. SQL) y realizas experimentos de seguridad con `npm run probar:seguridad` e `npm run inspeccionar:estado`.
+3. **Explora el Taller AgroPay** (`#taller`). Descargas `descargas/taller-agropay.zip`, lo instalas con `npm install` y recorres las siete etapas con `npm run etapa:N`. El taller viene 100 % construido y funcional: ejecutas pruebas, inspeccionas dónde se guardan los datos (EVM Storage vs. Logs vs. SQL) y realizas experimentos de seguridad con `npm run probar:seguridad` y `npm run inspeccionar:estado`.
 4. **Practica en los laboratorios** (`#labs`). Cada uno indica cómo hacerlo, qué resultado esperar y qué hacer si falla.
 
 | Lenguaje | Uso en la guía | Rol del aprendiz |
@@ -22,6 +22,26 @@ La guía web explica cada paso con comandos, salidas esperadas y solución de pr
 | Python | Slither, dentro del laboratorio Auditoría | No; es opcional |
 
 El taller vive en `taller/`: `taller/inicio` es el paquete que recibe el aprendiz y `taller/solucion` es la referencia canónica para el instructor. `npm run test:taller` comprueba que ambas carpetas vienen 100 % construidas, pasan todas las etapas con 100 % de funciones JavaScript, alcanzan el 100 % de funciones Solidity y ejecutan los scripts de demostración e inspección sin errores.
+
+## Documentos de apoyo
+
+Los documentos de `docs/` amplían la guía web. No siguen la misma numeración que los módulos, así que esta tabla indica dónde usar cada uno.
+
+| Documento | Módulo o sección web | Para qué sirve |
+|---|---|---|
+| [Fundamentos y decisión](docs/01-fundamentos.md) | m1 · Dinero y redes | Evidencia MG-A01: justificar cuándo conviene una cadena de bloques. |
+| [Casos de uso ADSO](docs/01b-casos-adso.md) | m2 · Casos de uso y decisiones | Ejemplos de cadena de suministro y voto para analizar actores y reglas. |
+| [Diseño, persistencia y seguridad](docs/02-diseno.md) | m2 · Casos de uso y decisiones | Evidencia MG-A02: ejemplo resuelto de límites y responsabilidades. |
+| [Inspecciona el Taller AgroPay](docs/03-implementacion.md) | m3 · Contratos y seguridad | Evidencia MG-A03: etapas del taller, almacenamiento EVM y retiro seguro. |
+| [POO frente a contratos inteligentes](docs/03c-paradigma-poo-vs-smart-contracts.md) | m3 · Contratos y seguridad | Comparación entre objetos, estado persistente y reversión. |
+| [Validación con pruebas](docs/04-validacion.md) | m4 · Oráculos y datos firmados | Evidencia MG-A04: cómo leer y experimentar con las pruebas de cada etapa. |
+| [Cierre de transferencia](docs/05-cierre.md) | m5 · Pruebas y persistencia | Evidencia MG-A05: consolidar pruebas, cobertura y sincronización reproducibles. |
+| [Arquitectura blockchain y PostgreSQL](docs/ARQUITECTURA_BLOCKCHAIN_Y_POSTGRES_ADSO.md) | m5 · Pruebas y persistencia | Relación entre eventos, indexador y proyección SQL. |
+| [Migración de Web2 a Web3](docs/GUIA_MIGRACION_WEB2_A_WEB3_PASO_A_PASO.md) | m6 · Proyecto y Portafolio | Ideas para llevar los patrones a un proyecto propio. |
+| [Aplicaciones, redes y Coolify](docs/03b-implementacion-aplicaciones-y-redes.md) | Anexo `#publicar` | Despliegue de la guía y de un nodo de práctica en un VPS. |
+| [Servidor EVM en Coolify y uso local](docs/GUIA_SERVIDOR_EVM_COOLIFY_Y_USO_LOCAL.md) | Anexo `#publicar` | Configuración paso a paso del nodo remoto de práctica. |
+| [Comparación visual](docs/COMPARACION-VISUAL.md) | Mantenimiento | Evidencia visual de la interfaz. |
+| [Validación del 21 de octubre](docs/VALIDACION-2026-10-21.md) y [del 24 de octubre](docs/VALIDACION-2026-10-24.md) | Mantenimiento | Registros fechados de validación. |
 
 ## Mantenimiento e instructor (entorno DevBrain)
 ### Inicio en Windows
@@ -139,7 +159,7 @@ Las comprobaciones de aprovisionamiento usan también las credenciales administr
 | Hallazgos automatizados de accesibilidad | test-results/accesibilidad.json |
 | Capturas adaptables | output/playwright/aula-320.png hasta aula-2560.png |
 
-La corrida local más reciente aprobó 131 pruebas Node.js (incluido el taller) y 37 Hardhat, con 225 de 225 funciones JavaScript y 41 de 41 funciones Solidity. Los resultados, los defectos corregidos y lo pendiente están en [el registro de validación del 24 de octubre](docs/VALIDACION-2026-10-24.md); el [registro anterior](docs/VALIDACION-2026-10-21.md) conserva la validación previa y [la comparación visual](docs/COMPARACION-VISUAL.md). Los reportes generados son la evidencia de una ejecución concreta; la presencia del archivo o una suite aprobada no certifican por sí solas la calidad de toda una aplicación.
+Las cifras vigentes de pruebas y cobertura salen de cada corrida: consulte el artefacto `evidencia-windows` de GitHub Actions o ejecute `npm run coverage` y `npm run coverage:contracts`. Los resultados, los defectos corregidos y lo pendiente están en [el registro de validación del 24 de octubre](docs/VALIDACION-2026-10-24.md); el [registro anterior](docs/VALIDACION-2026-10-21.md) conserva la validación previa y [la comparación visual](docs/COMPARACION-VISUAL.md). Los reportes generados son la evidencia de una ejecución concreta; la presencia del archivo o una suite aprobada no certifican por sí solas la calidad de toda una aplicación.
 
 ## Estructura y CI
 

@@ -119,7 +119,7 @@ describe('⚡ Verificación: Implementación en Aplicaciones Reales, Redes y Coo
       assert.ok(erc20Sol.includes('function retirarMiDineroTokens'));
       // Verifica que el saldo se pone en 0 antes del transfer de tokens
       const idxEffects = erc20Sol.indexOf('saldosPendientes[msg.sender] = 0;');
-      const idxInteractions = erc20Sol.indexOf('tokenEstable.transfer(msg.sender, monto);');
+      const idxInteractions = erc20Sol.indexOf('_llamarToken(abi.encodeCall(IERC20.transfer, (msg.sender, monto)));');
       assert.ok(idxEffects > 0);
       assert.ok(idxInteractions > 0);
       assert.ok(idxEffects < idxInteractions, 'Effects debe preceder a Interactions');

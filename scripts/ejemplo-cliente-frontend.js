@@ -49,16 +49,17 @@ const CONTRACT_ABI = [
 ];
 
 /**
- * Función principal de inicialización del cliente Web3
+ * Función principal de inicialización del cliente Web3.
+ * `opciones` permite usar otro proveedor o la dirección de un despliegue distinto.
  */
-async function inicializarClienteWeb3(rpcUrl = "http://127.0.0.1:8545") {
+async function inicializarClienteWeb3(rpcUrl = "http://127.0.0.1:8545", opciones = {}) {
   console.log("🔌 1. Conectando con la red Blockchain en:", rpcUrl);
 
   // A. Proveedor de lectura (Provider): Solo lee datos de los nodos
-  const provider = new ethers.JsonRpcProvider(rpcUrl);
+  const provider = opciones.provider ?? new ethers.JsonRpcProvider(rpcUrl);
 
   // B. Instancia del contrato solo para lectura
-  const contratoLectura = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+  const contratoLectura = new ethers.Contract(opciones.direccion ?? CONTRACT_ADDRESS, CONTRACT_ABI, provider);
 
   // ==========================================================================
   // OPERACIÓN 1: LECTURAS OFF-CHAIN (GRATIS, CERO GAS, RESPUESTA INSTANTÁNEA)
@@ -103,7 +104,7 @@ async function inicializarClienteWeb3(rpcUrl = "http://127.0.0.1:8545") {
  * OPERACIÓN 3: ESCRITURA ON-CHAIN CON BILLETERA (PAGA GAS Y REQUIERE FIRMA)
  * Ejemplo: El beneficiario retira su dinero programado cuando la IA lo aprobó.
  */
-async function ejecutarRetiroBeneficiario(signerOrPrivateKey, rpcUrl = "http://127.0.0.1:8545") {
+async function ejecutarRetiroBeneficiario(signerOrPrivateKey, rpcUrl = "http://127.0.0.1:8545", direccion = CONTRACT_ADDRESS) {
   console.log("\n✍️ 3. Ejecutando transacción de retiro...");
 
   let signer;
@@ -120,8 +121,7 @@ async function ejecutarRetiroBeneficiario(signerOrPrivateKey, rpcUrl = "http://1
   console.log("• Cuenta del usuario:", direccionBeneficiario);
 
   // Conectamos el contrato con la cuenta firmante
-  const provider = signer.provider;
-  const contratoEscritura = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+  const contratoEscritura = new ethers.Contract(direccion, CONTRACT_ABI, signer);
 
   // Verificamos primero si tiene saldo antes de gastar gas (Check en cliente)
   const saldoDisponible = await contratoEscritura.saldosPendientes(direccionBeneficiario);

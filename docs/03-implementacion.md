@@ -7,8 +7,12 @@ La implementación completa de referencia vive en el **Taller AgroPay** de la gu
 | Etapa | Archivo | Qué analizas y compruebas |
 |---|---|---|
 | 0 · Prepara el proyecto | `package.json`, `hardhat.config.js` | El proyecto compila y la etapa 0 pasa directamente. |
+| 1 · Reglas de negocio puras | `src/reglas.js` | Evaluación de lecturas contra `LIMITES` con `evaluarLectura`, en JavaScript puro, sin red ni base de datos. |
 | 2 · Almacenamiento en EVM | `contracts/GarantiaAgroPay.sol` | Variables de estado (`garantiaDisponible`), modificador `payable` y emisión de eventos. |
 | 3 · Permisos y retiro seguro | `contracts/GarantiaAgroPay.sol` | Control de acceso (`SoloOraculo`), mappings y retiro con Checks–Effects–Interactions (CEI). |
+| 4 · Oráculo con firmas | `src/oraculo.js` | Firma de cada lectura, verificación del firmante y control de repetición antes de autorizar un pago. |
+| 5 · Indexador y proyección SQL | `src/indexador.js`, `src/repositorio-postgres.js`, `sql/` | Lectura de eventos y proyección sin duplicados con `ON CONFLICT DO NOTHING` (patrón CQRS). |
+| 6 · Recorrido completo | `src/recorrido.js`, `scripts/inspeccionar-estado.js` | Flujo de extremo a extremo e inspección en tres capas: storage, logs y SQL. |
 
 ## Almacenamiento en EVM y custodia de garantía (Etapa 2)
 
@@ -26,11 +30,11 @@ En el mundo de los contratos inteligentes, **el contrato `GarantiaAgroPay.sol` a
 
 ```mermaid
 flowchart TD
-    A["Comprador o Financiador\nmsg.sender"] -->|1. depositarGarantia con msg.value| B{"¿msg.value == 0?"}
-    B -->|Sí: Depósito vacío| C["Reversión atómica\nrevert MontoInvalido()\nGas de ejecución cancelado"]
-    B -->|No: Monto válido| D["Capa 0: Balance Nativo\naddress(this).balance += msg.value en wei"]
-    D --> E["Capa 1: EVM Storage Slot 0\ngarantiaDisponible += msg.value\nEstado persistente en nodos"]
-    E --> F["Capa 2: Bitácora de Bloques\nemit GarantiaDepositada(msg.sender, msg.value)\nRecibo indexable para PostgreSQL"]
+    A["Comprador o financiador<br>msg.sender"] -->|1. depositarGarantia con msg.value| D["Capa 0: balance nativo<br>msg.value ingresa a address(this).balance al iniciar la llamada"]
+    D --> B{"¿msg.value == 0?"}
+    B -->|Sí: depósito vacío| C["Reversión atómica<br>revert MontoInvalido()<br>El estado y el valor vuelven atrás; el gas consumido se cobra"]
+    B -->|No: monto válido| E["Capa 1: EVM storage, slot 0<br>garantiaDisponible += msg.value<br>Estado persistente en los nodos"]
+    E --> F["Capa 2: bitácora del bloque<br>emit GarantiaDepositada(msg.sender, msg.value)<br>Recibo indexable para PostgreSQL"]
 ```
 
 ### Cuadro comparativo de persistencia y almacenamiento en la EVM

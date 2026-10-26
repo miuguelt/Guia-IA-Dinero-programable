@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity =0.8.24;
 
 // Archivo de práctica entregado: no lo modifiques. Intenta retirar dos veces
 // el mismo saldo volviendo a llamar a retirar() mientras recibe el pago.

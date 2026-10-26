@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity =0.8.24;
 
 /// @notice Certifica cumplimiento de reglas del ejercicio, no pureza física de una muestra.
 contract CertificacionMiel {

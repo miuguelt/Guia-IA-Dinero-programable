@@ -1,5 +1,7 @@
 # Registro de validación — 24 de octubre de 2026
 
+> **Nota posterior:** el modelo de taller con comentarios `TODO` descrito aquí se retiró. `taller/inicio` se entrega construido para explorar e inspeccionar; el [README](../README.md) describe el modelo vigente.
+
 Este registro documenta la incorporación del Taller AgroPay y la revisión de la guía para que un aprendiz pueda preparar su equipo y construir su propio proyecto. Todos los resultados provienen de corridas locales en Windows nativo; la ejecución remota de CI sigue pendiente porque el repositorio no tiene remoto configurado. Los resultados corresponden a una guía de aprendizaje con datos de práctica.
 
 ## Qué cambió para el aprendiz

@@ -11,7 +11,7 @@
     "language": "es-CO",
     "version": "2.0.0",
     "servicePort": 8153,
-    "summary": "Ruta web de seis módulos, doce laboratorios en simulación y ejecución real local, y un taller de siete etapas para construir un proyecto propio, con evaluación por reglas explicables."
+    "summary": "Ruta web de seis módulos, doce laboratorios en simulación y ejecución real local, y un taller de siete etapas construido para explorar, ejecutar e inspeccionar, con evaluación por reglas explicables."
   },
   "curricularAlignment": {
     "program": {
@@ -97,14 +97,14 @@
     {
       "phase": "appropriation",
       "name": "Apropiación",
-      "purpose": "Aprender patrones de seguridad (Check-Effects-Interactions), oráculos de IA y desarrollar contratos con TDD en Hardhat.",
-      "hours": 4
+      "purpose": "Aprender patrones de seguridad (Checks-Effects-Interactions), oráculos de IA e inspeccionar contratos con pruebas en Hardhat.",
+      "hours": 3.5
     },
     {
       "phase": "transfer",
       "name": "Transferencia",
       "purpose": "Integrar la solución descentralizada y transferir los artefactos verificables al proyecto formativo del aprendiz.",
-      "hours": 2
+      "hours": 2.5
     }
   ],
   "evidence": {
@@ -130,7 +130,7 @@
   "glossary": [
     {
       "term": "Dinero Programable",
-      "meaning": "Valor digital cuya emisión, transferencia y condiciones de liquidación son ejecutadas por código inmutable en una red descentralizada."
+      "meaning": "Valor digital cuya emisión, transferencia y condiciones de liquidación se ejecutan con código desplegado en una red descentralizada; ese código no cambia salvo que el diseño prevea una estrategia de actualización."
     },
     {
       "term": "Smart Contract",
@@ -138,7 +138,7 @@
     },
     {
       "term": "Oráculo",
-      "meaning": "Mecanismo criptográfico que suministra datos del mundo exterior (off-chain) a los contratos inteligentes (on-chain)."
+      "meaning": "Servicio que lleva datos del mundo exterior (off-chain) a los contratos inteligentes (on-chain); suele firmar cada dato para que el contrato verifique su origen, pero la firma no garantiza que el dato sea verdadero."
     }
   ],
   "sources": [
