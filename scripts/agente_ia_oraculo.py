@@ -16,12 +16,21 @@ import sys
 from typing import Dict, Any, Tuple
 
 # Garantizar codificación UTF-8 en stdout/stderr para consolas Windows y CI
-if hasattr(sys.stdout, "reconfigure"):
-    try:
-        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
-    except Exception:
-        pass
+for stream_name in ("stdout", "stderr"):
+    stream = getattr(sys, stream_name, None)
+    if stream is not None:
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+                continue
+            except Exception:
+                pass
+        if hasattr(stream, "buffer"):
+            try:
+                import io
+                setattr(sys, stream_name, io.TextIOWrapper(stream.buffer, encoding="utf-8", errors="replace", line_buffering=True))
+            except Exception:
+                pass
 
 # Constantes del contrato inteligente
 CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
