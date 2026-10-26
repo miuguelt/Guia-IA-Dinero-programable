@@ -84,11 +84,18 @@ test('recarga nativa recompila al guardar, se recupera de errores y cierra su pr
   assert.match(await fs.readFile(output, 'utf8'), /Valor actualizado/);
   await fs.writeFile(source, 'document.title="Recuperado";');
   await waitFor(async () => (await fs.readFile(output, 'utf8')).includes('Recuperado'));
-  instance.close();
+  await fs.writeFile(source, 'document.title="Cambio final";');
+  await new Promise(resolve => setTimeout(resolve, 200));
+  await instance.close();
+  assert.match(await fs.readFile(output, 'utf8'), /Cambio final/);
+  await fs.access(path.join(root, 'web/descargas/taller-agropay.zip'));
+  await fs.rm(path.join(root, 'web'), { recursive: true });
+  await new Promise(resolve => setTimeout(resolve, 300));
+  await assert.rejects(fs.access(path.join(root, 'web')), { code: 'ENOENT' });
   await waitFor(async () => {
     try { await fetch(origin); return false; } catch { return true; }
   }, 3000);
-  assert.match(await fs.readFile(source, 'utf8'), /Recuperado/);
+  assert.match(await fs.readFile(source, 'utf8'), /Cambio final/);
 });
 
 test('CLI de desarrollo registra la señal de cierre y rechaza fuentes inválidas', async t => {
@@ -119,4 +126,30 @@ test('aprovisionamiento real es idempotente y limita la escritura a la guía', a
   assert.equal(await runProvisionCli({ env: {}, operator, logger }), false);
   assert.equal(operator.exitCode, 1);
   assert.match(messages[1], /No se pudo preparar/);
+});
+
+test('cierre de la recarga espera la compilación en curso y descarta guardados posteriores', async t => {
+  const root = await fixture(t);
+  const source = path.join(root, 'frontend/web/main.js');
+  const builds = [];
+  let release;
+  const build = target => {
+    builds.push(target);
+    if (builds.length === 1) return buildWeb(target);
+    return new Promise(resolve => { release = resolve; });
+  };
+  const instance = await startDevelopment(root, { build });
+  t.after(() => { release?.(); return instance.close(); });
+  await fs.writeFile(source, 'document.title="Pendiente";');
+  await waitFor(() => builds.length === 2);
+  let settled = false;
+  const closing = instance.close().then(() => { settled = true; });
+  await new Promise(resolve => setTimeout(resolve, 100));
+  assert.equal(settled, false);
+  release();
+  await closing;
+  assert.equal(settled, true);
+  await fs.writeFile(source, 'document.title="Tras el cierre";');
+  await new Promise(resolve => setTimeout(resolve, 300));
+  assert.equal(builds.length, 2);
 });
