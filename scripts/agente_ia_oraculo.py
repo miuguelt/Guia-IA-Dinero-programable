@@ -15,6 +15,14 @@ import os
 import sys
 from typing import Dict, Any, Tuple
 
+# Garantizar codificación UTF-8 en stdout/stderr para consolas Windows y CI
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Constantes del contrato inteligente
 CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
 
