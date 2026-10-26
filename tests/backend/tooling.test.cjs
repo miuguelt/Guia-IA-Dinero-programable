@@ -18,6 +18,8 @@ async function fixture(t) {
   await fs.writeFile(path.join(root, 'frontend/web/index.html'), '<main>Aula de prueba</main>');
   await fs.writeFile(path.join(root, 'frontend/web/styles.css'), 'body { color: green; }');
   await fs.writeFile(path.join(root, 'frontend/web/main.js'), 'document.title="Valor inicial";');
+  await fs.writeFile(path.join(root, 'frontend/web/devbrain-prose.js'), 'globalThis.DevBrainProseLayout = {};');
+  await fs.writeFile(path.join(root, 'frontend/web/devbrain-prose.css'), '.prose {}');
   await fs.writeFile(path.join(root, 'js/vendor/devbrain-learner-sdk.js'), 'window.DevBrainSDK = {};');
   await fs.writeFile(path.join(root, 'css/vendor/devbrain-learner-sdk.css'), '.sdk {}');
   await fs.writeFile(path.join(root, 'css/vendor/devbrain-reader.css'), '.reader {}');

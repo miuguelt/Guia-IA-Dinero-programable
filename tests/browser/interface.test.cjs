@@ -177,13 +177,16 @@ test('WebAuthn registra y autentica desde la interfaz con verificación real del
   assert.match(await page.locator('#auth-status-architecture').innerText(), /verificada/);
 });
 
-test('Lecciones, catálogo, formularios y Portafolio conservan lectura y foco con teclado', { timeout: 90000 }, async t => {
-  const browser = await chromium.launch({ channel: 'chrome', headless: true });
-  t.after(() => browser.close());
-  const context = await browser.newContext({ reducedMotion: 'reduce' });
-  const page = await context.newPage();
-  const failures = [];
-  for (const width of [320, 390, 768, 1440, 1920, 2560]) {
+// Una prueba por ancho: el recorrido completo (54 páginas con axe) excedía el límite en el ejecutor de CI.
+const routeFailures = [];
+for (const width of [320, 390, 768, 1440, 1920, 2560]) {
+  test(`Lecciones, catálogo, formularios y Portafolio conservan lectura en ${width}px`, { timeout: 90000 }, async t => {
+    const browser = await chromium.launch({ channel: 'chrome', headless: true });
+    t.after(() => browser.close());
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    const failures = [];
+    await fs.mkdir('output/playwright', { recursive: true });
     await page.setViewportSize({ width, height: 1000 });
     for (const route of ['m3/1', 'labs', 'lab/pharma', 'portfolio', 'preparar', 'taller', 'taller/3', 'taller/5', 'publicar']) {
       await page.goto(base + '/#' + route);
@@ -197,9 +200,18 @@ test('Lecciones, catálogo, formularios y Portafolio conservan lectura y foco co
       failures.push(...result.violations.map(item => ({ width, route, id: item.id, targets: item.nodes.map(node => node.target) })));
       await page.screenshot({ path: path.resolve(`output/playwright/${route.replace('/', '-')}-${width}.png`), fullPage: true });
     }
-  }
-  await fs.writeFile('test-results/accesibilidad-recorrido.json', JSON.stringify(failures, null, 2));
-  assert.deepEqual(failures, []);
+    routeFailures.push(...failures);
+    await fs.mkdir('test-results', { recursive: true });
+    await fs.writeFile('test-results/accesibilidad-recorrido.json', JSON.stringify(routeFailures, null, 2));
+    assert.deepEqual(failures, []);
+  });
+}
+
+test('El menú y la búsqueda conservan el foco con teclado', { timeout: 60000 }, async t => {
+  const browser = await chromium.launch({ channel: 'chrome', headless: true });
+  t.after(() => browser.close());
+  const context = await browser.newContext({ reducedMotion: 'reduce' });
+  const page = await context.newPage();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base);
   await page.locator('[data-toggle-menu]').focus();

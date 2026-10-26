@@ -13,6 +13,8 @@ test('La compilación genera una web autocontenida sin alterar las fuentes', asy
   await fs.writeFile(path.join(source, 'index.html'), '<main>Aprender</main>');
   await fs.writeFile(path.join(source, 'main.js'), 'document.title = "Aula";');
   await fs.writeFile(path.join(source, 'styles.css'), 'body { color: green; }');
+  await fs.writeFile(path.join(source, 'devbrain-prose.js'), 'globalThis.DevBrainProseLayout = {};');
+  await fs.writeFile(path.join(source, 'devbrain-prose.css'), '.prose {}');
   await fs.mkdir(path.join(root, 'js/vendor'), { recursive: true });
   await fs.mkdir(path.join(root, 'css/vendor'), { recursive: true });
   await fs.writeFile(path.join(root, 'js/vendor/devbrain-learner-sdk.js'), 'window.DevBrainSDK = {};');
@@ -28,6 +30,9 @@ test('La compilación genera una web autocontenida sin alterar las fuentes', asy
   assert.match(await fs.readFile(path.join(root, 'web', 'index.html'), 'utf8'), /Aprender/);
   assert.match(await fs.readFile(path.join(root, 'web', 'main.js'), 'utf8'), /Aula/);
   assert.match(await fs.readFile(path.join(root, 'web', 'styles.css'), 'utf8'), /green/);
+  // index.html carga el adaptador de prosa de la regla 7.4; sin él la web publicada pierde la justificación.
+  assert.equal(await fs.readFile(path.join(root, 'web', 'devbrain-prose.js'), 'utf8'), 'globalThis.DevBrainProseLayout = {};');
+  assert.equal(await fs.readFile(path.join(root, 'web', 'devbrain-prose.css'), 'utf8'), '.prose {}');
   assert.equal(await fs.readFile(path.join(root, 'web/vendor/devbrain-learner-sdk.js'), 'utf8'), 'window.DevBrainSDK = {};');
   assert.equal(await fs.readFile(path.join(root, 'web/vendor/devbrain-learner-sdk.css'), 'utf8'), '.sdk {}');
   assert.equal(await fs.readFile(path.join(root, 'web/vendor/devbrain-reader.css'), 'utf8'), '.reader {}');
