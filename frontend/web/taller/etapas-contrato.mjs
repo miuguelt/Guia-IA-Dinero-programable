@@ -104,13 +104,14 @@ export const etapa2 = {
     <g transform="translate(286, 185)">
       <rect width="530" height="52" rx="8" fill="url(#gradRevert)" stroke="#ef4444" stroke-width="1.5"/>
       <text x="16" y="22" fill="#fca5a5" font-family="system-ui, sans-serif" font-size="11" font-weight="bold">✕ REVERSIÓN: if (msg.value == 0) revert MontoInvalido();</text>
-      <text x="16" y="40" fill="#fecaca" font-family="system-ui, sans-serif" font-size="10">Rechazo automático: transacción revertida atómicamente, $0 gasto de almacenamiento y estado intacto.</text>
+      <text x="16" y="39" fill="#fecaca" font-family="system-ui, sans-serif" font-size="9.5">Rechazo atómico: transacción revertida sin mutar storage ni consumir gas persistente.</text>
     </g>
 
     <!-- Barra inferior resumen invariante -->
     <rect x="24" y="250" width="792" height="64" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1"/>
-    <text x="44" y="274" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="11" font-weight="bold">Invariante de solvencia y custodia en la EVM:</text>
-    <text x="44" y="293" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="10.5">El balance custodiado por la cuenta (address(this).balance) respalda en todo momento los fondos contables (garantiaDisponible). Si el monto es cero, la EVM revierte de inmediato sin alterar el estado.</text>
+    <text x="44" y="271" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="11" font-weight="bold">Invariante de solvencia y custodia en la EVM:</text>
+    <text x="44" y="288" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="10">El balance custodiado por la cuenta (address(this).balance) respalda los fondos contables (garantiaDisponible).</text>
+    <text x="44" y="302" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="9.5">Si el monto enviado es cero (msg.value == 0), la EVM revierte de inmediato sin alterar el estado del contrato.</text>
   </svg>
   <p>El diagrama ilustra el flujo de una transacción payable: el balance de la cuenta y la variable de almacenamiento aumentan al unísono, mientras el evento queda indexado en el bloque minado.</p>
 </div>
