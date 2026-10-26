@@ -34,3 +34,34 @@ En el desarrollo de software real (ADSO), la blockchain no reemplaza a tu base d
 * **🟢 Verde (Solo PostgreSQL):** Inventarios, catálogos, perfiles de usuario, facturación interna (95 % de los sistemas comunes).
 * **🟡 Amarillo (PostgreSQL + Criptografía):** Auditorías con sellos de tiempo y hashes SHA-256 en bases de datos relacionales.
 * **🟣 Púrpura (Arquitectura Híbrida):** Garantías de pago entre desconocidos, liquidaciones agrícolas automáticas, trazabilidad internacional y certificados de grado infalsificables.
+
+## El Filtro de Entrada: Reglas Puras en JavaScript vs Ejecución On-Chain (Etapa 1 del Taller)
+
+### Analogía del centro de acopio lechero
+Cuando un camión cisterna cargado de leche fresca llega a una cooperativa agropecuaria, el operario de recibo no emite de inmediato la orden de pago bancario ni registra la compra definitiva en el sistema financiero central. Primero, con el camión detenido en la bahía de recepción, toma una muestra directa y mide dos variables críticas: temperatura y acidez.
+
+Si la leche perdió frío (> 4 °C) o la acidez se elevó fuera del rango normal (14 a 18 °Dornic por fermentación bacteriana), el lote se rechaza en la puerta. No se emite cheque, no se procesa la leche y no se compromete dinero.
+
+En el desarrollo de software, la función `evaluarLectura()` en `src/reglas.js` cumple exactamente ese papel: se ejecuta en JavaScript puro fuera de la cadena (*Off-chain*), tarda menos de 1 milisegundo y tiene **costo cero en gas ($0)**. Si el lote no satisface los estándares, el proceso se detiene de inmediato con una explicación clara y jamás llega a la blockchain, evitando saturar la red con transacciones destinadas al fracaso.
+
+### Diagrama del pipeline de evaluación y dictamen explicable
+
+```mermaid
+flowchart TD
+    A["1. Muestra física (Entrada)<br/>Sensor: { temperatura, acidez }"] --> B["2. Función pura JavaScript (Off-Chain)<br/>evaluarLectura() · Stateless · $0 Gas"]
+    B --> C{"¿Cumple límites didácticos?<br/>Temp ≤ 4 °C y 14 ≤ Acidez ≤ 18 °D"}
+    C -->|Sí: motivos vacíos| D["✓ Dictamen Aprobado<br/>{ aprobada: true, motivos: [] }<br/>Habilita firma del Oráculo → Smart Contract"]
+    C -->|No: causas acumuladas| E["✕ Dictamen Rechazado<br/>{ aprobada: false, motivos: [...] }<br/>Aborta en recepción · Ahorro 100 % de Gas"]
+```
+
+### Tabla de umbrales y valor pedagógico
+
+| Parámetro | Rango aceptado | Condición de rechazo | Justificación técnica para el aprendiz |
+|---|---|---|---|
+| **Temperatura** | ≤ 4,0 °C | > 4,0 °C | Límite superior de la cadena de frío. Previene la proliferación bacteriana en almacenamiento. |
+| **Acidez química** | 14,0 a 18,0 °Dornic | < 14,0 °D o > 18,0 °D | Ventana de control con frontera inferior y superior. Descarta leche adulterada o fermentada. |
+| **Validación de tipos** | Número finito estricto | `NaN`, `null`, `string`, `undefined` | Función auxiliar `comprobarNumero()`. Rechaza entradas malformadas antes de evaluar la lógica. |
+
+### ¿Por qué un dictamen explicable y acumulativo?
+Un software empresarial no debe responder únicamente con un booleano (`true`/`false`) ni lanzar excepciones descontroladas ante datos inválidos de negocio. La función devuelve `{ aprobada: boolean, motivos: string[] }`. Si fallan tanto la temperatura como la acidez, el arreglo acumula ambas causas, permitiendo generar un reporte forense transparente que explica al productor agropecuario exactamente por qué no se aprobó su lote.
+

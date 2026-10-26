@@ -141,6 +141,68 @@ test('resuelve recursos locales de prosa en plantillas Flask sin iniciar el serv
   }
 });
 
+test('resuelve recursos locales de prosa en proyectos Vite, Django y referencias relativas', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'text-layout-vite-assets-'));
+  try {
+    const appDir = path.join(root, '_projects', 'vite-app');
+    const publicDir = path.join(appDir, 'public');
+    const subDir = path.join(appDir, 'sub');
+    const staticDir = path.join(appDir, 'static');
+    fs.mkdirSync(publicDir, { recursive: true });
+    fs.mkdirSync(subDir, { recursive: true });
+    fs.mkdirSync(staticDir, { recursive: true });
+
+    fs.writeFileSync(path.join(appDir, 'package.json'), JSON.stringify({
+      dependencies: { vite: '^5.0.0' }
+    }));
+
+    const malformedDir = path.join(root, '_projects', 'malformed-app');
+    fs.mkdirSync(malformedDir, { recursive: true });
+    fs.writeFileSync(path.join(malformedDir, 'package.json'), '{ malformed json');
+    const malformedPage = path.join(malformedDir, 'index.html');
+    fs.writeFileSync(malformedPage, '<!doctype html><script type="module" src="main.js"></script><link data-devbrain-prose href="/asset.css">');
+    assert.equal(discoverIndexPages(root).includes(malformedPage), true);
+    assert.deepEqual(resolveTemplateAssets(malformedPage, root), { styles: [], scripts: [] });
+
+    const vitePublicCss = path.join(publicDir, 'vite-prose.css');
+    const vitePublicJs = path.join(publicDir, 'vite-relative.js');
+    const rootFallbackCss = path.join(root, 'root-fallback.css');
+    const localRelativeJs = path.join(subDir, 'local-runtime.js');
+    const djangoCss = path.join(staticDir, 'django-prose.css');
+
+    fs.writeFileSync(vitePublicCss, '/* vite public css */');
+    fs.writeFileSync(vitePublicJs, '/* vite public js */');
+    fs.writeFileSync(rootFallbackCss, '/* root fallback css */');
+    fs.writeFileSync(localRelativeJs, '/* local relative js */');
+    fs.writeFileSync(djangoCss, '/* django static css */');
+
+    const page = path.join(subDir, 'page.html');
+    fs.writeFileSync(page, [
+      '<!doctype html><html><head>',
+      '<link rel="stylesheet" data-devbrain-prose href="/vite-prose.css">',
+      '<link rel="stylesheet" data-devbrain-prose href="/root-fallback.css">',
+      '<link rel="stylesheet" data-devbrain-prose href="{% static \'django-prose.css\' %}">',
+      '<link data-devbrain-prose href="?query=1#hash">',
+      '<script data-devbrain-prose-runtime src="local-runtime.js"></script>',
+      '<script data-devbrain-prose-runtime src="vite-relative.js"></script>',
+      '</head><body><main><p>Contenido</p></main></body></html>'
+    ].join('\r\n'));
+
+    const assets = resolveTemplateAssets(page, root);
+    assert.deepEqual(assets.styles.map(item => item.path), [
+      vitePublicCss,
+      rootFallbackCss,
+      djangoCss
+    ]);
+    assert.deepEqual(assets.scripts.map(item => item.path), [
+      localRelativeJs,
+      vitePublicJs
+    ]);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test('crea sondas de texto, limita la carga de ejemplo y resuelve Edge', () => {
   assert.match(createStressExpression(0), /phrase\.repeat\(1\)/);
   assert.match(createStressExpression(99), /phrase\.repeat\(20\)/);
