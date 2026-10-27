@@ -1,6 +1,6 @@
 # Dinero programable — Aula ADSO
 
-Guía web para aprendices con bases de JavaScript, programación orientada a objetos y bases de datos. La ruta introductoria reúne seis módulos y doce laboratorios con simulación y ejecución real local.
+Guía web para aprendices con bases de JavaScript, programación orientada a objetos y bases de datos. La ruta introductoria reúne seis módulos y trece laboratorios con simulación y ejecución real local.
 
 Los casos y archivos se prepararon para aprender y no contienen registros reales. Las cuentas, lecturas y fondos de práctica no deben utilizarse como credenciales, mediciones ni dinero de una aplicación en producción.
 
@@ -30,6 +30,7 @@ Los documentos de `docs/` amplían la guía web. No siguen la misma numeración 
 | Documento | Módulo o sección web | Para qué sirve |
 |---|---|---|
 | [Fundamentos y decisión](docs/01-fundamentos.md) | m1 · Dinero y redes | Evidencia MG-A01: justificar cuándo conviene una cadena de bloques. |
+| [Cómo funciona una cadena de bloques](docs/FUNCIONAMIENTO_BLOCKCHAIN_Y_VERIFICACION_DE_RED.md) | m1 · Dinero y redes | Bloques, cuentas, ciclo de una transacción y verificación del nodo local o del VPS. |
 | [Casos de uso ADSO](docs/01b-casos-adso.md) | m2 · Casos de uso y decisiones | Ejemplos de cadena de suministro y voto para analizar actores y reglas. |
 | [Diseño, persistencia y seguridad](docs/02-diseno.md) | m2 · Casos de uso y decisiones | Evidencia MG-A02: ejemplo resuelto de límites y responsabilidades. |
 | [Inspecciona el Taller AgroPay](docs/03-implementacion.md) | m3 · Contratos y seguridad | Evidencia MG-A03: etapas del taller, almacenamiento EVM y retiro seguro. |
@@ -75,7 +76,8 @@ Abra [http://localhost:8153/](http://localhost:8153/). El inicio compila la web 
 | Hardhat | 127.0.0.1:8545; chainId 31337 |
 | PostgreSQL local | 127.0.0.1:5434; PostgreSQL 18 |
 | Datos de la aplicación | Base exclusiva guia_dinero_programable |
-| Manifiesto del despliegue | artifacts/deployment.json |
+| Manifiesto del despliegue | artifacts/deployment.json (VPS: artifacts/deployment.vps.json) |
+| Verificar la red conectada | `npm run red:verificar -- --red local` o `--red vps` |
 | Procesos del proyecto | artifacts/lifecycle.json |
 
 Para reiniciar de forma controlada o detener los componentes propios:
@@ -100,7 +102,7 @@ La recarga de desarrollo compila las fuentes web al guardar y reinicia el backen
 
 Cada módulo sigue cuatro pasos: Comprende, Revisa el ejemplo, Practica y Aplica. La búsqueda incluye explicaciones y comandos, admite consultas sin tildes y devuelve enlaces directos.
 
-La **ruta introductoria suma ocho horas orientativas**. Instalar el entorno y ejecutar íntegramente los doce laboratorios reales constituye una ampliación. El archivo `test-results/laboratorios-reales.json` contiene tiempos observados de ejecución de herramientas y servicios; no mide el tiempo que necesita una persona para aprender o completar una actividad.
+La **ruta introductoria suma ocho horas y media orientativas**. Instalar el entorno y ejecutar íntegramente los trece laboratorios reales constituye una ampliación. El archivo `test-results/laboratorios-reales.json` contiene tiempos observados de ejecución de herramientas y servicios; no mide el tiempo que necesita una persona para aprender o completar una actividad.
 
 ### Dos modalidades
 

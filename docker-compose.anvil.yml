@@ -8,8 +8,13 @@
 # Características:
 # - Motor EVM: Foundry Anvil (< 50 MB RAM, arranque inmediato).
 # - Persistencia: guarda cuentas, contratos y bloques en el volumen `anvil_data`.
+# - Red: chainId 31338, distinto del nodo local del aula, para que MetaMask y los
+#   scripts no confundan el VPS con el equipo del aprendiz.
 # - Seguridad: sin `ports` abiertos al host; Traefik enruta por la red `coolify`
-#   y exige credenciales mediante el middleware `basicauth` (`ANVIL_BASIC_AUTH`).
+#   con un enrutador propio (`anvil-rpc`) que exige el middleware `basicauth`.
+#   Deja vacío el campo de dominio del servicio en Coolify: el dominio se define
+#   en `ANVIL_RPC_DOMAIN`. Comprueba con `npm run red:verificar -- --red vps` que
+#   una petición sin credenciales recibe 401.
 # =========================================================================
 
 services:
@@ -22,7 +27,7 @@ services:
       - "--port"
       - "8545"
       - "--chain-id"
-      - "${ANVIL_CHAIN_ID:-31337}"
+      - "${ANVIL_CHAIN_ID:-31338}"
       - "--block-time"
       - "${ANVIL_BLOCK_TIME:-2}"
       - "--state"
@@ -34,7 +39,7 @@ services:
       - "8545"
     environment:
       - TZ=America/Bogota
-      - ANVIL_CHAIN_ID=${ANVIL_CHAIN_ID:-31337}
+      - ANVIL_CHAIN_ID=${ANVIL_CHAIN_ID:-31338}
       - ANVIL_BLOCK_TIME=${ANVIL_BLOCK_TIME:-2}
     volumes:
       - anvil_data:/data
@@ -46,7 +51,14 @@ services:
       start_period: 10s
     labels:
       - "traefik.enable=true"
-      - "traefik.http.middlewares.anvil-auth.basicauth.users=${ANVIL_BASIC_AUTH}"
+      - "traefik.docker.network=coolify"
+      - "traefik.http.middlewares.anvil-auth.basicauth.users=${ANVIL_BASIC_AUTH:?Define ANVIL_BASIC_AUTH con un hash htpasswd bcrypt}"
+      - "traefik.http.routers.anvil-rpc.rule=Host(`${ANVIL_RPC_DOMAIN:?Define ANVIL_RPC_DOMAIN, por ejemplo rpc.tudominio.com}`)"
+      - "traefik.http.routers.anvil-rpc.entrypoints=https"
+      - "traefik.http.routers.anvil-rpc.tls=true"
+      - "traefik.http.routers.anvil-rpc.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.anvil-rpc.middlewares=anvil-auth"
+      - "traefik.http.routers.anvil-rpc.service=anvil"
       - "traefik.http.services.anvil.loadbalancer.server.port=8545"
     logging:
       driver: "json-file"

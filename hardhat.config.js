@@ -37,10 +37,12 @@ module.exports = {
       url: "http://127.0.0.1:8545",
       chainId: 31337,
     },
+    // El VPS usa 31338 para no confundirse con el nodo local. El despliegue necesita dos cuentas:
+    // administradora y oráculo. Sin claves, Hardhat usa las cuentas desbloqueadas del nodo.
     vps: {
       url: process.env.VPS_RPC_URL || "http://127.0.0.1:8545",
-      chainId: Number(process.env.VPS_CHAIN_ID || 31337),
-      accounts: process.env.VPS_PRIVATE_KEY ? [process.env.VPS_PRIVATE_KEY] : undefined,
+      chainId: Number(process.env.VPS_CHAIN_ID || 31338),
+      accounts: process.env.VPS_PRIVATE_KEY ? [process.env.VPS_PRIVATE_KEY, process.env.VPS_ORACLE_PRIVATE_KEY].filter(Boolean) : undefined,
     },
   },
 };

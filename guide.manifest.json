@@ -11,7 +11,7 @@
     "language": "es-CO",
     "version": "2.0.0",
     "servicePort": 8153,
-    "summary": "Ruta web de seis módulos, doce laboratorios en simulación y ejecución real local, y un taller de siete etapas construido para explorar, ejecutar e inspeccionar, con evaluación por reglas explicables."
+    "summary": "Ruta web de seis módulos, trece laboratorios en simulación y ejecución real local, y un taller de siete etapas construido para explorar, ejecutar e inspeccionar, con evaluación por reglas explicables."
   },
   "curricularAlignment": {
     "program": {
@@ -30,8 +30,8 @@
     ]
   },
   "duration": {
-    "recommendedTotalHours": "8 horas de ruta introductoria; preparación y prácticas reales como ampliación",
-    "hours": 8,
+    "recommendedTotalHours": "8,5 horas de ruta introductoria; preparación y prácticas reales como ampliación",
+    "hours": 8.5,
     "extensionTiming": "Los tiempos de ejecución se registran durante las prácticas; no equivalen a una duración de aprendizaje garantizada."
   },
   "platform": {
@@ -39,7 +39,7 @@
     "storagePrefix": "aula-dinero-v2",
     "legacyStoragePrefix": "guia_crypto_",
     "modules": 6,
-    "laboratories": 12,
+    "laboratories": 13,
     "xpTotal": 1500,
     "assessment": "El juicio del instructor se registra por separado de los puntos y las prácticas verificadas."
   },
@@ -85,8 +85,8 @@
     {
       "phase": "reflection",
       "name": "Reflexión inicial",
-      "purpose": "Comprender la disrupción del dinero programable frente a pasarelas centralizadas tradicionales y evaluar la viabilidad de blockchain.",
-      "hours": 1
+      "purpose": "Comprender la disrupción del dinero programable frente a pasarelas centralizadas tradicionales, el funcionamiento de bloques y transacciones, y evaluar la viabilidad de blockchain.",
+      "hours": 1.5
     },
     {
       "phase": "contextualization",

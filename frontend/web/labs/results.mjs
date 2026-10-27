@@ -102,6 +102,8 @@ const KEY_LABELS = {
   batchId: 'Lote', quarantined: '¿En cuarentena?', humidity: 'Humedad (%)', hmf: 'HMF (mg/kg)', deltaC13: 'Delta de carbono (‰)', steps: 'Etapas', scenarios: 'Escenarios', name: 'Nombre',
   effect: 'Efecto', gasUsed: 'Gas usado', commands: 'Comandos', task: 'Tarea', layers: 'Capas', rows: 'Registros', duplicates: 'Duplicados', action: 'Operación', balanceEth: 'Garantía disponible (ETH)',
   pendingEth: 'Saldo pendiente (ETH)', predictionCorrect: '¿Acertó tu predicción?', exitCode: 'Código de salida', success: '¿Terminó sin errores?', stdout: 'Salida', stderr: 'Diagnóstico',
+  blocks: 'Bloques', data: 'Contenido', previousHash: 'Hash anterior', parentHash: 'Hash anterior (parentHash)', intact: '¿Cadena íntegra?', linked: '¿Enlaza con el anterior?',
+  chainId: 'Identificador de red (chainId)', client: 'Cliente del nodo', nodeType: 'Tipo de nodo', latestBlock: 'Último bloque', timestamp: 'Marca de tiempo', transactions: 'Transacciones',
   durationMs: 'Duración (ms)', timedOut: '¿Se agotó el tiempo?', truncated: '¿Salida recortada?', hash: 'Hash', blockNumber: 'Bloque', receipt: 'Recibo', status: 'Estado', certificate: 'Certificado', candidate: 'Opción'
 };
 

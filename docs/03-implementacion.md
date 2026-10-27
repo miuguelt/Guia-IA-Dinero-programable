@@ -84,3 +84,11 @@ Observa cómo el sistema responde y neutraliza cuatro vectores de ataque comunes
 4. **Ataque de reentrada:** El contrato atacante `AtacanteRetiro` es frustrado porque el saldo se reduce a cero antes de transferir dinero (patrón CEI).
 
 Las pruebas que validan esta etapa están en [04-validacion.md](04-validacion.md).
+
+## Para tu evidencia MG-A03
+
+Este documento respalda la ficha del módulo 3, paso Aplica (`#m3/3`).
+
+- **Observa:** pega la salida de `npm run probar:seguridad` o de `npm run etapa:3` e indica la modalidad.
+- **Explica:** usa el experimento 3 para describir el rechazo con `SoloOraculo` y el saldo que quedó, y el experimento 4 para explicar por qué `retirar()` deja el saldo en cero antes de enviar los fondos.
+- **Tu proyecto:** describe con palabras una regla de permiso de tu proceso: quién puede ejecutar qué acción y qué pasa si otra cuenta lo intenta.

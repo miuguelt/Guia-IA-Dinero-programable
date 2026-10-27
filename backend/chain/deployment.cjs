@@ -2,6 +2,7 @@ const {randomUUID} = require('node:crypto');
 
 async function deployContracts(hre) {
   const [admin, oracle] = await hre.ethers.getSigners();
+  if (!oracle) throw new Error('El despliegue requiere dos cuentas: administradora y oráculo.');
   const definitions = {};
   async function deploy(name, args = [], options = {}) {
     const factory = await hre.ethers.getContractFactory(name, options);

@@ -1,6 +1,6 @@
 const { randomUUID } = require('node:crypto');
 const { reject } = require('../http/response.cjs');
-const LAB_IDS = ['elections', 'signatures', 'pipeline', 'pharma', 'honey', 'audit', 'evm', 'myths', 'comparison', 'pc', 'architecture', 'database'];
+const LAB_IDS = ['elections', 'signatures', 'pipeline', 'pharma', 'honey', 'audit', 'evm', 'myths', 'comparison', 'pc', 'architecture', 'database', 'blocks'];
 
 function createRunService(execute) {
   const jobs = new Map();

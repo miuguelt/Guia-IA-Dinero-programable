@@ -85,7 +85,7 @@ test('la navegación muestra módulos, restaura enlaces directos y completa sin 
   await navigate(context, '#home');
   assert.match(document.querySelector('.hero .button').textContent, /Continuar/);
   await navigate(context, '#labs');
-  assert.equal(document.querySelectorAll('#labs-catalog .lab-card').length, 12);
+  assert.equal(document.querySelectorAll('#labs-catalog .lab-card').length, 13);
   assert.deepEqual([...document.querySelectorAll('.lab-stage h2')].map(node => node.textContent), ['Comprender y decidir', 'Construir y conectar', 'Verificar y entregar']);
   assert.ok([...document.querySelectorAll('.lab-stage')].every(stage => stage.querySelectorAll('.lab-card').length > 0));
   await navigate(context, '#portfolio');
@@ -135,7 +135,7 @@ test('el buscador consulta el contenido, orienta sin coincidencias y permite men
   context.dom.window.close();
 });
 
-test('los doce laboratorios ejecutan la simulación real de la UI y conservan errores', async () => {
+test('los trece laboratorios ejecutan la simulación real de la UI y conservan errores', async () => {
   const context = setup('#labs');
   await context.app.ready;
   for (const lab of labs) {

@@ -147,6 +147,20 @@ test('cada evidencia se construye con los bloques Observa, Explica y Tu proyecto
   }
 });
 
+// La estación muestra «Qué se entrega: docs/…»; ese documento debe apoyar la misma ficha.
+test('el documento de apoyo de cada evidencia explica cómo alimenta sus bloques', () => {
+  for (const artefacto of JSON.parse(leer('deliverables.registry.json')).artifacts) {
+    const documento = leer(artefacto.evidence);
+    const inicio = documento.indexOf(`## Para tu evidencia ${artefacto.id}`);
+    assert.ok(inicio >= 0, `${artefacto.evidence}: sin sección para ${artefacto.id}`);
+    const seccion = documento.slice(inicio);
+    for (const bloque of ['Observa', 'Explica', 'Tu proyecto']) assert.match(seccion, new RegExp(`\\*\\*${bloque}:?\\*\\*`), `${artefacto.evidence}: ${bloque}`);
+    assert.match(seccion, new RegExp(`\\(#?[^)]*${artefacto.station.sectionId}`), `${artefacto.evidence}: sin enlace a ${artefacto.station.sectionId}`);
+  }
+  const cierre = leer('docs/05-cierre.md');
+  assert.doesNotMatch(cierre, /simulador \(de la estación anterior\)|Selección Tecnológica/, 'docs/05-cierre.md describe otra tarea');
+});
+
 test('el paso Aplica orienta hacia su fuente sin repetir la estación', () => {
   const registro = JSON.parse(leer('deliverables.registry.json'));
   const rutas = new Set([...etapas.map(etapa => `#taller/${etapa.numero}`), ...labs.map(lab => `#lab/${lab.id}`), '#portfolio']);

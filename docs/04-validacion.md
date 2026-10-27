@@ -32,3 +32,13 @@ La cobertura indica qué funciones se ejecutaron durante las pruebas; no demuest
 | `npm test` | Prueba todas las etapas. |
 | `npm run cobertura` | Mide la cobertura de funciones JavaScript. La etapa 5 completa requiere PostgreSQL (nivel completo). |
 | `npm run cobertura:contrato` | Mide la cobertura del contrato Solidity. |
+
+## Para tu evidencia MG-A04
+
+Este documento respalda la ficha del módulo 4, paso Aplica (`#m4/3`).
+
+- **Observa:** ejecuta `npm run etapa:4` y registra en la tabla los tres escenarios: paquete íntegro, lectura alterada y paquete repetido.
+- **Explica:** lee las pruebas de la etapa 4 junto a `src/oraculo.js` para separar lo que demuestra la firma de lo que decide la regla de calidad, e indica quién custodia la clave del oráculo.
+- **Tu proyecto:** nombra un dato que tu sistema no puede comprobar por sí solo y quién lo firmaría.
+
+El paso 3 del ciclo de trabajo, que consiste en cambiar un valor, observar la prueba que falla y restaurarlo, es el mismo experimento que pide el bloque Explica de MG-A05.

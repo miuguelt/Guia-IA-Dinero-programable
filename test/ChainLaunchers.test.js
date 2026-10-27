@@ -1,7 +1,8 @@
 const {expect} = require('chai');
 const fs = require('node:fs/promises');
 const path = require('node:path');
-const {main,runDeployCli} = require('../scripts/deploy.js');
+const {main,runDeployCli,deploymentTarget} = require('../scripts/deploy.js');
+const {deployContracts} = require('../backend/chain/deployment.cjs');
 const {startChain,runChainCli} = require('../scripts/chain-node.cjs');
 
 describe('Preparación explícita de la cadena', function () {
@@ -37,6 +38,21 @@ describe('Preparación explícita de la cadena', function () {
     await startChain({port:18545,runtime:{run:async (task,args) => {request={task,args};}}});
     expect(request).to.deep.equal({task:'node',args:{hostname:'127.0.0.1',port:18545}});
     await expect(startChain({port:80})).to.be.rejectedWith('puerto');
+  });
+
+  it('separa el despliegue del VPS: exige su chainId y escribe un manifiesto propio', async function () {
+    expect(deploymentTarget({network:{name:'localhost'}},{})).to.deep.include({chainId:31337n,label:'local'});
+    expect(deploymentTarget({network:{name:'localhost'}},{}).destination).to.match(/artifacts[\\/]deployment\.json$/);
+    const vps = deploymentTarget({network:{name:'vps'}},{VPS_CHAIN_ID:'31338'});
+    expect(vps).to.deep.include({chainId:31338n,label:'VPS'});
+    expect(vps.destination).to.match(/artifacts[\\/]deployment\.vps\.json$/);
+    const runtime = {network:{name:'vps'},ethers:{provider:{getNetwork:async () => ({chainId:31337n})}}};
+    await expect(main({runtime,env:{VPS_CHAIN_ID:'31338'}})).to.be.rejectedWith('31338');
+  });
+
+  it('el despliegue exige una cuenta administradora y otra de oráculo', async function () {
+    const hre = {ethers:{getSigners:async () => [{address:'0x1'}]}};
+    await expect(deployContracts(hre)).to.be.rejectedWith('dos cuentas');
   });
 
   it('la entrada CLI del nodo delega el arranque y comunica un puerto inválido sin exponer errores internos', async function () {

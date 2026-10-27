@@ -131,8 +131,8 @@ test('La lección usa todo el ancho del contenedor y justifica sus párrafos', {
   await page.screenshot({ path: path.resolve('output/playwright/ruta-tres-etapas-1440.png'), fullPage: true });
   await page.goto(builtWeb + '/#labs');
   assert.equal(await page.locator('.lab-stage').count(), 3);
-  assert.equal(await page.locator('#labs-catalog .lab-card').count(), 12);
-  assert.equal(await page.locator('#labs-catalog .lab-card').evaluateAll(nodes => new Set(nodes.map(node => node.getAttribute('href'))).size), 12);
+  assert.equal(await page.locator('#labs-catalog .lab-card').count(), 13);
+  assert.equal(await page.locator('#labs-catalog .lab-card').evaluateAll(nodes => new Set(nodes.map(node => node.getAttribute('href'))).size), 13);
 });
 
 test('Búsqueda, historial, progreso y simulación funcionan sin dependencias de internet', { timeout: 60000 }, async t => {

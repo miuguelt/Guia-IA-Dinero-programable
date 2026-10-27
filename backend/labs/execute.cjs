@@ -27,6 +27,7 @@ function createLabExecutor({ chain, store, signatures, tasks }) {
     if (labId === 'signatures') return signaturePractice(data);
     if (['pc', 'audit'].includes(labId)) return tasks.run(labId === 'audit' ? 'audit' : data.task || 'compile');
     if (labId === 'database') return databasePractice(data);
+    if (labId === 'blocks') return chain.blocks();
     let signature, envelope;
     if (['pipeline', 'pharma', 'honey'].includes(labId)) {
       envelope = await signatures.sign(data);

@@ -6,7 +6,7 @@ function serializeValue(value) {
 
 function resolveVpsConfig(env = process.env) {
   const rpcUrl = env.VPS_RPC_URL || 'http://127.0.0.1:8545';
-  const chainId = Number(env.VPS_CHAIN_ID || 31337);
+  const chainId = Number(env.VPS_CHAIN_ID || 31338);
   const deploymentId = env.VPS_DEPLOYMENT_ID || `vps-anvil-${chainId}`;
   const url = new URL(rpcUrl);
   if (!['http:', 'https:'].includes(url.protocol)) {
@@ -24,7 +24,7 @@ async function syncVpsEvents({
   provider,
   contract,
   store,
-  deploymentId = 'vps-anvil-31337',
+  deploymentId = 'vps-anvil-31338',
   contractName = 'DineroProgramableBase',
   fromBlock,
 } = {}) {

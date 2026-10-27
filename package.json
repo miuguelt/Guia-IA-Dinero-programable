@@ -19,6 +19,7 @@
     "dev": "node scripts/dev.cjs",
     "node": "node scripts/chain-node.cjs",
     "deploy": "hardhat run scripts/deploy.js --network localhost",
+    "red:verificar": "node scripts/verificar-red.cjs",
     "local:start": "pwsh -NoProfile -File start-windows.ps1",
     "local:stop": "pwsh -NoProfile -File start-windows.ps1 -Stop"
   },

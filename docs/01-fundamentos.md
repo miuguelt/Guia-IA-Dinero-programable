@@ -23,6 +23,8 @@ En el desarrollo de software real (ADSO), la blockchain no reemplaza a tu base d
 * **PostgreSQL:** Es el motor de lectura y reportes (Read Model). Se alimenta de los eventos emitidos por los contratos a través de un indexador idempotente (`UNIQUE(tx_hash, log_index)` con `ON CONFLICT DO NOTHING`). Resuelve búsquedas y vistas en menos de 5 ms.
 
 > 📖 Consulta la guía de ingeniería completa: [`docs/ARQUITECTURA_BLOCKCHAIN_Y_POSTGRES_ADSO.md`](ARQUITECTURA_BLOCKCHAIN_Y_POSTGRES_ADSO.md).
+>
+> 🧱 Para ver qué guarda un bloque, cómo viaja una transacción y cómo comprobar a qué nodo te conectas, consulta [Cómo funciona una cadena de bloques](FUNCIONAMIENTO_BLOCKCHAIN_Y_VERIFICACION_DE_RED.md).
 
 ## Marco de Decisión: El Semáforo ADSO
 ¿Cómo saber si tu proyecto formativo debe usar blockchain o una base de datos tradicional? Aplica el filtro de tres preguntas:
@@ -65,3 +67,11 @@ flowchart TD
 ### ¿Por qué un dictamen explicable y acumulativo?
 Un software empresarial no debe responder únicamente con un booleano (`true`/`false`) ni lanzar excepciones descontroladas ante datos inválidos de negocio. La función devuelve `{ aprobada: boolean, motivos: string[] }`. Si fallan tanto la temperatura como la acidez, el arreglo acumula ambas causas, permitiendo generar un reporte forense transparente que explica al productor agropecuario exactamente por qué no se aprobó su lote.
 
+
+## Para tu evidencia MG-A01
+
+Este documento respalda la ficha del módulo 1, paso Aplica (`#m1/3`).
+
+- **Observa:** usa las tres preguntas y los colores del Semáforo ADSO para clasificar tres procesos de AgroPay, con un motivo por fila.
+- **Explica:** apóyate en la arquitectura híbrida para nombrar un costo del contrato, como el gas de cada escritura, y un límite, como la dependencia de un oráculo para conocer hechos externos.
+- **Tu proyecto:** responde las mismas tres preguntas para un proceso de tu proyecto formativo y asígnale un color. Ese proceso te acompañará hasta el módulo 6.

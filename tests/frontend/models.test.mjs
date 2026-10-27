@@ -55,12 +55,12 @@ test('busca explicación, comandos y acentos con fragmentos y rutas válidas', (
   assert.equal(resolveRoute('#unknown').page, 'home');
 });
 
-test('conserva seis módulos, cuatro pasos y doce laboratorios con objetivos y evidencia', () => {
+test('conserva seis módulos, cuatro pasos y trece laboratorios con objetivos y evidencia', () => {
   assert.equal(modules.length, 6);
   assert.ok(modules.every(module => module.steps.length === 4 && module.steps.every(step => step.body.length > 50)));
   assert.deepEqual(learningStages.map(stage => stage.modules.map(module => module.id)), [['m1', 'm2'], ['m3', 'm4'], ['m5', 'm6']]);
   assert.deepEqual(learningStages.flatMap(stage => stage.modules.map(module => module.id)), modules.map(module => module.id));
-  assert.equal(new Set(labs.map(lab => lab.id)).size, 12);
+  assert.equal(new Set(labs.map(lab => lab.id)).size, 13);
   assert.ok(labs.every(lab => lab.goal && lab.evidence && lab.requirements));
 });
 
@@ -85,7 +85,7 @@ test('la cuarentena persiste y las reglas de miel rechazan valores fuera del eje
   assert.equal(simulateLab('pharma', { temperature: 'texto' }, state).status, 'failed');
 });
 
-test('los doce laboratorios simulan reglas observables y mantienen cantidades como cadenas', () => {
+test('los trece laboratorios simulan reglas observables y mantienen cantidades como cadenas', () => {
   for (const lab of labs) {
     const result = simulateLab(lab.id, lab.defaults, createSimulationState());
     assert.equal(result.labId, lab.id);

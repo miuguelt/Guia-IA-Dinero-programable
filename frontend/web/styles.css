@@ -156,6 +156,31 @@ progress::-moz-progress-bar { background: var(--accent); border-radius: 1rem; }
 .lesson-body .button { margin: 1rem .4rem .3rem 0; }
 .insight { padding: 1.25rem 1.4rem; background: #edf4e9; border-left: 3px solid #71a069; border-radius: 0 .7rem .7rem 0; }
 .insight p { margin-top: .5rem; }
+/* Ilustraciones de la cadena de bloques: el SVG en línea toma sus colores de los tokens del aula. */
+.chain-diagram { margin: 1.4rem 0; padding: clamp(.6rem,1.5vw,1rem); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+/* En pantallas angostas el dibujo conserva un ancho legible y se desplaza dentro de su contenedor, como las tablas. */
+.chain-diagram-scroll { overflow-x: auto; }
+.chain-diagram svg { display: block; inline-size: 100%; min-inline-size: 640px; block-size: auto; }
+.chain-diagram figcaption { margin-top: .7rem; color: var(--muted); font-size: .85rem; }
+.chain-diagram text { font-family: "Segoe UI", Arial, sans-serif; font-size: 12.5px; }
+.chain-diagram .bg { fill: var(--canvas); }
+.chain-diagram .card { fill: var(--surface); stroke: var(--border); stroke-width: 1.5; }
+.chain-diagram .soft { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.chain-diagram .bad-card { fill: #fbeceb; stroke: var(--danger); stroke-width: 1.8; }
+.chain-diagram .zone { fill: none; stroke: var(--muted); stroke-width: 1.3; stroke-dasharray: 6 5; }
+.chain-diagram .t { fill: var(--ink); }
+.chain-diagram .m { fill: var(--muted); }
+.chain-diagram .a { fill: var(--accent); }
+.chain-diagram .bad { fill: var(--danger); }
+.chain-diagram .b { font-weight: 650; }
+.chain-diagram .h { font-size: 15px; font-weight: 700; }
+.chain-diagram .s { font-size: 11px; }
+.chain-diagram .mono { font-family: ui-monospace, Consolas, "Courier New", monospace; font-size: 11.5px; }
+.chain-diagram .ln { stroke: var(--muted); stroke-width: 1.6; fill: none; }
+.chain-diagram .ln-a { stroke: var(--accent); stroke-width: 2; fill: none; }
+.chain-diagram .ln-bad { stroke: var(--danger); stroke-width: 2; stroke-dasharray: 6 4; fill: none; }
+.chain-diagram .mk { fill: var(--accent); }
+.chain-diagram .mk-bad { fill: var(--danger); }
 .table-scroll { overflow-x: auto; width: 100%; }
 table { width: 100%; border-collapse: collapse; text-align: left; font-size: .77rem; }
 caption { text-align: left; font-size: .68rem; font-weight: 600; color: var(--muted); padding: .5rem 0; }

@@ -4,6 +4,7 @@ const {createElectionLab} = require('./elections.cjs');
 const {agroPay,tokenPayment,escrow,amount,quality} = require('./payments.cjs');
 const {pharma,honey,certificate} = require('./telemetry.cjs');
 const {collectEvents} = require('./events.cjs');
+const {inspectRecentBlocks} = require('./blocks.cjs');
 const {confirmed} = require('./receipts.cjs');
 const {closeProofResources} = require('./proof-resources.cjs');
 
@@ -27,11 +28,12 @@ function createChainRuntime(options={}) {
     throw new Error('Este laboratorio no corresponde al adaptador EVM.');
   }
   async function events(options) { return collectEvents(await connection.context(), options); }
+  async function blocks() { return inspectRecentBlocks((await connection.context()).provider); }
   async function close() {
     try { await closeProofResources(); }
     finally { connection.close(); }
   }
-  return {health:connection.health,execute,events,close};
+  return {health:connection.health,execute,events,blocks,close};
 }
 
 async function evm(ctx,input) {

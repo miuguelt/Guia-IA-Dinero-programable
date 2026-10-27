@@ -79,6 +79,13 @@ export const labGuidance = {
     troubleshoot: 'La simulación no inventa cifras de gas: para verlas necesitas la modalidad Real local.',
     taller: null,
   },
+  blocks: {
+    steps: ['Ejecuta con el contenido vacío: los cuatro bloques quedan íntegros.', 'Elige el bloque 1, escribe «Depósito de garantía: 9,00 ETH» y ejecuta sin recalcular el hash.', 'Marca «Volver a calcular el hash del bloque alterado» y ejecuta de nuevo: observa qué bloque falla ahora.', 'En Real local, compara el parentHash de cada bloque con el hash de la fila anterior.'],
+    expect: 'Sin recalcular, falla el bloque alterado; al recalcularlo, falla el enlace del bloque siguiente. En Real local todos los enlaces coinciden.',
+    troubleshoot: 'En Real local, si aparecen pocos bloques, ejecuta antes otro laboratorio que envíe transacciones. Si la red no responde, reinicia la guía con pwsh ./start-windows.ps1 -Reload.',
+    concepts: [['Hash', 'Huella de longitud fija: cambiar un solo carácter del contenido produce otra huella.'], ['Hash anterior', 'Huella del bloque previo que cada bloque guarda; en Ethereum se llama parentHash.'], ['Génesis', 'Primer bloque de la cadena; su hash anterior es una serie de ceros.']],
+    taller: null,
+  },
   pc: {
     steps: ['Elige «Compilar» y ejecuta.', 'Elige «Ejecutar pruebas» y revisa el código de salida.', 'Si tienes Slither, elige «Auditar con Slither».', 'Compara con lo que haces en el taller con npm run etapa:N.'],
     expect: 'Cada tarea termina con código de salida 0 y su reporte.',

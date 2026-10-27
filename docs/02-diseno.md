@@ -135,3 +135,11 @@ Una solución empresarial no se limita al contrato inteligente; se compone de se
 4. **Capa 4: Middleware e Indexación:** Servicios que escuchan eventos on-chain e insertan en PostgreSQL. En la industria se usan herramientas como The Graph o Ponder; en esta guía, el indexador está escrito en JavaScript (etapa 5 del taller).
 5. **Capa 5: Interfaz de Usuario (React / Next.js + Tailwind):** Vistas web y móviles que interactúan con los nodos vía JSON-RPC mediante **Viem** y **Wagmi**.
 6. **Capa 6: Identidad & UX (WebAuthn / Passkeys):** Autenticación biométrica nativa (FaceID / TouchID) sobre curvas `secp256r1`, eliminando la necesidad de extensiones de navegador y frases semilla gracias a **Smart Accounts ERC-4337** con tarifas de gas cubiertas por **Paymasters**.
+
+## Para tu evidencia MG-A02
+
+Este documento respalda la ficha del módulo 2, paso Aplica (`#m2/3`).
+
+- **Observa:** registra un dictamen aprobado y uno rechazado de la etapa 1 del taller o del laboratorio Cadena de frío.
+- **Explica:** usa la separación entre escrituras en la cadena y lecturas en PostgreSQL (sección 2) y las seis capas (sección 3) para asignar cada responsabilidad a un solo componente e indicar si su dato vive dentro o fuera de la cadena.
+- **Tu proyecto:** nombra tres actores del proceso que elegiste en MG-A01 y quién puede escribir cada dato.

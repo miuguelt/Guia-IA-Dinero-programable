@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { startServer } = require('../../backend/server.cjs');
 
-test('Los doce laboratorios reales producen resultados observados mediante la API', { timeout: 240000 }, async t => {
+test('Los trece laboratorios reales producen resultados observados mediante la API', { timeout: 240000 }, async t => {
   const instance = await startServer({ port: 0 });
   t.after(() => instance.close());
   const base = `http://127.0.0.1:${instance.server.address().port}`;
@@ -18,7 +18,7 @@ test('Los doce laboratorios reales producen resultados observados mediante la AP
     honey: { batchId: 'M-' + crypto.randomUUID(), humidity: 17.2, hmf: 14, deltaC13: -26.4 },
     evm: { action: 'deposit', amountEth: '0.01' }, myths: { prediction: 'approved', temperature: 3.5, acidity: 16 },
     comparison: { amountEth: '0.01' }, architecture: {}, elections: { candidate: 1 },
-    database: { action: 'sync' }, pc: { task: 'compile' }, audit: {}
+    database: { action: 'sync' }, pc: { task: 'compile' }, audit: {}, blocks: {}
   };
   const durations = {};
   for (const [labId, input] of Object.entries(cases)) {
@@ -39,6 +39,7 @@ test('Los doce laboratorios reales producen resultados observados mediante la AP
       assert.equal(job.result.indexing.status, 'indexed');
     }
     if (labId === 'database') assert.ok(job.result.records.length > 0);
+    if (labId === 'blocks') { assert.equal(job.result.chainId, 31337); assert.equal(job.result.intact, true); assert.ok(job.result.blocks.length > 0); }
     if (labId === 'audit') assert.equal(job.result.analysisCompleted, true);
     if (labId === 'signatures') assert.equal(job.result.verification.verified, true);
     durations[labId] = Math.round(performance.now() - began);

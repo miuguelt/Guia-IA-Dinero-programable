@@ -9,7 +9,8 @@ test('hardhat.config.js expone la red vps parametrizada con valores predetermina
   const content = fs.readFileSync(configPath, 'utf8');
   assert.match(content, /\bvps:\s*\{/);
   assert.match(content, /process\.env\.VPS_RPC_URL/);
-  assert.match(content, /process\.env\.VPS_CHAIN_ID/);
+  assert.match(content, /process\.env\.VPS_CHAIN_ID \|\| 31338/);
+  assert.match(content, /process\.env\.VPS_ORACLE_PRIVATE_KEY/);
 });
 
 test('docker-compose.anvil.yml define el servicio Anvil persistente y protegido para Coolify', () => {
@@ -23,23 +24,36 @@ test('docker-compose.anvil.yml define el servicio Anvil persistente y protegido 
   assert.match(content, /healthcheck:/);
   assert.match(content, /coolify:/);
   assert.doesNotMatch(content, /^\s*ports:/m);
+  // El VPS usa otro chainId para que MetaMask y los scripts no lo confundan con el nodo local.
+  assert.match(content, /\$\{ANVIL_CHAIN_ID:-31338\}/);
+  assert.doesNotMatch(content, /31337/);
+});
+
+test('docker-compose.anvil.yml asocia el middleware Basic Auth a un enrutador con dominio y TLS', () => {
+  const content = fs.readFileSync(path.resolve(__dirname, '../../docker-compose.anvil.yml'), 'utf8');
+  // Un middleware definido pero no asociado a ningún enrutador no protege el RPC.
+  assert.match(content, /traefik\.http\.routers\.anvil-rpc\.middlewares=anvil-auth/);
+  assert.match(content, /traefik\.http\.routers\.anvil-rpc\.rule=Host\(`\$\{ANVIL_RPC_DOMAIN:\?/);
+  assert.match(content, /traefik\.http\.routers\.anvil-rpc\.tls=true/);
+  assert.match(content, /traefik\.http\.routers\.anvil-rpc\.service=anvil/);
+  assert.match(content, /basicauth\.users=\$\{ANVIL_BASIC_AUTH:\?/);
 });
 
 test('resolveVpsConfig valida URL, detecta credenciales Basic Auth y oculta el token', () => {
   const def = resolveVpsConfig({});
   assert.equal(def.rpcUrl, 'http://127.0.0.1:8545');
-  assert.equal(def.chainId, 31337);
-  assert.equal(def.deploymentId, 'vps-anvil-31337');
+  assert.equal(def.chainId, 31338);
+  assert.equal(def.deploymentId, 'vps-anvil-31338');
   assert.equal(def.hasAuth, false);
   assert.equal(def.maskedUrl, 'http://127.0.0.1:8545');
 
   const auth = resolveVpsConfig({
     VPS_RPC_URL: 'https://aprendiz:secreto123@rpc.ejemplo.co',
-    VPS_CHAIN_ID: '31337',
+    VPS_CHAIN_ID: '31338',
     VPS_DEPLOYMENT_ID: 'agropay-vps-01',
   });
   assert.equal(auth.hasAuth, true);
-  assert.equal(auth.chainId, 31337);
+  assert.equal(auth.chainId, 31338);
   assert.equal(auth.deploymentId, 'agropay-vps-01');
   assert.equal(auth.maskedUrl, 'https://aprendiz:***@rpc.ejemplo.co');
   assert.doesNotMatch(auth.maskedUrl, /secreto123/);
@@ -66,7 +80,7 @@ test('syncVpsEvents consulta logs del nodo EVM y proyecta en el almacén SQL con
     },
   };
   const provider = {
-    async getNetwork() { return { chainId: 31337n }; },
+    async getNetwork() { return { chainId: 31338n }; },
     async getBlockNumber() { return 25; },
     async getLogs({ address, fromBlock, toBlock }) {
       assert.equal(address, '0x1111111111111111111111111111111111111111');
@@ -112,6 +126,7 @@ test('syncVpsEvents consulta logs del nodo EVM y proyecta en el almacén SQL con
 
   const first = await syncVpsEvents({ provider, contract, store });
   assert.equal(first.status, 'synced');
+  assert.equal(first.deploymentId, 'vps-anvil-31338');
   assert.equal(first.fromBlock, 0);
   assert.equal(first.indexed, 2);
   assert.equal(first.events[0].txHash, '0xdef');
