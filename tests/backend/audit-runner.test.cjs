@@ -68,4 +68,10 @@ test('interpreta hallazgos sin convertir advertencias en garantías de seguridad
   assert.ok(summarizeAudit({ stdout: JSON.stringify({ success: false, error: 'fallo' }) }).toolError);
   assert.equal(summarizeAudit({ exitCode: 0, stdout: JSON.stringify({ success: true }) }).findings.length, 0);
   assert.equal(summarizeAudit({ stdout: JSON.stringify({ success: false, error: null }) }).toolError, null);
+  const counted = summarizeAudit({ exitCode: 0, stdout: JSON.stringify({ success: true, contractsAnalyzed: 9 }) });
+  assert.equal(counted.contractsAnalyzed, 9);
+  assert.equal(counted.stdout, 'Slither analizó 9 contratos.');
+  assert.equal(summarizeAudit({ exitCode: 0, stdout: JSON.stringify({ success: true }) }).contractsAnalyzed, 0);
+  assert.equal(summarizeAudit({ success: false, code: 'TOOL_UNAVAILABLE', stdout: '' }).code, 'TOOL_UNAVAILABLE');
+  assert.equal(summarizeAudit({ success: false, code: 'OTRO', stdout: '' }).code, 'AUDIT_OUTPUT_INVALID');
 });

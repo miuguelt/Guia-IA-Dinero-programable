@@ -5,7 +5,7 @@ import { labs } from './catalog.mjs';
 export function createLabController({ window: win, document, state, progress, api, auth, sdk, notify, updateProgressUi }) {
   function updateResult(labId, record) {
     state.results[labId] = record;
-    document.getElementById('run-result-' + labId).innerHTML = resultView(record);
+    document.getElementById('run-result-' + labId).innerHTML = resultView(record, labId);
   }
 
   function setLabMode(lab, mode) {

@@ -1,4 +1,7 @@
 // Guía paso a paso de cada laboratorio: qué hacer, qué resultado esperar y cómo resolver un fallo.
+// `notice` es un aviso propio del laboratorio; `concepts` es un glosario breve que se muestra antes de ejecutar.
+const SIGNED_DATA_NOTICE = 'Los datos se ingresan por software. Una firma válida no demuestra que una lectura corresponda a un producto físico.';
+
 export const labGuidance = {
   elections: {
     steps: ['Deja «Prueba válida» y ejecuta: el voto se cuenta.', 'Ejecuta otra vez con la misma identidad: se rechaza la repetición.', 'Pulsa «Reiniciar simulación», elige «Prueba inválida» y ejecuta.', 'Anota qué comprueba la prueba y qué no demuestra sobre una elección pública.'],
@@ -10,30 +13,52 @@ export const labGuidance = {
     steps: ['Ejecuta con las casillas desmarcadas: el paquete se acepta.', 'Marca «Alterar el contenido después de firmar» y ejecuta.', 'Desmarca la alteración, marca «Repetir el paquete» y ejecuta.', 'Compara los tres motivos con los códigos FIRMA_INVALIDA y LECTURA_REPETIDA del taller.'],
     expect: 'Solo el paquete sin alteración y sin repetir se acepta.',
     troubleshoot: 'En Real local, una firma vencida (más de cinco minutos) también se rechaza: genera una lectura nueva.',
+    notice: SIGNED_DATA_NOTICE,
     taller: 4,
   },
   pipeline: {
     steps: ['Ejecuta con 3,5 °C y acidez 16: observa las seis etapas.', 'Cambia la temperatura a 9 y ejecuta de nuevo.', 'En Real local, identifica la etapa que queda «Sin transacción» y explica por qué no hubo autorización.'],
     expect: 'Con valores dentro de los límites, el dictamen se acepta; con 9 °C se rechaza y no se envía una autorización.',
     troubleshoot: 'En Real local, si la indexación queda pendiente, el recibo se conserva: revisa que PostgreSQL esté activo y reintenta.',
+    notice: SIGNED_DATA_NOTICE,
     taller: 6,
   },
   pharma: {
     steps: ['Ejecuta LOTE-01 con 4,2 °C: queda disponible.', 'Ejecuta el mismo lote con 9 °C: entra en cuarentena.', 'Vuelve a 4 °C con el mismo lote y observa que la cuarentena se conserva.', 'Prueba un lote nuevo para comparar.'],
     expect: 'Una lectura fuera de 2 a 8 °C deja el lote en cuarentena y una lectura posterior correcta no la levanta.',
     troubleshoot: 'Si el lote sigue en cuarentena desde un intento anterior, cambia el identificador o reinicia la simulación.',
+    notice: SIGNED_DATA_NOTICE,
     taller: 1,
   },
   honey: {
     steps: ['Ejecuta con los valores iniciales: el lote cumple.', 'Sube la humedad a 22 % y ejecuta.', 'Cambia el delta de carbono a -20 y revisa la lista de razones.'],
     expect: 'Cada criterio que falla agrega su razón al dictamen.',
     troubleshoot: 'Si el campo marca error, revisa que el valor esté dentro del rango que admite el formulario.',
+    notice: SIGNED_DATA_NOTICE,
     taller: 1,
   },
   audit: {
-    steps: ['En Simulación, revisa la lista de comprobaciones.', 'Relaciona cada comprobación con una prueba de la etapa 3 del taller.', 'En Real local, ejecuta y revisa los hallazgos: separa los del contrato de producción de los del archivo adversario.'],
-    expect: 'La prueba de ataque pasa y no hay hallazgos altos o medios en los contratos de producción.',
-    troubleshoot: 'Si aparece «Slither no disponible», instala uv y Slither (ver Prepara tu equipo, nivel completo).',
+    steps: [
+      'Ejecuta la simulación con «Contrato actual (protegido)». Lee el veredicto y la tabla: cada comprobación dice qué riesgo evita y dónde está en el código.',
+      'Elige la variante que envía el dinero antes de poner el saldo en cero. Observa que Slither y la prueba de ataque detectan la reentrada.',
+      'Prueba las variantes de permisos y de lote repetido. Slither no encuentra nada, pero la prueba falla: anota por qué un analizador automático no reemplaza las pruebas.',
+      'En Real local, ejecuta la revisión del proyecto. Separa los hallazgos del contrato de producción de los del archivo adversario y explica cada hallazgo alto o medio.'
+    ],
+    expect: 'La versión protegida queda aprobada: la prueba de ataque pasa y no hay hallazgos altos ni medios en el contrato de producción. Cada variante queda en «Requiere corrección» con la comprobación que falla.',
+    troubleshoot: 'Si Real local informa que Slither no está instalado, instálalo con uv (Prepara tu equipo, nivel completo). Si falla la compilación, ejecuta npx hardhat compile y corrige el error antes de auditar. Si falla la prueba de ataque, revisa su salida en «Ver detalles de la ejecución».',
+    concepts: [
+      ['Auditoría', 'Revisión del código de un contrato para encontrar fallas antes de desplegarlo, cuando todavía se pueden corregir.'],
+      ['Slither', 'Analizador estático: lee el código sin ejecutarlo y señala patrones de riesgo conocidos. No conoce las reglas del negocio.'],
+      ['Prueba de ataque', 'Prueba automatizada en la que un contrato adversario intenta abusar del contrato. Si el abuso funciona, la prueba falla.'],
+      ['Hallazgo', 'Cada alerta del analizador. Indica el detector, la gravedad y el lugar del código.'],
+      ['Impacto', 'Gravedad estimada del hallazgo: alto, medio, bajo, informativo u optimización. Los altos y medios en producción bloquean la revisión.'],
+      ['Confianza', 'Qué tan seguro está el analizador de que el hallazgo es real y no una falsa alarma.'],
+      ['Contrato de producción', 'El código que se desplegaría para usuarios reales. Sus hallazgos altos o medios deben corregirse.'],
+      ['Archivo adversario', 'Contrato que solo existe para las pruebas y ataca a propósito, como AdversarioRetiro.sol. Que tenga hallazgos es lo esperado.'],
+      ['Checks-Effects-Interactions', 'Orden seguro de una función: comprobar condiciones, actualizar el estado y, al final, interactuar con otras cuentas.'],
+      ['Relación con el taller', 'En la etapa 3 trabajas con GarantiaAgroPay y AtacanteRetiro. Aquí se revisan DineroProgramableBase y AdversarioRetiro: el patrón de defensa es el mismo.']
+    ],
+    notice: 'Un análisis sin hallazgos altos no garantiza que el contrato sea seguro. Combínalo con pruebas de las reglas del negocio y con revisión humana.',
     taller: 3,
   },
   evm: {

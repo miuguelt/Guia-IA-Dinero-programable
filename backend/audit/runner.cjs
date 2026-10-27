@@ -5,13 +5,15 @@ const { executeProcess } = require('./process.cjs');
 
 function summarizeAudit(result) {
   let report;
-  try { report = JSON.parse(result.stdout); } catch { return { ...result, success: false, passed: false, analysisCompleted: false, findings: [], code: 'AUDIT_OUTPUT_INVALID' }; }
+  // Si Python o Slither no pudieron iniciarse, se conserva TOOL_UNAVAILABLE para indicar cómo instalarlos.
+  try { report = JSON.parse(result.stdout); } catch { return { ...result, success: false, passed: false, analysisCompleted: false, findings: [], code: result.code === 'TOOL_UNAVAILABLE' ? result.code : 'AUDIT_OUTPUT_INVALID' }; }
   const findings = (report.results?.detectors || []).map(item => ({
     detector: item.check, impact: item.impact, confidence: item.confidence, description: item.description,
     scope: (item.elements || []).every(element => /contracts[\\/]fixtures[\\/]/.test(element.source_mapping?.filename_relative || '')) && item.elements?.length ? 'fixture' : 'production',
     locations: (item.elements || []).map(element => ({ file: element.source_mapping?.filename_relative, lines: element.source_mapping?.lines }))
   }));
-  return { ...result, stdout: `Slither analizó ${report.contractsAnalyzed || 0} contratos.`, success: report.success === true, analysisCompleted: report.success === true,
+  const contractsAnalyzed = report.contractsAnalyzed || 0;
+  return { ...result, stdout: `Slither analizó ${contractsAnalyzed} contratos.`, contractsAnalyzed, success: report.success === true, analysisCompleted: report.success === true,
     passed: result.exitCode === 0 && !findings.some(item => item.scope === 'production' && ['High', 'Medium'].includes(item.impact)), findings,
     toolError: report.success ? null : redactError(report.error) };
 }

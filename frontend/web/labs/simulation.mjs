@@ -1,4 +1,5 @@
 import { evaluateMilk, evaluateHoney, numeric, parseEtherInput, formatEtherValue } from './rules.mjs';
+import { simulateAudit } from './audit-model.mjs';
 
 // Mismas tareas que ejecuta backend/audit/runner.cjs en la modalidad real.
 export const PC_COMMANDS = {
@@ -46,7 +47,7 @@ function simulateActivity(id, input, state) {
     case 'pipeline': return { ...evaluateMilk(input), steps: ['Captura de parámetros', 'Modelo de firma', 'Comprobación de integridad', 'Evaluación por reglas', 'Modelo de autorización', 'Modelo de indexación'], explanation: 'Este recorrido explica las etapas sin enviar transacciones ni escribir en PostgreSQL.' };
     case 'pharma': return simulatePharma(input, state);
     case 'honey': return evaluateHoney(input);
-    case 'audit': return { checks: ['Permisos del oráculo', 'Estado antes de llamadas externas', 'Lote de un solo uso', 'Retiro sin saldo'], explanation: 'Lista de revisión didáctica. Slither y las pruebas se ejecutan en la modalidad real.' };
+    case 'audit': return simulateAudit(input);
     case 'evm': return simulateEvm(input, state);
     case 'myths': {
       const result = evaluateMilk(input);

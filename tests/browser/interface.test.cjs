@@ -265,3 +265,25 @@ test('El laboratorio real presenta seis etapas y transiciones confirmadas sin pe
   assert.match(evidence.receipt.hash, /^0x[a-f0-9]{64}$/i);
   await page.screenshot({ path: path.resolve('output/playwright/pipeline-real-390.png'), fullPage: true });
 });
+
+test('La auditoría simulada explica el veredicto y deja el JSON en datos técnicos', { timeout: 60000 }, async t => {
+  const browser = await chromium.launch({ channel: 'chrome', headless: true });
+  t.after(() => browser.close());
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(base + '/#lab/audit');
+    await page.locator('#lab-form-audit').waitFor();
+    assert.doesNotMatch(await page.locator('[data-lab-page="audit"] .lab-context').innerText(), /Una firma válida/);
+    await page.locator('#lab-form-audit select[name=scenario]').selectOption('replay');
+    await page.locator('#run-lab-audit').click();
+    await page.locator('#run-result-audit .audit-verdict').waitFor();
+    assert.match(await page.locator('#run-result-audit .audit-verdict').innerText(), /Requiere corrección/);
+    assert.equal(await page.locator('#run-result-audit .audit-checks > li').count(), 4);
+    assert.equal(await page.locator('#run-result-audit pre.result-json').evaluateAll(nodes => nodes.filter(node => node.checkVisibility()).length), 0);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true, `lab/audit en ${width}px`);
+    const result = await new AxeBuilder({ page }).include('[data-lab-page="audit"]').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+    assert.deepEqual(result.violations.map(item => ({ id: item.id, targets: item.nodes.map(node => node.target) })), []);
+  }
+});
