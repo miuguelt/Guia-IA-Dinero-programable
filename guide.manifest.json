@@ -30,8 +30,8 @@
     ]
   },
   "duration": {
-    "recommendedTotalHours": "8,5 horas de ruta introductoria; preparación y prácticas reales como ampliación",
-    "hours": 8.5,
+    "recommendedTotalHours": "9 horas de ruta introductoria; preparación y prácticas reales como ampliación",
+    "hours": 9,
     "extensionTiming": "Los tiempos de ejecución se registran durante las prácticas; no equivalen a una duración de aprendizaje garantizada."
   },
   "platform": {
@@ -91,8 +91,8 @@
     {
       "phase": "contextualization",
       "name": "Contextualización",
-      "purpose": "Analizar casos de uso reales en Colombia como trazabilidad apícola, inclusión rural y contratación pública transparente.",
-      "hours": 1
+      "purpose": "Analizar casos de uso como la trazabilidad apícola, la cadena de frío, la votación y la contratación pública: actores, permisos, fallas y qué se guarda dentro o fuera de la cadena.",
+      "hours": 1.5
     },
     {
       "phase": "appropriation",
