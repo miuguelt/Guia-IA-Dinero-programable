@@ -2,11 +2,11 @@
 // fallas y permisos) y cada dato citado coincide con el código del taller y de los laboratorios.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { modules } from '../../frontend/web/learning/catalog.mjs';
 import { simulateLab, createSimulationState } from '../../frontend/web/labs/simulation.mjs';
-import { evaluateHoney } from '../../frontend/web/labs/rules.mjs';
+import { evaluateHoney, evaluateMilk } from '../../frontend/web/labs/rules.mjs';
 
 const require = createRequire(import.meta.url);
 const { evaluarLectura, LIMITES } = require('../../taller/solucion/src/reglas.js');
@@ -15,6 +15,7 @@ const m2 = modules.find(module => module.id === 'm2');
 const [comprende, ejemplo, practica, aplica] = m2.steps.map(step => step.body);
 const todo = m2.steps.map(step => step.body).join('\n');
 const sinEtiquetas = html => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+const CONTRATOS_AULA = readdirSync('contracts').filter(archivo => archivo.endsWith('.sol')).map(archivo => `contracts/${archivo}`);
 
 test('el módulo 2 conserva su estructura y dedica 90 minutos', () => {
   assert.deepEqual(m2.steps.map(step => step.title), ['Comprende', 'Revisa el ejemplo', 'Practica', 'Aplica']);
@@ -50,7 +51,8 @@ test('el diagrama de límites sigue el contrato accesible de las figuras del aul
 });
 
 test('las funciones y errores de Solidity citados existen en GarantiaAgroPay', () => {
-  const contrato = leer('taller/solucion/contracts/GarantiaAgroPay.sol');
+  // El ejemplo cita el contrato del taller y, en «Del caso al contrato», los del aula.
+  const contrato = [leer('taller/solucion/contracts/GarantiaAgroPay.sol'), ...CONTRATOS_AULA.map(leer)].join('\n');
   // Funciones del contrato (con paréntesis) y errores o eventos en PascalCase citados en el ejemplo.
   const funciones = [...ejemplo.matchAll(/<code>(depositarGarantia|autorizarPago|retirar)\(\)<\/code>/g)].map(([, nombre]) => nombre);
   const errores = [...ejemplo.matchAll(/<code>([A-Z][a-z]+(?:[A-Z][a-z]+)+)<\/code>/g)].map(([, nombre]) => nombre);
@@ -123,4 +125,64 @@ test('Aplica sigue breve y orienta a sus fuentes', () => {
   assert.match(aplica, /<h2>MG-A02 · Diseño razonado<\/h2>/);
   assert.ok(sinEtiquetas(aplica).length < 900, 'la ficha completa vive en la estación');
   assert.match(aplica, /href="#taller\/1"/);
+});
+
+test('«Del caso al contrato» cita los enteros, la cuarentena y la huella tal como están en el código', () => {
+  assert.match(ejemplo, /<h3>Del caso al contrato<\/h3>/);
+  const telemetria = leer('contracts/RegistroTelemetria.sol');
+  const miel = leer('contracts/CertificacionMiel.sol');
+  // Solidity no tiene decimales: las décimas se envían como enteros.
+  assert.match(telemetria, /temperaturaX10 < 20 \|\| temperaturaX10 > 80/);
+  assert.match(telemetria, /dato\.cuarentena = dato\.cuarentena \|\|/);
+  assert.match(miel, /humedadX10 > 200 \|\| hmfX10 > 400 \|\| deltaX10 > -245/);
+  assert.match(miel, /bytes32 documento/);
+  const texto = sinEtiquetas(ejemplo);
+  for (const dato of ['temperaturaX10', '42', '20', '80', 'dato.cuarentena ||', 'humedadX10', '200', '400', '-245', 'documento', 'bytes32', 'registrar()', 'certificar()']) {
+    assert.ok(texto.includes(dato), `falta ${dato}`);
+  }
+  for (const nombre of ['LecturaDuplicada', 'LoteInvalido', 'CondicionesIncumplidas']) assert.match(ejemplo, new RegExp(`<code>${nombre}</code>`), nombre);
+});
+
+test('el dictamen relaciona los motivos de la etapa 1 con el puntaje de los laboratorios', () => {
+  const aprobada = evaluateMilk({ temperature: 3.5, acidity: 16 });
+  const rechazada = evaluateMilk({ temperature: 9, acidity: 16 });
+  assert.deepEqual([aprobada.score, aprobada.accepted, rechazada.score, rechazada.accepted], [98, true, 58, false]);
+  const texto = sinEtiquetas(ejemplo);
+  assert.match(texto, /98 puntos/);
+  assert.match(texto, /58 puntos/);
+  assert.match(texto, /90 puntos/);
+});
+
+test('Practica cierra con preguntas de autoevaluación que se abren con teclado', () => {
+  assert.match(practica, /<h3>Comprueba lo que aprendiste<\/h3>/);
+  const preguntas = [...practica.matchAll(/<details><summary>([^<]+)<\/summary>([\s\S]*?)<\/details>/g)];
+  assert.ok(preguntas.length >= 5, `solo hay ${preguntas.length} preguntas`);
+  for (const [, pregunta, respuesta] of preguntas) {
+    assert.match(pregunta, /^¿[^?]+\?$/, `pregunta mal formada: ${pregunta}`);
+    assert.ok(sinEtiquetas(respuesta).trim().length > 60, `respuesta corta: ${pregunta}`);
+  }
+});
+
+test('el documento de casos describe los contratos del aula y no promete lo que no implementan', () => {
+  const documento = leer('docs/01b-casos-adso.md').replace(/\r\n/g, '\n');
+  assert.match(documento.slice(0, 700), /se prepararon para aprender/);
+  for (const retirado of [/recordTelemetry/, /QualityThresholdNotMet/, /NullifierAlreadyUsed/, /ERC-5192/, /ERC-721/, /IPFS/, /tercer producto más adulterado/i, /menos de 1 milisegundo/i, /sin intermediación bancaria/i, /-1\.0‰|−1\.0‰/]) {
+    assert.doesNotMatch(documento, retirado, `${retirado} no corresponde al aula`);
+  }
+  const fuentes = CONTRATOS_AULA.map(leer).join('\n');
+  const funciones = [...documento.matchAll(/`([a-z]\w+)\(\)`/g)].map(([, nombre]) => nombre);
+  const errores = [...documento.matchAll(/`([A-Z][a-z]+(?:[A-Z][a-z]+)+)`/g)].map(([, nombre]) => nombre);
+  for (const nombre of ['registrar', 'certificar', 'registrarElector', 'emitirVoto']) assert.ok(funciones.includes(nombre), `el documento no cita ${nombre}()`);
+  for (const nombre of [...funciones, ...errores]) assert.match(fuentes, new RegExp(`(function|error|event|contract) ${nombre}\\b`), `${nombre} no existe en contracts/`);
+  for (const umbral of ['2 a 8 °C', '20 %', '40 mg/kg', '−24,5 ‰']) assert.ok(documento.includes(umbral), umbral);
+  assert.match(documento, /## En un sistema de producción/);
+  assert.match(documento, /Semaphore/);
+});
+
+test('la sección MG-A02 del documento de diseño remite a las tablas del módulo 2', () => {
+  const documento = leer('docs/02-diseno.md');
+  const seccion = documento.slice(documento.indexOf('## Para tu evidencia MG-A02'));
+  assert.match(seccion, /#m2\/1/);
+  assert.match(seccion, /responsabilidades/);
+  assert.match(seccion, /fallas/);
 });

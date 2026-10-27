@@ -10,6 +10,8 @@ import { etapas } from '../../frontend/web/taller/catalog.mjs';
 import { prepararView } from '../../frontend/web/taller/preparar.mjs';
 import { publicarView } from '../../frontend/web/taller/publicar.mjs';
 import { tallerView } from '../../frontend/web/taller/view.mjs';
+import { homeView } from '../../frontend/web/learning/view.mjs';
+import { createProgress, createMemoryStorage } from '../../frontend/web/learning/progress.mjs';
 
 const leer = archivo => readFileSync(archivo, 'utf8');
 const documentos = ['README.md', 'GUIA_EJERCICIO_BASE_ENTORNO.md', ...readdirSync('docs').filter(f => f.endsWith('.md') && !f.startsWith('VALIDACION') && f !== 'COMPARACION-VISUAL.md').map(f => `docs/${f}`)];
@@ -107,6 +109,28 @@ test('las horas de cada fase del manifiesto suman los minutos de sus módulos', 
   const declaradas = Object.fromEntries(manifiesto.learningSequence.map(f => [f.phase, f.hours * 60]));
   assert.deepEqual(declaradas, minutos);
   assert.equal(manifiesto.duration.hours * 60, modules.reduce((total, module) => total + module.minutes, 0));
+});
+
+// La duración y la cantidad de laboratorios se escriben en palabras; deben seguir al manifiesto y al catálogo.
+test('la duración y la cantidad de laboratorios citadas coinciden con el manifiesto y el catálogo', () => {
+  const manifiesto = JSON.parse(leer('guide.manifest.json'));
+  const horasEnPalabras = { 8.5: 'ocho horas y media', 9: 'nueve horas', 9.5: 'nueve horas y media', 10: 'diez horas' };
+  const horas = horasEnPalabras[manifiesto.duration.hours];
+  assert.ok(horas, `sin palabras para ${manifiesto.duration.hours} horas`);
+  assert.ok(manifiesto.duration.recommendedTotalHours.startsWith(`${String(manifiesto.duration.hours).replace('.', ',')} horas`), 'manifiesto: texto de la duración');
+  const cierre = modules.find(module => module.id === 'm6').steps[3].body;
+  const inicio = homeView(createProgress(createMemoryStorage()).read());
+  for (const [origen, texto] of [['README.md', leer('README.md')], ['m6 · Aplica', cierre]]) {
+    const citadas = [...texto.matchAll(/suma ([a-z]+ horas(?: y media)?)/g)].map(([, frase]) => frase);
+    assert.ok(citadas.length > 0, `${origen}: sin duración`);
+    for (const frase of citadas) assert.equal(frase, horas, `${origen}: duración`);
+  }
+  const cantidades = { 12: 'doce', 13: 'trece', 14: 'catorce' };
+  assert.equal(manifiesto.platform.laboratories, labs.length);
+  for (const [origen, texto] of [['inicio', inicio], ['README.md', leer('README.md')], ['m6 · Aplica', cierre], ['manifiesto', JSON.stringify(manifiesto)]]) {
+    for (const [, palabra] of texto.matchAll(/\b(doce|trece|catorce) (?:laboratorios|prácticas)/g)) assert.equal(palabra, cantidades[labs.length], `${origen}: cantidad de laboratorios`);
+  }
+  assert.match(inicio, new RegExp(`${cantidades[labs.length]} prácticas reales`));
 });
 
 test('la plantilla del Portafolio incluye cada evidencia con su lista de chequeo y sus bloques', () => {

@@ -141,5 +141,5 @@ Una solución empresarial no se limita al contrato inteligente; se compone de se
 Este documento respalda la ficha del módulo 2, paso Aplica (`#m2/3`).
 
 - **Observa:** registra un dictamen aprobado y uno rechazado de la etapa 1 del taller o del laboratorio Cadena de frío.
-- **Explica:** usa la separación entre escrituras en la cadena y lecturas en PostgreSQL (sección 2) y las seis capas (sección 3) para asignar cada responsabilidad a un solo componente e indicar si su dato vive dentro o fuera de la cadena.
+- **Explica:** toma como modelo las tablas de responsabilidades y de fallas del paso Revisa el ejemplo del módulo 2 (`#m2/1`). Asigna cada responsabilidad a un solo componente, indica si su dato vive dentro o fuera de la cadena y describe cómo se recupera el sistema si se cae la red o PostgreSQL. La separación entre escrituras en la cadena y lecturas en PostgreSQL (sección 2) explica por qué la proyección se puede reconstruir.
 - **Tu proyecto:** nombra tres actores del proceso que elegiste en MG-A01 y quién puede escribir cada dato.

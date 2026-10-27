@@ -102,7 +102,7 @@ La recarga de desarrollo compila las fuentes web al guardar y reinicia el backen
 
 Cada módulo sigue cuatro pasos: Comprende, Revisa el ejemplo, Practica y Aplica. La búsqueda incluye explicaciones y comandos, admite consultas sin tildes y devuelve enlaces directos.
 
-La **ruta introductoria suma ocho horas y media orientativas**. Instalar el entorno y ejecutar íntegramente los trece laboratorios reales constituye una ampliación. El archivo `test-results/laboratorios-reales.json` contiene tiempos observados de ejecución de herramientas y servicios; no mide el tiempo que necesita una persona para aprender o completar una actividad.
+La **ruta introductoria suma nueve horas orientativas**. Instalar el entorno y ejecutar íntegramente los trece laboratorios reales constituye una ampliación. El archivo `test-results/laboratorios-reales.json` contiene tiempos observados de ejecución de herramientas y servicios; no mide el tiempo que necesita una persona para aprender o completar una actividad.
 
 ### Dos modalidades
 
