@@ -7,7 +7,7 @@ import { modules } from '../../frontend/web/learning/catalog.mjs';
 import { labs } from '../../frontend/web/labs/catalog.mjs';
 import { publicarView } from '../../frontend/web/taller/publicar.mjs';
 
-const leer = archivo => readFileSync(archivo, 'utf8');
+const leer = archivo => readFileSync(archivo, 'utf8').replace(/\r\n/g, '\n');
 const DOC = 'docs/FUNCIONAMIENTO_BLOCKCHAIN_Y_VERIFICACION_DE_RED.md';
 const ILUSTRACIONES = ['anatomia-bloque', 'cadena-de-bloques', 'ciclo-transaccion', 'cuentas-y-claves', 'local-vs-coolify'];
 
@@ -20,8 +20,8 @@ test('el documento explica la cadena de bloques y cómo verificar la red desde e
   ]) assert.ok(texto.includes(seccion), seccion);
   for (const campo of ['parentHash', 'stateRoot', 'transactionsRoot', 'receiptsRoot', 'baseFeePerGas', 'gasUsed']) assert.match(texto, new RegExp('`' + campo + '`'));
   for (const metodo of ['eth_chainId', 'web3_clientVersion', 'eth_blockNumber', 'eth_getBlockByNumber', 'eth_getCode']) assert.match(texto, new RegExp(metodo));
-  assert.match(texto, /```mermaid\nsequenceDiagram/);
-  assert.match(texto, /```mermaid\nflowchart/);
+  assert.match(texto, /```mermaid\r?\nsequenceDiagram/);
+  assert.match(texto, /```mermaid\r?\nflowchart/);
   assert.match(texto, /npm run red:verificar -- --red local/);
   assert.match(texto, /npm run red:verificar -- --red vps/);
   assert.match(texto, /31338/);

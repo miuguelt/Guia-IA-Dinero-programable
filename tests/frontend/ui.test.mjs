@@ -33,8 +33,8 @@ function labPage(context, labId) { return context.document.getElementById('lab/'
 function activeHeading(context) { return context.document.querySelector('.module-page[style*="display: block"] h1'); }
 async function navigate(context, hash) {
   const win = context.dom.window;
-  if (win.location.hash === hash) return;
-  win.location.hash = hash;
+  if (win.location.hash !== hash) win.location.hash = hash;
+  context.app?.render();
   await tick();
 }
 function submit(context, selector) {

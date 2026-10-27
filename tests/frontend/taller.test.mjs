@@ -24,6 +24,7 @@ function setup(hash = '') {
 }
 async function navigate(context, hash) {
   context.dom.window.location.hash = hash;
+  context.app?.render();
   await tick();
 }
 const visible = element => element && !element.hidden && !element.closest('[hidden]');
