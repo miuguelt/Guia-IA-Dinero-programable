@@ -43,7 +43,7 @@ export const etapa0 = {
     ['FALTA Paquete hardhat', 'No estás en la carpeta del taller o falta <code>npm install</code>. Ejecuta <code>cd "$HOME\\Documents\\agropay-taller"</code> y repite.'],
     ['npm ERR! network o ETIMEDOUT', 'Revisa la conexión. En una red con proxy, pide la dirección al instructor y configúrala con <code>npm config set proxy</code>.'],
   ],
-  evidenciaTexto: 'Esta etapa asegura tu base técnica. Conserva la salida de <code>npm run verificar</code>; te servirá para describir tu entorno en MG-A05.',
+  evidenciaTexto: 'Esta etapa asegura tu base técnica. Conserva la salida de <code>npm run verificar</code>: te servirá en el bloque 3 · Tu proyecto de MG-A05, cuando describas cómo reproducir tu entrega.',
 };
 
 export const etapa1 = {
@@ -181,5 +181,5 @@ export const etapa1 = {
     ['expected … to deeply equal …', 'Verifica que no se hayan modificado los textos en <code>src/reglas.js</code>; el mensaje de error está normalizado con tildes y guiones.'],
     ['TypeError: comprobarNumero is not a function', 'Confirma que las funciones auxiliares se conserven intactas en <code>src/reglas.js</code>.'],
   ],
-  evidenciaTexto: 'En tu portafolio MG-A02, explica cómo esta regla desacoplada separa la captura física de la decisión de pago. Describe un caso aprobado y uno rechazado con sus motivos técnicos.',
+  evidenciaTexto: 'Copia un dictamen aprobado y uno rechazado de <code>npm run etapa:1</code> en el bloque 1 · Observa de MG-A02. En el bloque 2, explica cómo esta regla separa la captura física de la decisión de pago.',
 };

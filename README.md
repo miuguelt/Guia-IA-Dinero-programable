@@ -117,7 +117,7 @@ La práctica WebAuthn registra y verifica una clave de acceso mediante el autent
 
 El aula recupera los módulos y evidencias del almacenamiento anterior, conserva el punto del recorrido y evita recompensas repetidas por la misma actividad. El módulo completado, la práctica real verificada y el juicio del instructor son estados diferentes.
 
-MG-A01 a MG-A05 se producen en sus respectivas estaciones. El Portafolio consolida los registros y permite exportarlos en JSON o Markdown. Los textos se guardan en el navegador; si el almacenamiento está bloqueado, la interfaz lo informa al intentar guardar. Conviene conservar una exportación para la entrega definida por el instructor.
+MG-A01 a MG-A05 se producen en sus respectivas estaciones. Todas siguen la misma ficha de tres bloques: **Observa** un resultado de AgroPay, **Explica** lo que significa y llévalo a **Tu proyecto**. Los bloques «Tu proyecto» se acumulan módulo a módulo y en m6 forman la propuesta final. El Portafolio consolida los registros y permite exportarlos en JSON o Markdown. Los textos se guardan en el navegador; si el almacenamiento está bloqueado, la interfaz lo informa al intentar guardar. Conviene conservar una exportación para la entrega definida por el instructor.
 
 ## Credenciales y datos
 

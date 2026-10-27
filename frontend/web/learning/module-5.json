@@ -26,7 +26,7 @@
     },
     {
       "title": "Aplica",
-      "body": "<h2>MG-A05 · Cierre técnico</h2><p>Consolida una prueba fallida, su corrección y la comprobación posterior. Adjunta el resultado completo de la suite y la cobertura obtenida, sin confundir pruebas aprobadas con porcentaje de funciones cubiertas.</p><h3>Ejemplo</h3><blockquote>La segunda indexación conservó el mismo número de eventos. La restricción única impidió duplicarlos. La reconstrucción produjo los mismos registros para el mismo despliegue. El reporte muestra el alcance y los errores encontrados.</blockquote><p>Relaciona cada resultado con la regla que verifica. Señala dependencias, límites y pasos de reproducción para otra persona.</p><p><strong>Fuente sugerida:</strong> la <a href=\"#taller/5\">etapa 5</a> y la <a href=\"#taller/6\">etapa 6 del Taller AgroPay</a>. Adjunta la salida de <code>npm test</code>, el archivo <code>evidencia-taller.md</code> y, si tienes el nivel completo, la salida de la etapa 5 con PostgreSQL.</p>"
+      "body": "<h2>MG-A05 · Cierre técnico reproducible</h2><p>Esta ficha reúne lo que otra persona necesita para repetir tu trabajo. Toma las salidas de la <a href=\"#taller/5\">etapa 5</a> y de la <a href=\"#taller/6\">etapa 6 del Taller AgroPay</a>: <code>npm test</code>, <code>npm run cobertura</code> y el archivo <code>evidencia-taller.md</code> que genera <code>npm run demo</code>.</p><p>Para el fallo provocado, cambia un solo valor y restáuralo al terminar. Así compruebas que las pruebas detectan el cambio sin dejar el taller alterado.</p>"
     }
   ]
 }

@@ -32,7 +32,7 @@ export const etapa4 = {
   siFalla: [
     ['Error: FIRMA_INVALIDA', 'Si experimentaste modificando campos, asegúrate de firmar nuevamente el paquete con la clave del oráculo.'],
   ],
-  evidenciaTexto: 'En tu portafolio MG-A04, contrasta los tres escenarios de prueba: paquete íntegro, lectura alterada y paquete repetido. Explica por qué una firma válida por sí sola no autoriza el pago si la regla de calidad rechaza el producto.',
+  evidenciaTexto: 'Registra los tres escenarios de prueba (paquete íntegro, lectura alterada y paquete repetido) en la tabla del bloque 1 · Observa de MG-A04. En el bloque 2, explica por qué una firma válida por sí sola no autoriza el pago si la regla de calidad rechaza el producto.',
 };
 
 export const etapa5 = {
@@ -73,7 +73,7 @@ export const etapa5 = {
     ['ECONNREFUSED 127.0.0.1:5432 o 5434', 'PostgreSQL no está en ejecución. Abre Servicios de Windows y verifica que el servicio esté iniciado.'],
     ['password authentication failed', 'La contraseña en TALLER_DATABASE_URL no coincide con el usuario configurado en PostgreSQL.'],
   ],
-  evidenciaTexto: 'En tu portafolio MG-A05, describe la importancia del principio de idempotencia. Demuestra que sincronizar dos veces seguidas no incrementa el número de registros en la base de datos y que vaciar la tabla y reconstruirla recupera la totalidad de los eventos.',
+  evidenciaTexto: 'En el bloque 2 · Explica de MG-A05, demuestra que sincronizar dos veces seguidas no aumenta el número de registros y que vaciar la tabla y reconstruirla recupera todos los eventos.',
 };
 
 export const etapa6 = {
@@ -115,5 +115,5 @@ export const etapa6 = {
   siFalla: [
     ['Fallo en la prueba de PostgreSQL', 'Si no tienes PostgreSQL activo, recuerda que la etapa funciona al 100 % en memoria para el nivel mínimo.'],
   ],
-  evidenciaTexto: 'Adjunta el archivo <code>evidencia-taller.md</code> y el reporte generado por <code>npm run inspeccionar:estado</code> a tu Portafolio de Evidencias.',
+  evidenciaTexto: 'Pega el resumen de <code>npm test</code> y el contenido de <code>evidencia-taller.md</code> en el bloque 1 · Observa de MG-A05. Conserva también el reporte de <code>npm run inspeccionar:estado</code> para tu Portafolio.',
 };

@@ -109,11 +109,57 @@ test('las horas de cada fase del manifiesto suman los minutos de sus módulos', 
   assert.equal(manifiesto.duration.hours * 60, modules.reduce((total, module) => total + module.minutes, 0));
 });
 
-test('la plantilla del Portafolio incluye cada evidencia con su lista de chequeo', () => {
+test('la plantilla del Portafolio incluye cada evidencia con su lista de chequeo y sus bloques', () => {
   const plantilla = leer('docs/evidencias-template.md');
   for (const artefacto of JSON.parse(leer('deliverables.registry.json')).artifacts) {
     assert.ok(plantilla.includes(`## ${artefacto.id} · ${artefacto.name}`), artefacto.id);
     for (const item of artefacto.checklist) assert.ok(plantilla.includes(`- [ ] ${item}`), `${artefacto.id}: ${item}`);
+    for (const campo of artefacto.fields) assert.ok(plantilla.includes(`**${campo.label}**`), `${artefacto.id}: ${campo.label}`);
   }
   assert.match(plantilla, /no contienen registros reales/);
+});
+
+// Cada estación sigue la misma ficha: observar un resultado de AgroPay, explicarlo
+// y llevar una pieza al proyecto propio. El aprendiz aprende el formato una vez.
+test('cada evidencia se construye con los bloques Observa, Explica y Tu proyecto', () => {
+  const bloques = [['observacion', /^1 · Observa/], ['explicacion', /^2 · Explica/], ['proyecto', /^3 · Tu proyecto/]];
+  for (const artefacto of JSON.parse(leer('deliverables.registry.json')).artifacts) {
+    const claves = artefacto.fields.map(campo => campo.key);
+    assert.equal(new Set(claves).size, claves.length, `${artefacto.id}: claves repetidas`);
+    for (const [clave, etiqueta] of bloques) {
+      const campo = artefacto.fields.find(item => item.key === clave);
+      assert.ok(campo, `${artefacto.id}: falta ${clave}`);
+      assert.match(campo.label, etiqueta, `${artefacto.id}: ${clave}`);
+      assert.notEqual(campo.required, false, `${artefacto.id}: ${clave} debe ser obligatorio`);
+    }
+    for (const campo of artefacto.fields) {
+      assert.ok(campo.hint?.trim(), `${artefacto.id}: ${campo.key} sin ayuda`);
+      if (campo.type === 'tabla') assert.ok(campo.columns.length >= 2 && campo.columns.every(columna => columna.placeholder), `${artefacto.id}: ${campo.key} sin columnas guiadas`);
+      else assert.ok(campo.placeholder?.trim(), `${artefacto.id}: ${campo.key} sin inicio de respuesta`);
+    }
+    // El campo heredado conserva lo que los aprendices ya escribieron, sin bloquear el estado.
+    assert.equal(artefacto.fields.find(campo => campo.key === 'evidencia')?.required, false, `${artefacto.id}: notas opcionales`);
+    assert.ok(artefacto.checklist.every(item => /^(Observa|Explica|Tu proyecto):/.test(item)), `${artefacto.id}: chequeo sin bloque`);
+    assert.notEqual(artefacto.purpose, artefacto.instructions, `${artefacto.id}: propósito repetido`);
+    assert.ok(artefacto.inputs.length && artefacto.inputs.every(entrada => !/Guía y contexto del caso/.test(entrada)), `${artefacto.id}: entradas genéricas`);
+    assert.ok(artefacto.station.minutes > 0, `${artefacto.id}: sin minutos`);
+    assert.ok(!/^Ayuda a revisar la claridad de esta evidencia/.test(artefacto.aiAssist.prompt), `${artefacto.id}: prompt genérico`);
+  }
+});
+
+test('el paso Aplica orienta hacia su fuente sin repetir la estación', () => {
+  const registro = JSON.parse(leer('deliverables.registry.json'));
+  const rutas = new Set([...etapas.map(etapa => `#taller/${etapa.numero}`), ...labs.map(lab => `#lab/${lab.id}`), '#portfolio']);
+  for (const module of modules) {
+    const cuerpo = module.steps[3].body;
+    assert.equal(module.steps[3].title, 'Aplica');
+    assert.doesNotMatch(cuerpo, /<blockquote>/, `${module.id}: ejemplo duplicado`);
+    const enlaces = [...cuerpo.matchAll(/href="(#[^"]+)"/g)].map(([, destino]) => destino);
+    assert.ok(enlaces.length > 0, `${module.id}: sin enlace a la fuente`);
+    for (const destino of enlaces) assert.ok(rutas.has(destino), `${module.id}: ${destino}`);
+    const artefacto = registro.artifacts.find(item => item.id === module.evidence);
+    if (!artefacto) continue;
+    assert.match(cuerpo, new RegExp(`<h2>${artefacto.id} · ${artefacto.name}</h2>`), `${module.id}: título`);
+    for (const texto of [artefacto.example, artefacto.instructions, artefacto.purpose]) assert.ok(!cuerpo.includes(texto), `${module.id}: repite la estación`);
+  }
 });

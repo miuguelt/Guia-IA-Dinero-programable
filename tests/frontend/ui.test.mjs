@@ -6,7 +6,7 @@ import { createAula } from '../../frontend/web/main.js';
 import { createProgress, createMemoryStorage } from '../../frontend/web/learning/progress.mjs';
 import { labs } from '../../frontend/web/labs/catalog.mjs';
 import { modules } from '../../frontend/web/learning/catalog.mjs';
-import { artifacts, exportPortfolio } from '../../frontend/web/evidence/view.mjs';
+import { artifacts, composeEvidence, evidenceSummaryHtml, exportPortfolio } from '../../frontend/web/evidence/view.mjs';
 import { escapeHtml, icon, announce } from '../../frontend/web/dom.mjs';
 import { evaluateHoney, parseEtherInput, formatEtherValue } from '../../frontend/web/labs/rules.mjs';
 import { decorateCode } from '../../frontend/web/learning/code-view.mjs';
@@ -65,11 +65,18 @@ test('la navegación muestra módulos, restaura enlaces directos y completa sin 
     }
   }
   await navigate(context, '#m1/3');
-  const textarea = document.querySelector('#dbe-MG-A01-evidencia');
-  textarea.value = '<Una decisión> con fuentes y límites.';
+  const bloques = [...document.querySelectorAll('#m1 .dbe-campo__etiqueta')].map(node => node.textContent.match(/^\d · (Observa|Explica|Tu proyecto)/)?.[0]).filter(Boolean);
+  assert.deepEqual([...new Set(bloques)], ['1 · Observa', '2 · Explica', '3 · Tu proyecto']);
+  const explicacion = document.querySelector('#dbe-MG-A01-explicacion');
+  explicacion.value = '<Una decisión> con un costo de gas.';
+  explicacion.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  const textarea = document.querySelector('#dbe-MG-A01-proyecto');
+  textarea.value = 'Mi proceso de préstamos queda en PostgreSQL.';
   textarea.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
   await tick();
-  assert.equal(app.progress.read().evidence['MG-A01'], textarea.value);
+  const mga01 = artifacts.find(artifact => artifact.id === 'MG-A01');
+  const etiqueta = key => mga01.fields.find(campo => campo.key === key).label;
+  assert.equal(app.progress.read().evidence['MG-A01'], `${etiqueta('explicacion')}: ${explicacion.value}\n${etiqueta('proyecto')}: ${textarea.value}`);
   assert.equal(document.querySelector('#m1 [data-db-evidence-status]').getAttribute('data-db-evidence-status'), 'borrador');
   document.querySelector('[data-complete=m1]').click();
   await tick();
@@ -85,7 +92,7 @@ test('la navegación muestra módulos, restaura enlaces directos y completa sin 
   assert.ok(artifacts.every(artifact => document.querySelector('[data-db-evidence-dossier]').textContent.includes(artifact.name)));
   assert.equal(document.querySelectorAll('.evidence-summary').length, 5);
   assert.match(document.querySelector('.portfolio-stats').textContent, /Pendiente/);
-  assert.equal(document.querySelector('[data-evidence-content="MG-A01"]').textContent, textarea.value);
+  assert.deepEqual([...document.querySelectorAll('[data-evidence-content="MG-A01"] p')].map(node => node.textContent), app.progress.read().evidence['MG-A01'].split('\n'));
   assert.equal(document.querySelector('[data-evidence-content="MG-A01"] una'), null);
   app.destroy();
   context.dom.window.close();
@@ -255,6 +262,49 @@ test('sincroniza el progreso anterior con el SDK y migra las estaciones a su reg
   assert.equal(context.document.querySelector('#progress-label').textContent, '1 de 6');
   context.app.destroy();
   context.dom.window.close();
+});
+
+test('la ficha de tres bloques se compone para el Portafolio sin perder filas ni escapar HTML', () => {
+  const artifact = {
+    fields: [
+      { key: 'observacion', label: '1 · Observa', type: 'tabla', columns: [{ key: 'a' }, { key: 'b' }] },
+      { key: 'explicacion', label: '2 · Explica', type: 'area' },
+      { key: 'proyecto', label: '3 · Tu proyecto', type: 'area' },
+      { key: 'evidencia', label: 'Notas', type: 'area', required: false }
+    ]
+  };
+  const text = composeEvidence(artifact, { observacion: [{ a: 'Inventario', b: 'Verde' }, { a: 'Garantía', b: '' }], explicacion: '  <b>Gas</b>  ', proyecto: '   ' });
+  assert.equal(text, '1 · Observa: Inventario · Verde; Garantía · —\n2 · Explica: <b>Gas</b>');
+  assert.equal(composeEvidence(artifact, undefined), '');
+  assert.equal(composeEvidence(artifact, { observacion: [], evidencia: 'Registro anterior.' }), 'Notas: Registro anterior.');
+  assert.equal(evidenceSummaryHtml(text), '<p>1 · Observa: Inventario · Verde; Garantía · —</p><p>2 · Explica: &lt;b&gt;Gas&lt;/b&gt;</p>');
+  assert.equal(evidenceSummaryHtml('  '), '<p>Pendiente de registro.</p>');
+});
+
+test('la estación queda lista solo con los bloques obligatorios y la lista de chequeo completos', async () => {
+  const context = setup('#m3/3');
+  await context.app.ready;
+  const { document, dom, app } = context;
+  const mga03 = artifacts.find(artifact => artifact.id === 'MG-A03');
+  const status = () => document.querySelector('#m3 [data-db-evidence-status]').getAttribute('data-db-evidence-status');
+  assert.equal(status(), 'pendiente');
+  for (const campo of mga03.fields.filter(item => item.required !== false && item.type !== 'tabla')) {
+    const control = document.querySelector(`#dbe-MG-A03-${campo.key}`);
+    control.value = `Respuesta de ${campo.key}.`;
+    control.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  }
+  await tick();
+  assert.equal(status(), 'borrador');
+  mga03.checklist.forEach((_, index) => {
+    const box = document.querySelector(`#dbe-MG-A03-c${index}`);
+    box.checked = true;
+    box.dispatchEvent(new dom.window.Event('change', { bubbles: true }));
+  });
+  await tick();
+  assert.equal(status(), 'lista');
+  assert.match(app.progress.read().evidence['MG-A03'], /^1 · Observa/);
+  app.destroy();
+  dom.window.close();
 });
 
 test('las utilidades escapan texto, conservan precisión y explican validaciones', () => {

@@ -26,7 +26,7 @@
     },
     {
       "title": "Aplica",
-      "body": "<h2>MG-A02 · Diseño razonado</h2><p>Describe un caso de tu proyecto con al menos tres actores. Dibuja o enumera el recorrido desde la entrada hasta la evidencia verificable y asigna una responsabilidad a cada componente.</p><h3>Ejemplo</h3><blockquote>El proveedor identifica el lote. El servicio comprueba la firma y evalúa reglas. El contrato solo acepta al oráculo autorizado. PostgreSQL conserva una proyección para consultar el historial, asociada al recibo de la transacción.</blockquote><p>Incluye un flujo aprobado, uno rechazado y una recuperación ante falta de conexión. Explica qué dato se conserva fuera de la cadena y por qué.</p>"
+      "body": "<h2>MG-A02 · Diseño razonado</h2><p>Retoma el proceso que elegiste en MG-A01 y asigna a cada componente una sola responsabilidad. El bloque Observa usa los dictámenes que obtuviste en la <a href=\"#taller/1\">etapa 1 del Taller AgroPay</a> o en el laboratorio <a href=\"#lab/pharma\">Cadena de frío</a>.</p>"
     }
   ]
 }

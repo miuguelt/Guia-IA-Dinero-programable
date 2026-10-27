@@ -1,3 +1,5 @@
+import { composeEvidence } from '../evidence/view.mjs';
+
 export function mountGuideSdk({ window, root, main, modules, initialHash, initialPageId }) {
   const sdk = window.DevBrainSDK;
   if (!sdk?.createApp || !sdk.reader?.montarLector || !sdk.evidence?.montar) {
@@ -59,15 +61,15 @@ export async function mountGuideEvidence({ sdk, root, registry, progress, onChan
     raiz: root,
     dossierHref: '#portfolio'
   });
-  const ids = new Set(registry.artifacts.map(artifact => artifact.id));
+  // El texto anterior vive en el campo opcional «evidencia»; la ficha lo compone junto a los bloques.
+  const byId = new Map(registry.artifacts.map(artifact => [artifact.id, artifact]));
   const unsubscribe = mounted.store.suscribir((id, record) => {
-    if (!ids.has(id)) return;
-    progress.saveEvidence(id, String(record.values?.evidencia || ''));
+    if (!byId.has(id)) return;
+    progress.saveEvidence(id, composeEvidence(byId.get(id), record.values));
     onChange(id);
   });
   for (const artifact of registry.artifacts) {
-    const current = mounted.store.leer(artifact.id);
-    const saved = String(current.values?.evidencia || '');
+    const saved = composeEvidence(artifact, mounted.store.leer(artifact.id).values);
     if (saved) progress.saveEvidence(artifact.id, saved);
   }
   return { mounted, destroy: unsubscribe };

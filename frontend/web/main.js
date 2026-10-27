@@ -11,7 +11,7 @@ import { publicarView } from './taller/publicar.mjs';
 import { createApi } from './labs/api.mjs';
 import { practiceWebAuthn } from './labs/auth.mjs';
 import { createLabController } from './labs/controller.mjs';
-import { artifacts, portfolioView, registry, downloadPortfolio } from './evidence/view.mjs';
+import { artifacts, evidenceSummaryHtml, portfolioView, registry, downloadPortfolio } from './evidence/view.mjs';
 import { decorateCode } from './learning/code-view.mjs';
 import { createLiveReload } from './navigation/live.mjs';
 import { watchScrollableRegions } from './navigation/scroll-regions.mjs';
@@ -79,7 +79,7 @@ export function createAula({ window: win, document, storage, api = createApi(), 
     if (verifiedCount) verifiedCount.textContent = `${saved.verified.length} de ${labs.length}`;
     for (const artifact of artifacts) {
       const content = document.querySelector(`[data-evidence-content="${artifact.id}"]`);
-      if (content) content.textContent = saved.evidence[artifact.id].trim() || 'Pendiente de registro.';
+      if (content) content.innerHTML = evidenceSummaryHtml(saved.evidence[artifact.id]);
     }
   }
   const labController = createLabController({ window: win, document, state, progress, api, auth, sdk, notify, updateProgressUi });

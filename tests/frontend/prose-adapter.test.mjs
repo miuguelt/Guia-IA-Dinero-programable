@@ -81,9 +81,10 @@ test('una evidencia editada en el SDK se guarda aunque no se indique otra reacci
   const store = { suscribir: callback => { suscriptores.push(callback); return () => {}; }, leer: () => ({ values: { evidencia: '' } }) };
   const sdk = { evidence: { Store: class { leer() { return { values: {} }; } guardar() {} }, montar: async () => ({ store }) } };
   const progress = createProgress(createMemoryStorage());
-  const montado = await mountGuideEvidence({ sdk, root: {}, registry: { artifacts: [{ id: 'MG-A01' }] }, progress });
-  suscriptores[0]('MG-A01', { values: { evidencia: 'Decisión con fuentes.' } });
+  const fields = [{ key: 'proyecto', label: '3 · Tu proyecto', type: 'area' }, { key: 'evidencia', label: 'Notas', type: 'area', required: false }];
+  const montado = await mountGuideEvidence({ sdk, root: {}, registry: { artifacts: [{ id: 'MG-A01', fields }] }, progress });
+  suscriptores[0]('MG-A01', { values: { proyecto: 'Decisión con fuentes.', evidencia: 'Registro anterior.' } });
   suscriptores[0]('OTRA', { values: { evidencia: 'Ignorada.' } });
-  assert.equal(progress.read().evidence['MG-A01'], 'Decisión con fuentes.');
+  assert.equal(progress.read().evidence['MG-A01'], '3 · Tu proyecto: Decisión con fuentes.\nNotas: Registro anterior.');
   assert.equal(typeof montado.destroy, 'function');
 });

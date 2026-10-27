@@ -25,7 +25,7 @@
     },
     {
       "title": "Aplica",
-      "body": "<h2>MG-A01 · Decisión de arquitectura</h2><p>Elige un proceso de tu proyecto formativo. Compara una solución con base de datos y otra con contrato inteligente. Describe actores, dato compartido, autoridad de escritura, costo y mecanismo para corregir errores.</p><h3>Ejemplo de razonamiento</h3><blockquote>El inventario interno seguirá en PostgreSQL porque lo administra una sola cooperativa. La garantía compartida entre comprador y proveedor puede explorarse en un contrato, siempre que acordemos quién certifica la entrega y cómo se resuelve una controversia.</blockquote><p>Justifica la elección y reconoce al menos un límite. No basta con afirmar que una cadena de bloques es más segura o transparente.</p>"
+      "body": "<h2>MG-A01 · Decisión de arquitectura</h2><p>Cada módulo cierra con una ficha de tres bloques: <strong>Observa</strong> un resultado de AgroPay, <strong>Explica</strong> lo que significa y llévalo a <strong>Tu proyecto</strong>. En esta primera ficha eliges el proceso de tu proyecto formativo que te acompañará en el resto del recorrido.</p><p>Ten a mano el Semáforo ADSO del paso Comprende y tu resultado del laboratorio <a href=\"#lab/myths\">IA y redes</a>. Evita respuestas como «la cadena de bloques es más segura»: cada decisión necesita un motivo y un límite.</p>"
     }
   ]
 }

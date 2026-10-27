@@ -25,7 +25,7 @@
     },
     {
       "title": "Aplica",
-      "body": "<h2>MG-A03 · Implementación comprobada</h2><p>Selecciona una regla del contrato y presenta código, prueba y resultado observado. Incluye un rechazo por permisos y una transición aprobada.</p><h3>Ejemplo de registro</h3><blockquote>La cuenta observadora intentó autorizar el lote y revirtió con NoAutorizado. El saldo pendiente siguió en cero. La misma operación con el oráculo produjo el evento esperado y reservó el monto.</blockquote><p>Explica las comprobaciones, la representación del dinero y el efecto de una transferencia fallida. Adjunta recibo o salida de prueba e identifica la modalidad.</p><p><strong>Fuente sugerida:</strong> la <a href=\"#taller/3\">etapa 3 del Taller AgroPay</a>. En tu contrato, la cuenta sin permiso recibe <code>SoloOraculo</code>; en el contrato del aula, <code>NoAutorizado</code>. Usa el nombre que corresponda a tu código.</p>"
+      "body": "<h2>MG-A03 · Implementación comprobada</h2><p>No necesitas escribir un contrato nuevo: la evidencia sale de ejecutar y leer el del taller. Ejecuta <code>npm run probar:seguridad</code> en la <a href=\"#taller/3\">etapa 3 del Taller AgroPay</a> y copia la salida en el bloque Observa.</p><p>El taller responde con <code>SoloOraculo</code> cuando una cuenta sin permiso intenta autorizar un pago; el laboratorio <a href=\"#lab/evm\">Taller EVM</a> usa <code>NoAutorizado</code>. Escribe el nombre que aparezca en tu salida.</p>"
     }
   ]
 }

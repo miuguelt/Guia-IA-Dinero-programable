@@ -25,7 +25,7 @@
     },
     {
       "title": "Aplica",
-      "body": "<h2>MG-A04 · Validación del oráculo</h2><p>Registra un caso aprobado y uno rechazado. En cada caso, separa verificación de firma, dictamen del evaluador y resultado del contrato.</p><h3>Ejemplo</h3><blockquote>El paquete conserva su firma, pero la lectura a 8 °C obtiene 58 puntos. El evaluador rechaza el caso y no autoriza el pago. Al alterar una lectura ya firmada, el sistema rechaza la firma antes de evaluar.</blockquote><p>Incluye una prueba de repetición y explica quién administra la identidad autorizada. Si usas un modelo en tu proyecto, documenta sus límites; no atribuyas ese comportamiento al evaluador por reglas de esta guía.</p>"
+      "body": "<h2>MG-A04 · Validación del oráculo</h2><p>Ejecuta <code>npm run etapa:4</code> en la <a href=\"#taller/4\">etapa 4 del Taller AgroPay</a> o usa el laboratorio <a href=\"#lab/signatures\">Firma de datos</a> con sus tres casos: lectura válida, contenido alterado y paquete repetido. Cada caso ocupa una fila del bloque Observa.</p><p>Si tu proyecto usa un modelo de IA, documenta sus límites aparte: el evaluador de esta guía funciona con reglas explicables.</p>"
     }
   ]
 }

@@ -145,7 +145,7 @@ export const etapa2 = {
     ['FALTA Paquete hardhat', 'Asegúrate de haber ejecutado <code>npm install</code> en la raíz de la carpeta del taller.'],
     ['HardhatError: Contract not deployed', 'Verifica que la versión de Node.js sea 24 o superior con <code>node --version</code>.'],
   ],
-  evidenciaTexto: 'Esta etapa sienta las bases de la custodia en cadena. Conserva los resultados de la prueba para incorporarlos en el reporte de desempeño MG-A03.',
+  evidenciaTexto: 'Esta etapa sienta las bases de la custodia en cadena. Conserva la salida de la prueba: la usarás junto con la etapa 3 en MG-A03.',
 };
 
 export const etapa3 = {
@@ -289,5 +289,5 @@ export const etapa3 = {
   siFalla: [
     ['Transaction reverted without reason', 'Asegúrate de que la red de Hardhat esté compilando correctamente con <code>npm run compilar</code>.'],
   ],
-  evidenciaTexto: 'En tu portafolio MG-A03, presenta la regla de permisos de <code>autorizarPago</code> y el orden Checks-Effects-Interactions de <code>retirar()</code>. Adjunta la salida de <code>npm run probar:seguridad</code> explicando por qué el contrato atacante no pudo sustraer más del monto asignado.',
+  evidenciaTexto: 'Pega la salida de <code>npm run probar:seguridad</code> en el bloque 1 · Observa de MG-A03. En el bloque 2, explica el rechazo de <code>autorizarPago</code> por permisos y el orden Checks-Effects-Interactions de <code>retirar()</code>, incluido por qué el contrato atacante no pudo sacar más del monto asignado.',
 };
