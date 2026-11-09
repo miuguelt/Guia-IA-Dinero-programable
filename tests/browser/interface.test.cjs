@@ -93,7 +93,7 @@ test('La lección usa todo el ancho del contenedor y justifica sus párrafos', {
   for (const width of [320, 390, 768, 1440, 1920, 2560]) {
     await page.setViewportSize({ width, height: 1080 });
     await page.goto(builtWeb + '/#m1/0');
-    const paragraph = page.locator('.lesson-body .lesson-step p').first();
+    const paragraph = page.locator('.lesson-body .lesson-step:not([hidden]) p').first();
     await paragraph.waitFor();
     await settleAlignment('.lesson-body .lesson-step:not([hidden]) p');
     const layout = await paragraph.evaluate(node => {
@@ -127,7 +127,7 @@ test('La lección usa todo el ancho del contenedor y justifica sus párrafos', {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(builtWeb + '/#home');
   assert.deepEqual(await page.locator('.learning-stage').evaluateAll(nodes => nodes.map(node => node.querySelector('h3').textContent)), ['Comprender y decidir', 'Construir y conectar', 'Verificar y entregar']);
-  assert.deepEqual(await page.locator('.learning-stage').evaluateAll(nodes => nodes.map(node => node.querySelectorAll('.module-card').length)), [2, 2, 2]);
+  assert.deepEqual(await page.locator('.learning-stage').evaluateAll(nodes => nodes.map(node => node.querySelectorAll('.module-card').length)), [3, 2, 2]);
   await page.screenshot({ path: path.resolve('output/playwright/ruta-tres-etapas-1440.png'), fullPage: true });
   await page.goto(builtWeb + '/#labs');
   assert.equal(await page.locator('.lab-stage').count(), 3);
