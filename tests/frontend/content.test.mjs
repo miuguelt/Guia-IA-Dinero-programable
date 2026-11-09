@@ -98,8 +98,8 @@ test('el README relaciona cada documento de apoyo con su módulo web', () => {
 test('las horas de cada fase del manifiesto suman los minutos de sus módulos', () => {
   const manifiesto = JSON.parse(leer('guide.manifest.json'));
   const registro = JSON.parse(leer('deliverables.registry.json'));
-  // m6 consolida el Portafolio sin estación propia; pertenece a la fase de transferencia.
-  const fasePorModulo = { m6: 'transfer', ...Object.fromEntries(registro.artifacts.map(a => [a.station.sectionId, a.station.phase])) };
+  // m0 (punto de partida) y m6 (Portafolio) no tienen estación propia; pertenece a la fase de transferencia.
+  const fasePorModulo = { m0: 'reflection', m6: 'transfer', ...Object.fromEntries(registro.artifacts.map(a => [a.station.sectionId, a.station.phase])) };
   const minutos = {};
   for (const module of modules) {
     const fase = fasePorModulo[module.id];

@@ -29,6 +29,7 @@ Los documentos de `docs/` amplían la guía web. No siguen la misma numeración 
 
 | Documento | Módulo o sección web | Para qué sirve |
 |---|---|---|
+| [Mi primer contrato y arquitectura de sistemas](docs/00-mi-primer-contrato-y-sistemas.md) | m1 · Dinero y redes y m3 · Contratos y seguridad | Creación paso a paso de DispensadorDigital desde cero, analogías cotidianas (máquina dispensadora/trigger de BD) e integración Fullstack con Express y PostgreSQL. |
 | [Fundamentos y decisión](docs/01-fundamentos.md) | m1 · Dinero y redes | Evidencia MG-A01: justificar cuándo conviene una cadena de bloques. |
 | [Cómo funciona una cadena de bloques](docs/FUNCIONAMIENTO_BLOCKCHAIN_Y_VERIFICACION_DE_RED.md) | m1 · Dinero y redes | Bloques, cuentas, ciclo de una transacción y verificación del nodo local o del VPS. |
 | [Casos de uso ADSO](docs/01b-casos-adso.md) | m2 · Casos de uso y decisiones | Ejemplos de cadena de suministro y voto para analizar actores y reglas. |
@@ -102,7 +103,7 @@ La recarga de desarrollo compila las fuentes web al guardar y reinicia el backen
 
 Cada módulo sigue cuatro pasos: Comprende, Revisa el ejemplo, Practica y Aplica. La búsqueda incluye explicaciones y comandos, admite consultas sin tildes y devuelve enlaces directos.
 
-La **ruta introductoria suma nueve horas orientativas**. Instalar el entorno y ejecutar íntegramente los trece laboratorios reales constituye una ampliación. El archivo `test-results/laboratorios-reales.json` contiene tiempos observados de ejecución de herramientas y servicios; no mide el tiempo que necesita una persona para aprender o completar una actividad.
+La **ruta introductoria suma diez horas orientativas**. Instalar el entorno y ejecutar íntegramente los trece laboratorios reales constituye una ampliación. El archivo `test-results/laboratorios-reales.json` contiene tiempos observados de ejecución de herramientas y servicios; no mide el tiempo que necesita una persona para aprender o completar una actividad.
 
 ### Dos modalidades
 

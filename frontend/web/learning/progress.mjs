@@ -3,7 +3,7 @@ import { labs } from '../labs/catalog.mjs';
 
 const KEY = 'aula-dinero-v2';
 const EVIDENCE_IDS = ['MG-A01', 'MG-A02', 'MG-A03', 'MG-A04', 'MG-A05'];
-const ROUTE_PATTERN = /^(home|m[1-6]\/[0-3]|labs|lab\/[a-z]+|portfolio|preparar|taller|taller\/[0-6]|publicar)$/;
+const ROUTE_PATTERN = /^(home|m[0-6]\/[0-3]|labs|lab\/[a-z]+|portfolio|preparar|taller|taller\/[0-6]|publicar)$/;
 export const XP_CATALOG = { module: 150, verifiedLab: 50 };
 export const XP_TOTAL = modules.length * XP_CATALOG.module + labs.length * XP_CATALOG.verifiedLab;
 

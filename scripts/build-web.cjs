@@ -8,7 +8,7 @@ async function buildWeb(root = path.resolve(__dirname, '..')) {
   const target = path.join(root, 'web');
   await mkdir(target, { recursive: true });
   await mkdir(path.join(target, 'vendor'), { recursive: true });
-  await build({ entryPoints: [path.join(source, 'main.js')], bundle: true, format: 'esm', target: 'es2022',
+  await build({ entryPoints: [path.join(source, 'main.js')], bundle: true, format: 'iife', target: 'es2022',
     outfile: path.join(target, 'main.js'), sourcemap: false, logLevel: 'silent' });
   for (const file of ['index.html', 'styles.css', 'devbrain-prose.js', 'devbrain-prose.css']) {
     await copyFile(path.join(source, file), path.join(target, file));

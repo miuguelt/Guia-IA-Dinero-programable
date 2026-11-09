@@ -728,29 +728,21 @@
      * @param {string} pageId 
      */
     showPage(pageId) {
-      const pages = this.container.querySelectorAll('.module-page');
-      let pageFound = false;
-      
-      pages.forEach(page => {
-        if (page.id === `page-${pageId}` || page.id === pageId) {
-          page.style.display = 'block';
-          pageFound = true;
-        } else {
-          page.style.display = 'none';
-        }
-      });
-      
-      if (!pageFound) {
+      const target = this._findPage(pageId);
+      // Un id desconocido no debe dejar la guía sin páginas visibles: se conserva la actual.
+      if (!target) {
         console.warn(`[SpaRouter] Page not found for id: ${pageId}`);
         return;
       }
   
+      this.container.querySelectorAll('.module-page').forEach(page => {
+        page.style.display = page === target ? 'block' : 'none';
+      });
+  
       this.currentPageId = pageId;
-      
+  
       // Update hash silently if needed
       if (window.location.hash !== `#${pageId}`) {
-        // Temporarily remove listener to avoid double triggers
-        const currentHash = window.location.hash;
         window.location.hash = pageId;
       }
   
@@ -802,9 +794,20 @@
      */
     _handleHashChange() {
       const hash = window.location.hash.slice(1);
-      if (hash && hash !== this.currentPageId) {
+      // Los hashes internos (#lab/evm, #seccion) pertenecen al lector; solo un id de página cambia de página.
+      if (hash && hash !== this.currentPageId && this._findPage(hash)) {
         this.showPage(hash);
       }
+    }
+  
+    /**
+     * @private
+     * @param {string} pageId
+     * @returns {HTMLElement|null}
+     */
+    _findPage(pageId) {
+      return [...this.container.querySelectorAll('.module-page')]
+        .find(page => page.id === `page-${pageId}` || page.id === pageId) || null;
     }
   }
   
@@ -5905,12 +5908,18 @@
   
   /**
    * Resuelve el registro cuando llega como ruta.
+   *
+   * Si la guía incrustó el registro en `DEVBRAIN_DELIVERABLES_REGISTRY`
+   * (js/deliverables.registry.js), se usa ese objeto: con file:// el navegador
+   * bloquea fetch y el Portafolio de Evidencias no cargaría.
    * @param {Object|string} origen
    * @returns {Promise<Object>}
    */
   async function dbeResolverRegistro(origen) {
     if (!origen) throw new Error('DevBrainEvidence: falta el registro de entregables.');
     if (typeof origen === 'object') return origen;
+    const incrustado = globalThis.DEVBRAIN_DELIVERABLES_REGISTRY;
+    if (incrustado && typeof incrustado === 'object') return incrustado;
     const respuesta = await fetch(String(origen), { cache: 'no-store' });
     if (!respuesta.ok) throw new Error(`DevBrainEvidence: no se pudo leer ${origen} (${respuesta.status}).`);
     return respuesta.json();

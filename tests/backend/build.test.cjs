@@ -11,7 +11,7 @@ test('La compilación genera una web autocontenida sin alterar las fuentes', asy
   const source = path.join(root, 'frontend', 'web');
   await fs.mkdir(source, { recursive: true });
   await fs.writeFile(path.join(source, 'index.html'), '<main>Aprender</main>');
-  await fs.writeFile(path.join(source, 'main.js'), 'document.title = "Aula";');
+  await fs.writeFile(path.join(source, 'main.js'), 'export const aula = 1; document.title = "Aula";');
   await fs.writeFile(path.join(source, 'styles.css'), 'body { color: green; }');
   await fs.writeFile(path.join(source, 'devbrain-prose.js'), 'globalThis.DevBrainProseLayout = {};');
   await fs.writeFile(path.join(source, 'devbrain-prose.css'), '.prose {}');
@@ -28,7 +28,11 @@ test('La compilación genera una web autocontenida sin alterar las fuentes', asy
   assert.equal(zip.readUInt32LE(0), 0x04034b50);
   assert.ok(zip.includes(Buffer.from('agropay-taller/src/reglas.js')));
   assert.match(await fs.readFile(path.join(root, 'web', 'index.html'), 'utf8'), /Aprender/);
-  assert.match(await fs.readFile(path.join(root, 'web', 'main.js'), 'utf8'), /Aula/);
+  const bundle = await fs.readFile(path.join(root, 'web', 'main.js'), 'utf8');
+  assert.match(bundle, /Aula/);
+  // Regla 10.3: la web se abre con file://, donde Chromium bloquea los módulos ES.
+  assert.doesNotMatch(bundle, /^\s*(export|import)/m);
+  assert.match(bundle, /^\(\(\) => \{/);
   assert.match(await fs.readFile(path.join(root, 'web', 'styles.css'), 'utf8'), /green/);
   // index.html carga el adaptador de prosa de la regla 7.4; sin él la web publicada pierde la justificación.
   assert.equal(await fs.readFile(path.join(root, 'web', 'devbrain-prose.js'), 'utf8'), 'globalThis.DevBrainProseLayout = {};');
@@ -36,5 +40,11 @@ test('La compilación genera una web autocontenida sin alterar las fuentes', asy
   assert.equal(await fs.readFile(path.join(root, 'web/vendor/devbrain-learner-sdk.js'), 'utf8'), 'window.DevBrainSDK = {};');
   assert.equal(await fs.readFile(path.join(root, 'web/vendor/devbrain-learner-sdk.css'), 'utf8'), '.sdk {}');
   assert.equal(await fs.readFile(path.join(root, 'web/vendor/devbrain-reader.css'), 'utf8'), '.reader {}');
-  assert.equal(await fs.readFile(path.join(source, 'main.js'), 'utf8'), 'document.title = "Aula";');
+  assert.equal(await fs.readFile(path.join(source, 'main.js'), 'utf8'), 'export const aula = 1; document.title = "Aula";');
+});
+
+test('La página fuente carga main.js como script clásico, compatible con file://', async () => {
+  const html = await fs.readFile(path.join(__dirname, '..', '..', 'frontend', 'web', 'index.html'), 'utf8');
+  assert.match(html, /<script defer src="main\.js"><\/script>/);
+  assert.doesNotMatch(html, /type="module"/);
 });

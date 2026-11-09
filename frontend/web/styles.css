@@ -414,3 +414,18 @@ textarea { resize: vertical; line-height: 1.7; }
 #aula .sena-dossier-sheet .dossier-subtitle { color: #2f6a12 !important; }
 #aula .sena-dossier-sheet .badge--pending { color: #3f4f63 !important; }
 [data-scroll-region]:focus-visible,pre[tabindex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Diagramas conceptuales del módulo 0: SVG inline, colores por tokens para tema claro y oscuro. */
+.concept-diagram { margin: 1.5rem 0; inline-size: 100%; }
+.concept-diagram svg { display: block; inline-size: 100%; block-size: auto; max-inline-size: 100%; }
+.concept-diagram figcaption { margin-top: .6rem; color: var(--muted); font-size: .92rem; }
+.concept-diagram .d-box { fill: var(--surface); stroke: var(--border); stroke-width: 2; }
+.concept-diagram .d-accent { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+.concept-diagram .d-ok { fill: var(--accent); stroke: var(--accent-dark); stroke-width: 2; }
+.concept-diagram .d-ok + .d-text, .concept-diagram .d-ok + .d-text + .d-sub { fill: var(--surface); }
+.concept-diagram .d-bad { fill: var(--surface); stroke: var(--danger); stroke-width: 2.5; stroke-dasharray: 6 4; }
+.concept-diagram .d-text { fill: var(--ink); font: 600 15px system-ui, sans-serif; }
+.concept-diagram .d-sub { fill: var(--muted); font: 13px system-ui, sans-serif; }
+.concept-diagram .d-head { fill: var(--accent-dark); font: 700 15px system-ui, sans-serif; }
+.concept-diagram .d-line { stroke: var(--muted); stroke-width: 2; }
+.concept-diagram .d-arrowhead { fill: var(--muted); }

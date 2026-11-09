@@ -4,6 +4,9 @@ pragma solidity =0.8.24;
 /// @title GarantiaAgroPay
 /// @notice Custodia fondos de garantía de práctica y autoriza pagos a productores
 /// cuando el oráculo registrado certifica un lote conforme a las reglas.
+/// @dev Prerrequisito: antes de estudiar este contrato,
+/// programa y ejecuta las pruebas de `DispensadorDigital.sol` (etapa 1b), donde aprendes
+/// `payable`, `msg.value`, variables de estado y reversión atómica en un caso más pequeño.
 /// Los fondos de la red local no tienen valor monetario.
 contract GarantiaAgroPay {
     // --- ERRORES PERSONALIZADOS (Ahorran gas y explican el motivo de reversión) ---

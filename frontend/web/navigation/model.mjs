@@ -28,7 +28,7 @@ export function resolveRoute(hash) {
   const aliases = { welcome: 'home', 'multi-sim': 'labs', simuladores: 'labs', portafolio: 'portfolio', instalacion: 'preparar', construye: 'taller' };
   const route = aliases[value] || value;
   const [page, segment] = route.split('/');
-  if (/^m[1-6]$/.test(page)) return { page, step: /^[0-3]$/.test(segment) ? Number(segment) : 0, route: page + '/' + (/^[0-3]$/.test(segment) ? segment : '0') };
+  if (/^m[0-6]$/.test(page)) return { page, step: /^[0-3]$/.test(segment) ? Number(segment) : 0, route: page + '/' + (/^[0-3]$/.test(segment) ? segment : '0') };
   if (page === 'lab' && labs.some(lab => lab.id === segment)) return { page, labId: segment, route: page + '/' + segment };
   if (page === 'taller' && /^[0-6]$/.test(segment || '')) return { page: 'etapa', etapa: Number(segment), route: 'taller/' + segment };
   if (['home', 'labs', 'portfolio', 'preparar', 'taller', 'publicar'].includes(page)) return { page, route: page };

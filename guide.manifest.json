@@ -30,17 +30,17 @@
     ]
   },
   "duration": {
-    "recommendedTotalHours": "9 horas de ruta introductoria; preparación y prácticas reales como ampliación",
-    "hours": 9,
+    "recommendedTotalHours": "10 horas de ruta introductoria; preparación y prácticas reales como ampliación",
+    "hours": 10,
     "extensionTiming": "Los tiempos de ejecución se registran durante las prácticas; no equivalen a una duración de aprendizaje garantizada."
   },
   "platform": {
     "bootstrap": "frontend/web/main.js",
     "storagePrefix": "aula-dinero-v2",
     "legacyStoragePrefix": "guia_crypto_",
-    "modules": 6,
+    "modules": 7,
     "laboratories": 13,
-    "xpTotal": 1500,
+    "xpTotal": 1650,
     "assessment": "El juicio del instructor se registra por separado de los puntos y las prácticas verificadas."
   },
   "project": {
@@ -85,8 +85,8 @@
     {
       "phase": "reflection",
       "name": "Reflexión inicial",
-      "purpose": "Comprender la disrupción del dinero programable frente a pasarelas centralizadas tradicionales, el funcionamiento de bloques y transacciones, y evaluar la viabilidad de blockchain.",
-      "hours": 1.5
+      "purpose": "Aprender el vocabulario desde cero y escribir el primer contrato; después, comprender la disrupción del dinero programable frente a pasarelas centralizadas tradicionales, el funcionamiento de bloques y transacciones, y evaluar la viabilidad de blockchain.",
+      "hours": 2.5
     },
     {
       "phase": "contextualization",
