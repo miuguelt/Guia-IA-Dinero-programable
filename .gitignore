@@ -116,3 +116,13 @@ dist/
 /taller/*/coverage.json
 /taller/*/evidencia-taller.md
 /backend/audit/__pycache__
+
+# Salidas regenerables de la plantilla mi-dapp.
+/plantilla/*/artifacts/
+/plantilla/*/cache/
+/plantilla/*/coverage/
+/plantilla/*/coverage.json
+/plantilla/*/despliegue.json
+/plantilla/*/.pytest_cache/
+/plantilla/*/backend-python/__pycache__/
+/plantilla/*/backend-python/.pytest_cache/

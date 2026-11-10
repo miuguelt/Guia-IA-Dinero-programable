@@ -1,0 +1,124 @@
+:root {
+  color-scheme: light dark;
+  --fondo: #f3f6f8;
+  --superficie: #ffffff;
+  --texto: #1d2a33;
+  --texto-suave: #4a5b67;
+  --borde: #c9d5dd;
+  --acento: #1f6f8b;
+  --acento-texto: #ffffff;
+  --ok: #1d6b45;
+  --aviso: #8a5a00;
+  --error: #a3261f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo: #172027;
+    --superficie: #1f2b33;
+    --texto: #e6edf1;
+    --texto-suave: #b4c2cb;
+    --borde: #3a4a55;
+    --acento: #7cc4dc;
+    --acento-texto: #10202a;
+    --ok: #7fd3a6;
+    --aviso: #f0c36b;
+    --error: #ff9c94;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font: 1rem/1.6 system-ui, "Segoe UI", sans-serif;
+}
+
+main {
+  inline-size: 100%;
+  padding: clamp(1rem, 3vw, 2.5rem);
+  display: grid;
+  gap: 1.5rem;
+}
+
+section, header {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 0.75rem;
+  padding: clamp(1rem, 2.5vw, 1.75rem);
+  container-type: inline-size;
+}
+
+h1, h2 { margin: 0 0 0.5rem; line-height: 1.25; }
+
+p {
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  margin: 0.5rem 0 0;
+  text-align: start;
+  text-align-last: start;
+  hyphens: none;
+  overflow-wrap: break-word;
+}
+
+@container (min-width: 40rem) {
+  p { text-align: justify; }
+}
+
+.ayuda { color: var(--texto-suave); }
+
+#estado {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-inline-start: 0.4rem solid var(--texto-suave);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin: 0;
+  text-align: start;
+}
+#estado[data-estado="confirmado"] { border-inline-start-color: var(--ok); }
+#estado[data-estado="pendiente"], #estado[data-estado="ejecucion"] { border-inline-start-color: var(--aviso); }
+#estado[data-estado="error"] { border-inline-start-color: var(--error); }
+
+form { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); align-items: end; }
+.campo { display: grid; gap: 0.25rem; }
+label { font-weight: 600; }
+
+input {
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--borde);
+  border-radius: 0.5rem;
+  background: var(--fondo);
+  color: var(--texto);
+  font: inherit;
+}
+
+.acciones, .encabezado-lista, .acciones-fila { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.encabezado-lista { justify-content: space-between; }
+
+button {
+  min-block-size: 2.75rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--acento);
+  border-radius: 0.5rem;
+  background: var(--acento);
+  color: var(--acento-texto);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+button.secundario { background: transparent; color: var(--acento); }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--acento); outline-offset: 2px; }
+
+.tabla { inline-size: 100%; overflow-x: auto; margin-block-start: 0.75rem; }
+table { inline-size: 100%; border-collapse: collapse; }
+th, td { padding: 0.6rem 0.75rem; border-block-end: 1px solid var(--borde); text-align: start; vertical-align: middle; }
+.acciones-fila input { inline-size: 8rem; }
+
+/* text-layout-exception: una dirección de cuenta es un identificador técnico de 42 caracteres; se muestra completa y solo se parte para no desbordar la celda */
+.direccion { font-family: ui-monospace, Consolas, monospace; font-size: 0.875rem; overflow-wrap: anywhere; }

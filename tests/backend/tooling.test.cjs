@@ -25,6 +25,8 @@ async function fixture(t) {
   await fs.writeFile(path.join(root, 'css/vendor/devbrain-reader.css'), '.reader {}');
   await fs.mkdir(path.join(root, 'taller/inicio'), { recursive: true });
   await fs.writeFile(path.join(root, 'taller/inicio/package.json'), '{}');
+  await fs.mkdir(path.join(root, 'plantilla/mi-dapp'), { recursive: true });
+  await fs.writeFile(path.join(root, 'plantilla/mi-dapp/package.json'), '{}');
   await fs.writeFile(path.join(root, 'backend/server.cjs'), `
 const http=require('node:http'), fs=require('node:fs'), path=require('node:path');
 const root=path.resolve(__dirname,'..');

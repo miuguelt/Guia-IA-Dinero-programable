@@ -53,9 +53,9 @@ test('la navegación muestra módulos, restaura enlaces directos y completa sin 
   await context.app.ready;
   const { document, dom, app } = context;
   assert.match(activeHeading(context).textContent, /Del dato al pago/);
-  assert.equal(document.querySelectorAll('.module-card').length, 7);
+  assert.equal(document.querySelectorAll('.module-card').length, 8);
   assert.deepEqual([...document.querySelectorAll('.learning-stage h3')].map(node => node.textContent), ['Comprender y decidir', 'Construir y conectar', 'Verificar y entregar']);
-  assert.deepEqual([...document.querySelectorAll('.learning-stage')].map(stage => [...stage.querySelectorAll('.module-card')].map(card => card.getAttribute('href'))), [['#m0/0', '#m1/0', '#m2/0'], ['#m3/0', '#m4/0'], ['#m5/0', '#m6/0']]);
+  assert.deepEqual([...document.querySelectorAll('.learning-stage')].map(stage => [...stage.querySelectorAll('.module-card')].map(card => card.getAttribute('href'))), [['#m0/0', '#m1/0', '#m2/0'], ['#m3/0', '#m4/0'], ['#m5/0', '#m6/0', '#m7/0']]);
   for (const module of modules) {
     for (let step = 0; step < 4; step++) {
       await navigate(context, '#' + module.id + '/' + step);
@@ -80,7 +80,7 @@ test('la navegación muestra módulos, restaura enlaces directos y completa sin 
   assert.equal(document.querySelector('#m1 [data-db-evidence-status]').getAttribute('data-db-evidence-status'), 'borrador');
   document.querySelector('[data-complete=m1]').click();
   await tick();
-  assert.equal(document.querySelector('#progress-label').textContent, '1 de 7');
+  assert.equal(document.querySelector('#progress-label').textContent, '1 de 8');
   assert.equal(app.progress.read().xp, 150);
   await navigate(context, '#home');
   assert.match(document.querySelector('.hero .button').textContent, /Continuar/);
@@ -90,7 +90,7 @@ test('la navegación muestra módulos, restaura enlaces directos y completa sin 
   assert.ok([...document.querySelectorAll('.lab-stage')].every(stage => stage.querySelectorAll('.lab-card').length > 0));
   await navigate(context, '#portfolio');
   assert.ok(artifacts.every(artifact => document.querySelector('[data-db-evidence-dossier]').textContent.includes(artifact.name)));
-  assert.equal(document.querySelectorAll('.evidence-summary').length, 5);
+  assert.equal(document.querySelectorAll('.evidence-summary').length, 6);
   assert.match(document.querySelector('.portfolio-stats').textContent, /Pendiente/);
   assert.deepEqual([...document.querySelectorAll('[data-evidence-content="MG-A01"] p')].map(node => node.textContent), app.progress.read().evidence['MG-A01'].split('\n'));
   assert.equal(document.querySelector('[data-evidence-content="MG-A01"] una'), null);
@@ -212,7 +212,7 @@ test('exporta los cinco registros sin otorgar un juicio y libera las descargas',
   assert.ok(downloads[1].endsWith('.md'));
   const progress = context.app.progress.read();
   const json = JSON.parse(exportPortfolio(progress, 'json', new Date('2026-10-21T00:00:00Z')));
-  assert.equal(Object.keys(json.evidence).length, 5);
+  assert.equal(Object.keys(json.evidence).length, 6);
   assert.equal(json.instructorJudgment, 'Pendiente');
   assert.match(exportPortfolio(progress, 'markdown'), /Pendiente de registro/);
   progress.evidence['MG-A01'] = 'Decisión con resultado.';
@@ -259,7 +259,7 @@ test('sincroniza el progreso anterior con el SDK y migra las estaciones a su reg
   assert.equal(context.dom.window.localStorage.getItem('aula-dinero-v2_xp'), '200');
   assert.equal(context.dom.window.localStorage.getItem('aula-dinero-v2_evidencia_MG-A01') !== null, true);
   assert.equal(context.document.querySelector('#dbe-MG-A01-evidencia').value, 'Registro anterior con resultado y límites.');
-  assert.equal(context.document.querySelector('#progress-label').textContent, '1 de 7');
+  assert.equal(context.document.querySelector('#progress-label').textContent, '1 de 8');
   context.app.destroy();
   context.dom.window.close();
 });
@@ -324,7 +324,7 @@ test('las utilidades escapan texto, conservan precisión y explican validaciones
   assert.throws(() => parseEtherInput('1e20'), /hasta 18/);
   assert.throws(() => parseEtherInput('0'), /mayor/);
   assert.equal(evaluateHoney({ humidity: -1, hmf: -2, deltaC13: -101 }).accepted, false);
-  assert.equal(artifacts.length, 5);
+  assert.equal(artifacts.length, 6);
 });
 
 test('el código conserva contenido y sangría al resaltar y copiar; el rechazo del portapapeles se explica', async () => {

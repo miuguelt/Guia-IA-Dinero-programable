@@ -16,6 +16,7 @@ COPY frontend/web/ ./frontend/web/
 # frontend/web/evidence/view.mjs importa el registro de entregables de la raíz.
 COPY deliverables.registry.json ./
 COPY taller/inicio/ ./taller/inicio/
+COPY plantilla/mi-dapp/ ./plantilla/mi-dapp/
 COPY js/vendor/devbrain-learner-sdk.js ./js/vendor/
 COPY css/vendor/devbrain-learner-sdk.css css/vendor/devbrain-reader.css ./css/vendor/
 RUN npm run build

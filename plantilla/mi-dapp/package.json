@@ -1,0 +1,35 @@
+{
+  "name": "mi-dapp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plantilla de aplicación híbrida: contrato RegistroProductos, API en Node o Python, interfaz web y proyección de eventos.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "compilar": "hardhat compile",
+    "test": "hardhat test",
+    "test:python": "uv run --python 3.12 --with-requirements backend-python/requirements.txt pytest backend-python -q",
+    "nodo": "hardhat node",
+    "desplegar": "hardhat run scripts/desplegar.js --network localhost",
+    "desplegar:remota": "hardhat run scripts/desplegar.js --network remota",
+    "api": "node backend-node/servidor.js",
+    "api:python": "uv run --python 3.12 --with-requirements backend-python/requirements.txt uvicorn --app-dir backend-python servidor:app --port 3000",
+    "cobertura": "c8 --all --include=backend-node/**/*.js --include=scripts/**/*.js --include=frontend/**/*.js --check-coverage --functions=100 --reporter=text hardhat test",
+    "cobertura:contrato": "hardhat coverage"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "5.0.0",
+    "c8": "12.0.0",
+    "hardhat": "2.29.1",
+    "jsdom": "30.1.3",
+    "solc": "0.8.24",
+    "solidity-coverage": "0.8.17"
+  },
+  "dependencies": {
+    "ethers": "6.17.0",
+    "express": "5.3.0",
+    "pg": "8.23.1"
+  }
+}

@@ -55,10 +55,10 @@ test('busca explicación, comandos y acentos con fragmentos y rutas válidas', (
   assert.equal(resolveRoute('#unknown').page, 'home');
 });
 
-test('conserva siete módulos, cuatro pasos y trece laboratorios con objetivos y evidencia', () => {
-  assert.equal(modules.length, 7);
+test('conserva ocho módulos, cuatro pasos y trece laboratorios con objetivos y evidencia', () => {
+  assert.equal(modules.length, 8);
   assert.ok(modules.every(module => module.steps.length === 4 && module.steps.every(step => step.body.length > 50)));
-  assert.deepEqual(learningStages.map(stage => stage.modules.map(module => module.id)), [['m0', 'm1', 'm2'], ['m3', 'm4'], ['m5', 'm6']]);
+  assert.deepEqual(learningStages.map(stage => stage.modules.map(module => module.id)), [['m0', 'm1', 'm2'], ['m3', 'm4'], ['m5', 'm6', 'm7']]);
   assert.deepEqual(learningStages.flatMap(stage => stage.modules.map(module => module.id)), modules.map(module => module.id));
   assert.equal(new Set(labs.map(lab => lab.id)).size, 13);
   assert.ok(labs.every(lab => lab.goal && lab.evidence && lab.requirements));

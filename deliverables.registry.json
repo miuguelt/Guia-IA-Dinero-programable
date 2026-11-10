@@ -40,7 +40,8 @@
         "evidenceType": "producto",
         "artifacts": [
           "MG-A02",
-          "MG-A05"
+          "MG-A05",
+          "MG-A06"
         ],
         "criterion": "Producto completo y trazable.",
         "instrument": "Rúbrica",
@@ -476,6 +477,77 @@
       },
       "upload": {
         "fileName": "05-cierre.md",
+        "format": "markdown"
+      }
+    },
+    {
+      "id": "MG-A06",
+      "code": "MG-APLICACION",
+      "name": "Aplicación integrada publicada",
+      "purpose": "Demuestra que puedes llevar un contrato a una aplicación completa que otra persona puede abrir y usar.",
+      "inputs": [
+        "Plantilla mi-dapp ejecutándose en tu equipo",
+        "Salida de npm test de la plantilla",
+        "Respuesta de /api/salud de tu aplicación, publicada o en tu equipo"
+      ],
+      "instructions": "Recorre crear, actualizar y desactivar en tu aplicación, copia la lista de eventos, explica quién firmó cada operación y dónde quedó cada dato, y decide cómo adaptarás la plantilla a tu proyecto.",
+      "example": "Observa: «POST creó el producto 1 en el bloque 3; PATCH y DELETE respondieron 200; /api/eventos lista ProductoCreado, PrecioActualizado y ProductoDesactivado». Explica: «La API firmó las tres operaciones. Con mi billetera creé el producto 2 y la API respondió 403 al intentar cambiarlo». Tu proyecto: «En mi sistema de préstamo de equipos, el contrato guarda quién tiene cada equipo; los datos de las personas quedan en PostgreSQL».",
+      "station": {
+        "sectionId": "m7",
+        "order": 6,
+        "phase": "transfer",
+        "minutes": 30
+      },
+      "evidenceType": "producto",
+      "fields": [
+        {
+          "key": "observacion",
+          "label": "1 · Observa: el CRUD y sus eventos",
+          "type": "area",
+          "hint": "Copia las respuestas de crear, actualizar y desactivar un producto, y la salida de /api/eventos. Añade la respuesta de /api/salud.",
+          "placeholder": "Crear: id …, bloque … Actualizar: … Desactivar: … Eventos: …"
+        },
+        {
+          "key": "explicacion",
+          "label": "2 · Explica: quién firma y dónde queda cada dato",
+          "type": "area",
+          "hint": "Indica quién firmó cada operación, qué respondió la API al modificar un producto creado con tu billetera y qué quedó en el contrato, en los eventos y en la proyección.",
+          "placeholder": "Firmó … La API respondió … porque … En el contrato queda … En los eventos … En la proyección …"
+        },
+        {
+          "key": "proyecto",
+          "label": "3 · Tu proyecto: qué va en el contrato y cómo lo publicas",
+          "type": "area",
+          "hint": "Separa los datos de tu proyecto que irán en el contrato de los que irán en tu base de datos. Escribe la dirección publicada o por qué la publicación queda pendiente.",
+          "placeholder": "En el contrato: … En mi base de datos: … Publicada en: … / Pendiente porque …"
+        },
+        {
+          "key": "evidencia",
+          "label": "Notas adicionales (opcional)",
+          "type": "area",
+          "hint": "Agrega fuentes, dudas o registros anteriores. Este campo no es obligatorio.",
+          "placeholder": "Escribe aquí cualquier aclaración.",
+          "required": false
+        }
+      ],
+      "checklist": [
+        "Observa: adjunta las respuestas reales de crear, actualizar y desactivar, y la lista de eventos",
+        "Explica: indica quién firmó cada operación y qué respondió la API ante un producto ajeno",
+        "Explica: describe qué quedó en el contrato, en los eventos y en la proyección",
+        "Tu proyecto: separa lo que irá en el contrato de lo que irá en tu base de datos",
+        "Tu proyecto: escribe la dirección publicada o por qué queda pendiente"
+      ],
+      "criterion": "La aplicación integra contrato, API e interfaz, y la explicación distingue quién firma, dónde vive cada dato y qué está comprobado.",
+      "instrument": "Lista de chequeo de evidencia DevBrain",
+      "evidence": "docs/06-aplicacion-propia.md",
+      "nextStep": "Revisa los criterios y consolida tu Portafolio.",
+      "aiAssist": {
+        "prompt": "Revisa si mi separación entre contrato y base de datos deja algún dato personal en la cadena y si cada respuesta que cito aparece en las salidas que pegué.",
+        "verify": "Contrasta cada afirmación con código, pruebas o fuente técnica.",
+        "log": "Interacción registrada en la bitácora del aprendiz."
+      },
+      "upload": {
+        "fileName": "06-aplicacion-propia.md",
         "format": "markdown"
       }
     }

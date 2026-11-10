@@ -3,7 +3,7 @@ const path = require('node:path');
 require('./load-env.cjs');
 const root = path.resolve(__dirname, '..');
 const commands = [
-  ['--require', path.join(root, 'scripts/load-env.cjs'), '--test', '--test-concurrency=2', 'tests/backend/*.test.cjs', 'tests/frontend/*.test.mjs', 'tests/integration/*.test.cjs', 'tests/browser/*.test.cjs', 'tests/taller/*.test.cjs'],
+  ['--require', path.join(root, 'scripts/load-env.cjs'), '--test', '--test-concurrency=2', 'tests/backend/*.test.cjs', 'tests/frontend/*.test.mjs', 'tests/integration/*.test.cjs', 'tests/browser/*.test.cjs', 'tests/taller/*.test.cjs', 'tests/plantilla/*.test.cjs'],
   [path.join(root, 'node_modules/hardhat/internal/cli/cli.js'), 'test']
 ];
 for (const args of commands) {

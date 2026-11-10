@@ -3,7 +3,9 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const zlib = require('node:zlib');
 
-const EXCLUIDOS = new Set(['node_modules', 'artifacts', 'cache', 'coverage', 'coverage.json', 'evidencia-taller.md']);
+const EXCLUIDOS = new Set(['node_modules', 'artifacts', 'cache', 'coverage', 'coverage.json', 'evidencia-taller.md',
+  // Salidas locales de la plantilla mi-dapp: despliegue de la red local y cachés de Python.
+  'despliegue.json', '__pycache__', '.pytest_cache', '.venv']);
 // Fecha fija: el mismo contenido produce el mismo archivo en cada compilación.
 const FECHA_DOS = { hora: 0, dia: ((2026 - 1980) << 9) | (1 << 5) | 1 };
 

@@ -236,7 +236,8 @@ describe('⚡ Verificación: Implementación en Aplicaciones Reales, Redes y Coo
       assert.match(content, /POO y EVM/);
       assert.match(content, /storage.*memory.*calldata/s);
       assert.match(content, /msg.sender/);
-      assert.match(content, /saldosPendientes\[msg.sender\] = 0/);
+      // El módulo 3 enseña retirar() con GarantiaAgroPay, cuya variable es saldoPendiente.
+  assert.match(content, /saldoPendiente\[msg.sender\] = 0/);
     });
   });
 });

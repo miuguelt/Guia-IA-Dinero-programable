@@ -11,7 +11,7 @@
     "language": "es-CO",
     "version": "2.0.0",
     "servicePort": 8153,
-    "summary": "Ruta web de seis módulos, trece laboratorios en simulación y ejecución real local, y un taller de siete etapas construido para explorar, ejecutar e inspeccionar, con evaluación por reglas explicables."
+    "summary": "Ruta web de ocho módulos, trece laboratorios en simulación y ejecución real local, un taller de siete etapas construido para explorar, ejecutar e inspeccionar, y una plantilla para llevar el contrato a una aplicación propia con API en Node.js o Python."
   },
   "curricularAlignment": {
     "program": {
@@ -30,23 +30,23 @@
     ]
   },
   "duration": {
-    "recommendedTotalHours": "10 horas de ruta introductoria; preparación y prácticas reales como ampliación",
-    "hours": 10,
+    "recommendedTotalHours": "11,5 horas de ruta introductoria; preparación y prácticas reales como ampliación",
+    "hours": 11.5,
     "extensionTiming": "Los tiempos de ejecución se registran durante las prácticas; no equivalen a una duración de aprendizaje garantizada."
   },
   "platform": {
     "bootstrap": "frontend/web/main.js",
     "storagePrefix": "aula-dinero-v2",
     "legacyStoragePrefix": "guia_crypto_",
-    "modules": 7,
+    "modules": 8,
     "laboratories": 13,
-    "xpTotal": 1650,
+    "xpTotal": 1850,
     "assessment": "El juicio del instructor se registra por separado de los puntos y las prácticas verificadas."
   },
   "project": {
     "caseStudy": "AgroPay & GovTrust: casos de aprendizaje de garantía, evaluación y trazabilidad",
     "challenge": "Construir y verificar un recorrido de datos, firmas, reglas, contratos y consulta, con permisos y pruebas reproducibles.",
-    "finalProduct": "Repositorio con contratos, pruebas, evaluador por reglas y Portafolio de Evidencias.",
+    "finalProduct": "Repositorio con contratos, pruebas, evaluador por reglas, aplicación integrada y Portafolio de Evidencias.",
     "deliverablesRegistry": "deliverables.registry.json",
     "checkpoints": [
       {
@@ -78,6 +78,12 @@
         "name": "Cierre técnico reproducible",
         "evidence": "MG-A05",
         "criterion": "Otra persona puede reproducir la entrega y comprender el alcance de sus comprobaciones."
+      },
+      {
+        "id": "CP-06",
+        "name": "Aplicación integrada publicada",
+        "evidence": "MG-A06",
+        "criterion": "La aplicación integra contrato, API e interfaz, y la explicación distingue quién firma, dónde vive cada dato y qué está comprobado."
       }
     ]
   },
@@ -103,8 +109,8 @@
     {
       "phase": "transfer",
       "name": "Transferencia",
-      "purpose": "Integrar la solución descentralizada y transferir los artefactos verificables al proyecto formativo del aprendiz.",
-      "hours": 2.5
+      "purpose": "Integrar la solución, construir y publicar una aplicación propia con contrato, API e interfaz, y transferir los artefactos verificables al proyecto formativo del aprendiz.",
+      "hours": 4
     }
   ],
   "evidence": {
@@ -117,7 +123,8 @@
     ],
     "product": [
       "MG-A02",
-      "MG-A05"
+      "MG-A05",
+      "MG-A06"
     ]
   },
   "assessment": {
@@ -175,6 +182,19 @@
     "languages": [
       "JavaScript",
       "Solidity",
+      "SQL"
+    ]
+  },
+  "template": {
+    "name": "Plantilla mi-dapp",
+    "route": "#m7/2",
+    "source": "plantilla/mi-dapp",
+    "download": "web/descargas/mi-dapp.zip",
+    "verification": "npm run test:plantilla",
+    "languages": [
+      "Solidity",
+      "JavaScript",
+      "Python",
       "SQL"
     ]
   }

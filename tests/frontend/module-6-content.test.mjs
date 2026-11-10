@@ -156,7 +156,7 @@ test('Practica cierra con preguntas de autoevaluación que se abren con teclado'
   }
 });
 
-test('Aplica consolida las cinco evidencias y conserva la duración de la ruta', () => {
+test('Aplica consolida las evidencias, anuncia el módulo 7 y conserva la duración de la ruta', () => {
   assert.match(aplica, /<h2>Entrega tu solución razonada<\/h2>/);
   for (const artefacto of REGISTRO.artifacts) assert.ok(aplica.includes(artefacto.id), artefacto.id);
   assert.match(aplica, /href="#portfolio"/);

@@ -109,7 +109,7 @@ test('cada evidencia tiene una sola estación y cada módulo enlaza sus etapas d
   const context = setup('#m6/3');
   await context.app.ready;
   const { document } = context;
-  for (const id of ['MG-A01', 'MG-A02', 'MG-A03', 'MG-A04', 'MG-A05']) {
+  for (const id of ['MG-A01', 'MG-A02', 'MG-A03', 'MG-A04', 'MG-A05', 'MG-A06']) {
     assert.equal(document.querySelectorAll(`.lesson-step [data-db-evidence="${id}"]`).length, 1, id);
   }
   assert.equal(document.querySelector('#m6').querySelector('[data-db-evidence]'), null);

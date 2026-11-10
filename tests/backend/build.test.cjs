@@ -22,11 +22,18 @@ test('La compilación genera una web autocontenida sin alterar las fuentes', asy
   await fs.writeFile(path.join(root, 'css/vendor/devbrain-reader.css'), '.reader {}');
   await fs.mkdir(path.join(root, 'taller/inicio/src'), { recursive: true });
   await fs.writeFile(path.join(root, 'taller/inicio/src/reglas.js'), '// TODO etapa 1');
+  await fs.mkdir(path.join(root, 'plantilla/mi-dapp/contracts'), { recursive: true });
+  await fs.writeFile(path.join(root, 'plantilla/mi-dapp/contracts/RegistroProductos.sol'), '// contrato');
+  await fs.writeFile(path.join(root, 'plantilla/mi-dapp/despliegue.json'), '{}');
   const result = await buildWeb(root);
   assert.equal(result.download, path.join(root, 'web', 'descargas', 'taller-agropay.zip'));
   const zip = await fs.readFile(result.download);
   assert.equal(zip.readUInt32LE(0), 0x04034b50);
   assert.ok(zip.includes(Buffer.from('agropay-taller/src/reglas.js')));
+  assert.equal(result.template, path.join(root, 'web', 'descargas', 'mi-dapp.zip'));
+  const plantilla = await fs.readFile(result.template);
+  assert.ok(plantilla.includes(Buffer.from('mi-dapp/contracts/RegistroProductos.sol')));
+  assert.ok(!plantilla.includes(Buffer.from('despliegue.json')), 'el despliegue local no viaja en el paquete');
   assert.match(await fs.readFile(path.join(root, 'web', 'index.html'), 'utf8'), /Aprender/);
   const bundle = await fs.readFile(path.join(root, 'web', 'main.js'), 'utf8');
   assert.match(bundle, /Aula/);

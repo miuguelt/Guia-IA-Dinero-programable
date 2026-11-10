@@ -238,6 +238,48 @@ _Agrega fuentes, dudas o registros anteriores. Este campo no es obligatorio._
 - [ ] Explica: muestra un fallo, su causa y la comprobación posterior
 - [ ] Tu proyecto: escribe pasos que otra persona pueda seguir
 
+## MG-A06 · Aplicación integrada publicada
+
+**Módulo:** 7. **Tipo de evidencia:** producto. **Tiempo orientativo:** 30 min.
+
+Demuestra que puedes llevar un contrato a una aplicación completa que otra persona puede abrir y usar.
+
+**Necesitas:**
+
+- Plantilla mi-dapp ejecutándose en tu equipo.
+- Salida de npm test de la plantilla.
+- Respuesta de /api/salud de tu aplicación, publicada o en tu equipo.
+
+**Cómo se construye:** Recorre crear, actualizar y desactivar en tu aplicación, copia la lista de eventos, explica quién firmó cada operación y dónde quedó cada dato, y decide cómo adaptarás la plantilla a tu proyecto.
+
+**Ejemplo:** Observa: «POST creó el producto 1 en el bloque 3; PATCH y DELETE respondieron 200; /api/eventos lista ProductoCreado, PrecioActualizado y ProductoDesactivado». Explica: «La API firmó las tres operaciones. Con mi billetera creé el producto 2 y la API respondió 403 al intentar cambiarlo». Tu proyecto: «En mi sistema de préstamo de equipos, el contrato guarda quién tiene cada equipo; los datos de las personas quedan en PostgreSQL».
+
+**Mi registro:**
+
+**1 · Observa: el CRUD y sus eventos**
+
+_Copia las respuestas de crear, actualizar y desactivar un producto, y la salida de /api/eventos. Añade la respuesta de /api/salud._
+
+**2 · Explica: quién firma y dónde queda cada dato**
+
+_Indica quién firmó cada operación, qué respondió la API al modificar un producto creado con tu billetera y qué quedó en el contrato, en los eventos y en la proyección._
+
+**3 · Tu proyecto: qué va en el contrato y cómo lo publicas**
+
+_Separa los datos de tu proyecto que irán en el contrato de los que irán en tu base de datos. Escribe la dirección publicada o por qué la publicación queda pendiente._
+
+**Notas adicionales (opcional)**
+
+_Agrega fuentes, dudas o registros anteriores. Este campo no es obligatorio._
+
+**Lista de chequeo:**
+
+- [ ] Observa: adjunta las respuestas reales de crear, actualizar y desactivar, y la lista de eventos
+- [ ] Explica: indica quién firmó cada operación y qué respondió la API ante un producto ajeno
+- [ ] Explica: describe qué quedó en el contrato, en los eventos y en la proyección
+- [ ] Tu proyecto: separa lo que irá en el contrato de lo que irá en tu base de datos
+- [ ] Tu proyecto: escribe la dirección publicada o por qué queda pendiente
+
 ## Juicio del instructor
 
 Aprobado / No Aprobado: lo registra el instructor. Los puntos de la guía y las prácticas verificadas no reemplazan este juicio.

@@ -64,7 +64,9 @@ function limpiarSalidas(carpeta) {
 test('inicio y solución comparten pruebas, configuración, scripts y fuentes', () => {
   for (const archivo of ARCHIVOS_ENTREGADOS) {
     if (archivo === 'package.json') continue;
-    assert.equal(fs.readFileSync(path.join(inicio, archivo), 'utf8'), fs.readFileSync(path.join(solucion, archivo), 'utf8'), archivo);
+    // Git puede entregar cada copia con un salto de línea distinto; lo que debe coincidir es el contenido.
+    const contenido = carpeta => fs.readFileSync(path.join(carpeta, archivo), 'utf8').replace(/\r\n/g, '\n');
+    assert.equal(contenido(inicio), contenido(solucion), archivo);
   }
   const paqueteInicio = JSON.parse(fs.readFileSync(path.join(inicio, 'package.json'), 'utf8'));
   const paqueteSolucion = JSON.parse(fs.readFileSync(path.join(solucion, 'package.json'), 'utf8'));

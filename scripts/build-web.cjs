@@ -19,7 +19,8 @@ async function buildWeb(root = path.resolve(__dirname, '..')) {
   }
   const starter = path.join(root, 'taller', 'inicio');
   const download = await empaquetarTaller({ origen: starter, destino: path.join(target, 'descargas', 'taller-agropay.zip') });
-  return { directory: target, download: download.destino };
+  const template = await empaquetarTaller({ origen: path.join(root, 'plantilla', 'mi-dapp'), destino: path.join(target, 'descargas', 'mi-dapp.zip'), prefijo: 'mi-dapp/' });
+  return { directory: target, download: download.destino, template: template.destino };
 }
 
 async function runBuildCli({ root, operator = process, logger = console } = {}) {

@@ -1,0 +1,11 @@
+node_modules/
+artifacts/
+cache/
+coverage/
+coverage.json
+despliegue.json
+__pycache__/
+.pytest_cache/
+.venv/
+.env
+.env.*

@@ -1,0 +1,70 @@
+# =========================================================================
+# Publicación en un VPS con Coolify — aplicación con API en Node.js
+# =========================================================================
+# Coolify lee este archivo (Docker Compose Location: /docker-compose.yml).
+# En tu equipo no necesitas Docker: desarrollas con `npm run nodo` y `npm run api`.
+#
+# Todos los valores llegan desde las variables de entorno de Coolify. Ninguno
+# tiene valor por defecto: si falta uno, el despliegue se detiene y lo dice.
+#   RPC_URL            URL de tu nodo, por ejemplo https://usuario:clave@rpc.tudominio.com
+#   CLAVE_PRIVADA_API  clave de la cuenta con la que la API firma
+#   POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB  base de la proyección
+#
+# Sin `ports`: Traefik (red externa `coolify`) enruta el dominio y emite el
+# certificado. PostgreSQL solo es visible para la aplicación.
+# =========================================================================
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: backend-node/Dockerfile
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      - TZ=America/Bogota
+      - PUERTO=3000
+      - RPC_URL=${RPC_URL:?Define RPC_URL en Coolify}
+      - CLAVE_PRIVADA_API=${CLAVE_PRIVADA_API:?Define CLAVE_PRIVADA_API en Coolify}
+      - DATABASE_URL=postgres://${POSTGRES_USER:?Define POSTGRES_USER en Coolify}:${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en Coolify}@postgres:5432/${POSTGRES_DB:?Define POSTGRES_DB en Coolify}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:3000/api/salud || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - coolify
+      - interna
+
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      - TZ=America/Bogota
+      - POSTGRES_USER=${POSTGRES_USER:?Define POSTGRES_USER en Coolify}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en Coolify}
+      - POSTGRES_DB=${POSTGRES_DB:?Define POSTGRES_DB en Coolify}
+    volumes:
+      - datos_postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - interna
+
+volumes:
+  datos_postgres:
+    driver: local
+
+networks:
+  coolify:
+    external: true
+  interna:
+    driver: bridge

@@ -129,6 +129,8 @@ async function oraculoIA(lote, beneficiario, montoEth) {
 ### En Python (`scripts/agente_ia_oraculo.py`):
 Los servicios de IA construidos sobre FastAPI, PyTorch o scikit-learn pueden utilizar la biblioteca `web3.py` para firmar transacciones con su clave privada y enviarlas al endpoint JSON-RPC sin intermediarios.
 
+Una API completa en Python, con las mismas rutas que su versión en Node.js y con pruebas, está en la plantilla [`plantilla/mi-dapp`](../plantilla/mi-dapp/README.md): `backend-python/cadena.py` conecta con el contrato y `backend-python/app.py` expone el CRUD con FastAPI. El módulo 7 de la guía web la recorre paso a paso.
+
 ---
 
 ## 🪙 4. Dinero Programable con Stablecoins ERC-20 (USDC/USDT)

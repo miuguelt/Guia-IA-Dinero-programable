@@ -23,8 +23,8 @@ const web = {
 };
 const materiales = { ...Object.fromEntries(documentos.map(archivo => [archivo, leer(archivo)])), ...web };
 
-test('cada comando npm run citado existe en la guía o en el taller', () => {
-  const scripts = new Set([...Object.keys(JSON.parse(leer('package.json')).scripts), ...Object.keys(JSON.parse(leer('taller/inicio/package.json')).scripts)]);
+test('cada comando npm run citado existe en la guía, en el taller o en la plantilla', () => {
+  const scripts = new Set([...Object.keys(JSON.parse(leer('package.json')).scripts), ...Object.keys(JSON.parse(leer('taller/inicio/package.json')).scripts), ...Object.keys(JSON.parse(leer('plantilla/mi-dapp/package.json')).scripts)]);
   for (const [origen, texto] of Object.entries(materiales)) {
     for (const [, script] of texto.matchAll(/npm run ([a-z][a-z0-9:-]*)/g)) {
       // «npm run etapa:N» es la forma genérica de las siete etapas.
@@ -114,7 +114,7 @@ test('las horas de cada fase del manifiesto suman los minutos de sus módulos', 
 // La duración y la cantidad de laboratorios se escriben en palabras; deben seguir al manifiesto y al catálogo.
 test('la duración y la cantidad de laboratorios citadas coinciden con el manifiesto y el catálogo', () => {
   const manifiesto = JSON.parse(leer('guide.manifest.json'));
-  const horasEnPalabras = { 8.5: 'ocho horas y media', 9: 'nueve horas', 9.5: 'nueve horas y media', 10: 'diez horas' };
+  const horasEnPalabras = { 8.5: 'ocho horas y media', 9: 'nueve horas', 9.5: 'nueve horas y media', 10: 'diez horas', 11: 'once horas', 11.5: 'once horas y media' };
   const horas = horasEnPalabras[manifiesto.duration.hours];
   assert.ok(horas, `sin palabras para ${manifiesto.duration.hours} horas`);
   assert.ok(manifiesto.duration.recommendedTotalHours.startsWith(`${String(manifiesto.duration.hours).replace('.', ',')} horas`), 'manifiesto: texto de la duración');

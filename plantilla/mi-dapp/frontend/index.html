@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro de productos</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Registro de productos</h1>
+      <p>Esta aplicación es de práctica: sus productos y cuentas se prepararon para aprender y no representan registros ni dinero reales. Cada cambio que hagas queda guardado como un evento del contrato <code>RegistroProductos</code>.</p>
+    </header>
+
+    <p id="estado" role="status" data-estado="sin-datos">Cargando la lista de productos…</p>
+
+    <section aria-labelledby="titulo-crear">
+      <h2 id="titulo-crear">Crear un producto</h2>
+      <form id="formulario">
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" required maxlength="80" autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="precio">Precio en pesos, sin decimales</label>
+          <input id="precio" name="precio" inputmode="numeric" pattern="[0-9]+" required autocomplete="off">
+        </div>
+        <div class="acciones">
+          <button type="submit">Crear con la API</button>
+          <button type="button" id="crear-billetera" class="secundario">Crear con mi billetera</button>
+        </div>
+      </form>
+      <p class="ayuda"><strong>Crear con la API:</strong> el servidor firma la transacción con su propia cuenta y paga el gas; tú no necesitas billetera. <strong>Crear con mi billetera:</strong> la API solo prepara la transacción y tú la firmas, así que el producto queda a nombre de tu cuenta y solo tú podrás modificarlo.</p>
+    </section>
+
+    <section aria-labelledby="titulo-lista">
+      <div class="encabezado-lista">
+        <h2 id="titulo-lista">Productos</h2>
+        <button type="button" id="actualizar" class="secundario">Actualizar lista</button>
+      </div>
+      <div class="tabla">
+        <table>
+          <thead>
+            <tr><th scope="col">Id</th><th scope="col">Nombre</th><th scope="col">Precio</th><th scope="col">Responsable</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr>
+          </thead>
+          <tbody id="lista"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

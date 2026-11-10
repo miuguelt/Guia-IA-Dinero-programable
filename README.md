@@ -1,6 +1,6 @@
 # Dinero programable — Aula ADSO
 
-Guía web para aprendices con bases de JavaScript, programación orientada a objetos y bases de datos. La ruta introductoria reúne seis módulos y trece laboratorios con simulación y ejecución real local.
+Guía web para aprendices con bases de JavaScript, programación orientada a objetos y bases de datos. La ruta introductoria reúne ocho módulos, del 0 al 7, y trece laboratorios con simulación y ejecución real local, y termina con una plantilla para llevar el contrato a una aplicación propia.
 
 Los casos y archivos se prepararon para aprender y no contienen registros reales. Las cuentas, lecturas y fondos de práctica no deben utilizarse como credenciales, mediciones ni dinero de una aplicación en producción.
 
@@ -9,9 +9,10 @@ Los casos y archivos se prepararon para aprender y no contienen registros reales
 La guía web explica cada paso con comandos, salidas esperadas y solución de problemas. Este resumen indica por dónde empezar.
 
 1. **Prepara tu equipo** (`#preparar`). Nivel mínimo: Node.js 24, VS Code y PowerShell 7. Nivel completo: además PostgreSQL 18 y, si tu instructor lo pide, uv con Slither.
-2. **Recorre los seis módulos** y registra las evidencias MG-A01 a MG-A05 donde se producen.
+2. **Recorre los módulos del 0 al 7** y registra las evidencias MG-A01 a MG-A06 donde se producen.
 3. **Explora el Taller AgroPay** (`#taller`). Descargas `descargas/taller-agropay.zip`, lo instalas con `npm install` y recorres las siete etapas con `npm run etapa:N`. El taller viene 100 % construido y funcional: ejecutas pruebas, inspeccionas dónde se guardan los datos (EVM Storage vs. Logs vs. SQL) y realizas experimentos de seguridad con `npm run probar:seguridad` y `npm run inspeccionar:estado`.
 4. **Practica en los laboratorios** (`#labs`). Cada uno indica cómo hacerlo, qué resultado esperar y qué hacer si falla.
+5. **Lleva el contrato a tu proyecto** (`#m7`). Descargas `descargas/mi-dapp.zip`, una aplicación completa con contrato, API en Node.js o Python, interfaz y proyección en PostgreSQL. La ejecutas en tu equipo, recorres el CRUD, firmas con tu billetera y la publicas en un VPS con Coolify.
 
 | Lenguaje | Uso en la guía | Rol del aprendiz |
 |---|---|---|
@@ -19,7 +20,9 @@ La guía web explica cada paso con comandos, salidas esperadas y solución de pr
 | Solidity | Contrato `GarantiaAgroPay` | Analiza variables de almacenamiento EVM y permisos en bytecode |
 | SQL | Proyección de eventos sin duplicados | Comprende el patrón CQRS y la deduplicación con `ON CONFLICT DO NOTHING` |
 | PowerShell | Ejecutar comandos | Ejecuta comandos guiados |
-| Python | Slither, dentro del laboratorio Auditoría | No; es opcional |
+| Python | API de la plantilla `mi-dapp` con FastAPI y web3.py; Slither, dentro del laboratorio Auditoría | Elige entre la API en Python y la de Node.js; Slither es opcional |
+
+La plantilla vive en `plantilla/mi-dapp`. `npm run test:plantilla` comprueba el contrato, la API de Node.js con PostgreSQL, la API de Python contra un nodo Hardhat, la interfaz y los archivos de publicación, con 100 % de funciones en JavaScript, Solidity y Python. Requiere uv para la parte de Python.
 
 El taller vive en `taller/`: `taller/inicio` es el paquete que recibe el aprendiz y `taller/solucion` es la referencia canónica para el instructor. `npm run test:taller` comprueba que ambas carpetas vienen 100 % construidas, pasan todas las etapas con 100 % de funciones JavaScript, alcanzan el 100 % de funciones Solidity y ejecutan los scripts de demostración e inspección sin errores.
 
@@ -40,6 +43,7 @@ Los documentos de `docs/` amplían la guía web. No siguen la misma numeración 
 | [Cierre de transferencia](docs/05-cierre.md) | m5 · Pruebas y persistencia | Evidencia MG-A05: consolidar pruebas, cobertura y sincronización reproducibles. |
 | [Arquitectura blockchain y PostgreSQL](docs/ARQUITECTURA_BLOCKCHAIN_Y_POSTGRES_ADSO.md) | m5 · Pruebas y persistencia | Relación entre eventos, indexador y proyección SQL. |
 | [Migración de Web2 a Web3](docs/GUIA_MIGRACION_WEB2_A_WEB3_PASO_A_PASO.md) | m6 · Proyecto y Portafolio | Ideas para llevar los patrones a un proyecto propio. |
+| [Tu propia aplicación con un contrato](docs/06-aplicacion-propia.md) | m7 · Lleva el contrato a tu proyecto | Evidencia MG-A06: analogía con el CRUD, integración con Node.js y Python, quién firma y publicación. |
 | [Aplicaciones, redes y Coolify](docs/03b-implementacion-aplicaciones-y-redes.md) | Anexo `#publicar` | Despliegue de la guía y de un nodo de práctica en un VPS. |
 | [Servidor EVM en Coolify y uso local](docs/GUIA_SERVIDOR_EVM_COOLIFY_Y_USO_LOCAL.md) | Anexo `#publicar` | Configuración paso a paso del nodo remoto de práctica. |
 | [Comparación visual](docs/COMPARACION-VISUAL.md) | Mantenimiento | Evidencia visual de la interfaz. |
@@ -100,10 +104,11 @@ La recarga de desarrollo compila las fuentes web al guardar y reinicia el backen
 4. **Oráculos y datos firmados:** integridad, repetición y reglas explicables.
 5. **Pruebas y persistencia:** herramientas, eventos y proyecciones SQL.
 6. **Proyecto y Portafolio:** integración y entrega reproducible.
+7. **Lleva el contrato a tu proyecto:** aplicación propia con API, interfaz y publicación.
 
 Cada módulo sigue cuatro pasos: Comprende, Revisa el ejemplo, Practica y Aplica. La búsqueda incluye explicaciones y comandos, admite consultas sin tildes y devuelve enlaces directos.
 
-La **ruta introductoria suma diez horas orientativas**. Instalar el entorno y ejecutar íntegramente los trece laboratorios reales constituye una ampliación. El archivo `test-results/laboratorios-reales.json` contiene tiempos observados de ejecución de herramientas y servicios; no mide el tiempo que necesita una persona para aprender o completar una actividad.
+La **ruta introductoria suma once horas y media orientativas**. Instalar el entorno y ejecutar íntegramente los trece laboratorios reales constituye una ampliación. El archivo `test-results/laboratorios-reales.json` contiene tiempos observados de ejecución de herramientas y servicios; no mide el tiempo que necesita una persona para aprender o completar una actividad.
 
 ### Dos modalidades
 
@@ -120,7 +125,7 @@ La práctica WebAuthn registra y verifica una clave de acceso mediante el autent
 
 El aula recupera los módulos y evidencias del almacenamiento anterior, conserva el punto del recorrido y evita recompensas repetidas por la misma actividad. El módulo completado, la práctica real verificada y el juicio del instructor son estados diferentes.
 
-MG-A01 a MG-A05 se producen en sus respectivas estaciones. Todas siguen la misma ficha de tres bloques: **Observa** un resultado de AgroPay, **Explica** lo que significa y llévalo a **Tu proyecto**. Los bloques «Tu proyecto» se acumulan módulo a módulo y en m6 forman la propuesta final. El Portafolio consolida los registros y permite exportarlos en JSON o Markdown. Los textos se guardan en el navegador; si el almacenamiento está bloqueado, la interfaz lo informa al intentar guardar. Conviene conservar una exportación para la entrega definida por el instructor.
+MG-A01 a MG-A06 se producen en sus respectivas estaciones. Todas siguen la misma ficha de tres bloques: **Observa** un resultado del ejercicio, **Explica** lo que significa y llévalo a **Tu proyecto**. Los bloques «Tu proyecto» se acumulan módulo a módulo y en m6 forman la propuesta final. El Portafolio consolida los registros y permite exportarlos en JSON o Markdown. Los textos se guardan en el navegador; si el almacenamiento está bloqueado, la interfaz lo informa al intentar guardar. Conviene conservar una exportación para la entrega definida por el instructor.
 
 ## Credenciales y datos
 
@@ -144,6 +149,7 @@ npm run test:integration
 npm run test:browser
 npm run test:legacy
 npm run test:taller
+npm run test:plantilla
 npm run coverage
 Remove-Item Env:GUIA_DB_USER, Env:GUIA_DB_PASSWORD, Env:GUIA_ADMIN_USER, Env:GUIA_ADMIN_PASSWORD -ErrorAction SilentlyContinue
 ```
@@ -156,7 +162,7 @@ Las comprobaciones de aprovisionamiento usan también las credenciales administr
 |---|---|
 | Cobertura de aplicación | coverage/coverage-summary.json y coverage/lcov.info |
 | Cobertura Solidity | test-results/solidity/ y test-results/solidity/functions.json |
-| Funciones PowerShell y Python | test-results/lifecycle-coverage.json, credentials-coverage.json y python-functions.json |
+| Funciones PowerShell y Python | test-results/lifecycle-coverage.json, credentials-coverage.json, python-functions.json y python-functions-plantilla.json |
 | Resultado de Slither | test-results/audit/slither-report.json |
 | Ejecuciones medidas de laboratorios | test-results/laboratorios-reales.json |
 | Hallazgos automatizados de accesibilidad | test-results/accesibilidad.json |
@@ -166,7 +172,7 @@ Las cifras vigentes de pruebas y cobertura salen de cada corrida: consulte el ar
 
 ## Estructura y CI
 
-`frontend/web/` contiene las fuentes editables del aula; `web/` es una salida regenerable mediante `npm run build`, que también empaqueta `taller/inicio` en `web/descargas/taller-agropay.zip`. `backend/` separa HTTP, casos de uso, criptografía, herramientas, red y persistencia. `contracts/` conserva los contratos de producción y las pruebas viven junto a los límites que verifican.
+`frontend/web/` contiene las fuentes editables del aula; `web/` es una salida regenerable mediante `npm run build`, que también empaqueta `taller/inicio` en `web/descargas/taller-agropay.zip` y `plantilla/mi-dapp` en `web/descargas/mi-dapp.zip`. `backend/` separa HTTP, casos de uso, criptografía, herramientas, red y persistencia. `contracts/` conserva los contratos de producción y las pruebas viven junto a los límites que verifican.
 
 La CI de [GitHub Actions](.github/workflows/tests.yml) usa un ejecutor Windows efímero, Node.js 24 y PostgreSQL 17 en 5434 por compatibilidad con la acción de preparación. Esa diferencia corresponde al ejecutor de CI; el entorno local canónico continúa en PostgreSQL 18. Los roles de CI reciben credenciales generadas por ejecución.
 

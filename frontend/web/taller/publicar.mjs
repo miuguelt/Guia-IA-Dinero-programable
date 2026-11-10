@@ -120,9 +120,9 @@ const { Pool } = require('pg');
 const manifest = require('./artifacts/deployment.json');
 
 async function registrarEnBlockchainYBaseDeDatos() {
-  // 1. Conexión al nodo privado en el VPS con credenciales seguras
-  const rpcUrl = process.env.VPS_RPC_URL || 'https://aprendiz:token@rpc.tudominio.com';
-  const provider = new JsonRpcProvider(rpcUrl);
+  // 1. Conexión al nodo privado en el VPS. La URL con sus credenciales llega solo por el entorno.
+  if (!process.env.VPS_RPC_URL) throw new Error('Define VPS_RPC_URL antes de ejecutar.');
+  const provider = new JsonRpcProvider(process.env.VPS_RPC_URL);
   const signer = new Wallet(process.env.VPS_PRIVATE_KEY, provider);
 
   const info = manifest.contracts.CertificadosInmutables;
@@ -136,7 +136,7 @@ async function registrarEnBlockchainYBaseDeDatos() {
   const recibo = await tx.wait();
   console.log('Transacción confirmada en bloque:', recibo.blockNumber);
 
-  // 3. Proyección CQRS en PostgreSQL 18 para consultas en menos de 5 ms
+  // 3. Proyección CQRS en PostgreSQL 18 para consultas rápidas
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   const query = \`
     INSERT INTO certificados_proyeccion (hash_documento, emisor, bloque, fecha_registro)
@@ -190,10 +190,13 @@ export const publicarView = () => `<section class="module-page" id="publicar" da
     <p>En un sistema de producción, la red blockchain del VPS se complementa con tu aplicación web y tus bases de datos relacionales:</p>
     <ol>
       <li><strong>Backend (Escritura inmutable):</strong> Tu servicio backend en Node.js o Python recibe la solicitud del usuario, valida permisos internos y emite la transacción hacia la red del VPS con Ethers.js.</li>
-      <li><strong>Base de datos (Lectura rápida CQRS):</strong> Cuando la transacción es confirmada, los eventos emitidos se indexan en <strong>PostgreSQL 18</strong> aplicando <code>ON CONFLICT DO NOTHING</code>. Esto permite que el sistema responda búsquedas, filtros y reportes en menos de 5 ms sin sobrecargar el nodo RPC.</li>
+      <li><strong>Base de datos (Lectura rápida CQRS):</strong> Cuando la transacción es confirmada, los eventos emitidos se indexan en <strong>PostgreSQL 18</strong> aplicando <code>ON CONFLICT DO NOTHING</code>. Esto permite que el sistema responda búsquedas, filtros y reportes sin sobrecargar el nodo RPC.</li>
       <li><strong>Frontend y verificación con MetaMask:</strong> Los aprendices y usuarios finales pueden agregar la red del VPS a MetaMask configurando el RPC con Basic Auth (<code>https://aprendiz:token@rpc.tudominio.com</code>), el Chain ID <code>31338</code> y el símbolo <code>ETH</code>. Cualquier usuario puede validar la autenticidad de un documento con un solo clic.</li>
     </ol>
     <pre><code>${escapeHtml(ejemploIntegracion)}</code></pre>
+
+    <h2>Publica tu propia aplicación</h2>
+    <p>Este anexo publica la guía y un nodo de práctica. Para publicar una aplicación tuya, con contrato, API en Node.js o Python, interfaz y base de datos, sigue el <a href="#m7/0">módulo 7 · Lleva el contrato a tu proyecto</a>. Su plantilla <code>mi-dapp</code> incluye los archivos <code>docker-compose.yml</code> y <code>docker-compose.python.yml</code> listos para Coolify, y usa como red el nodo que creaste en el paso 1 de este anexo.</p>
 
     <h2>Publicar también el portal web de la guía (<code>/docker-compose.yml</code>)</h2>
     <p>Si deseas que tus compañeros o instructores consulten la web de la guía desde internet:</p>

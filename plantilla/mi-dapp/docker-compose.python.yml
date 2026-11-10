@@ -1,0 +1,39 @@
+# =========================================================================
+# Publicación en un VPS con Coolify — aplicación con API en Python (FastAPI)
+# =========================================================================
+# Coolify lee este archivo (Docker Compose Location: /docker-compose.python.yml).
+# Usa este o docker-compose.yml, no los dos: ambos publican la misma interfaz.
+#
+# La API en Python arma la lista de productos leyendo los eventos del contrato,
+# así que no necesita base de datos. Los valores llegan desde las variables de
+# entorno de Coolify y ninguno tiene valor por defecto.
+#   RPC_URL            URL de tu nodo, por ejemplo https://usuario:clave@rpc.tudominio.com
+#   CLAVE_PRIVADA_API  clave de la cuenta con la que la API firma
+#
+# Sin `ports`: Traefik (red externa `coolify`) enruta el dominio y emite el certificado.
+# =========================================================================
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: backend-python/Dockerfile
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      - TZ=America/Bogota
+      - RPC_URL=${RPC_URL:?Define RPC_URL en Coolify}
+      - CLAVE_PRIVADA_API=${CLAVE_PRIVADA_API:?Define CLAVE_PRIVADA_API en Coolify}
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:3000/api/salud')\" || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - coolify
+
+networks:
+  coolify:
+    external: true

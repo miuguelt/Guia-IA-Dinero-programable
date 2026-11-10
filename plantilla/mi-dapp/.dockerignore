@@ -1,0 +1,15 @@
+.git
+.gitignore
+.env
+.env.*
+node_modules
+artifacts
+cache
+coverage
+coverage.json
+despliegue.json
+test
+**/__pycache__
+**/.pytest_cache
+.venv
+*.md
