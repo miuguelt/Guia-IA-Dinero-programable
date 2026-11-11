@@ -28,7 +28,8 @@ services:
       - TZ=America/Bogota
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:80/ || exit 1"]
-      interval: 30s
+      interval: 5m
+      start_interval: 5s
       timeout: 10s
       retries: 3
       start_period: 10s

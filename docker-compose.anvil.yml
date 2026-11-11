@@ -45,7 +45,8 @@ services:
       - anvil_data:/data
     healthcheck:
       test: ["CMD-SHELL", "cast block-number --rpc-url http://127.0.0.1:8545 >/dev/null 2>&1 || exit 1"]
-      interval: 30s
+      interval: 5m
+      start_interval: 5s
       timeout: 10s
       retries: 3
       start_period: 10s
